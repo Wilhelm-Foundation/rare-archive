@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv/
+
+# macOS
+.DS_Store
+
+# Large model files
+*.gguf
+*.safetensors
+
+# Experiment tracking
+wandb/
+

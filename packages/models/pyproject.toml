@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rare-archive-models"
+version = "0.1.0"
+description = "4-stage LoRA training pipeline, evaluation, and GGUF quantization for the Rare AI Archive"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "datasets>=2.18.0",
+    "pyyaml>=6.0",
+    "trl>=0.8.0",
+]
+
+[project.optional-dependencies]
+unsloth = [
+    "unsloth>=2024.8",
+]
+swift = [
+    "ms-swift>=2.4.0",
+]
+eval = [
+    "openai>=1.0",
+]
+dev = [
+    "pytest>=7.0",
+    "wandb>=0.16",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

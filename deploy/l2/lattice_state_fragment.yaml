@@ -1,0 +1,69 @@
+# Rare AI Archive — Service entries for .lattice_state.yaml
+# Merge into /Users/stanley/Projects/latlab/deploy/.lattice_state.yaml
+
+rare_archive_services:
+  - id: llama_server_primary
+    node: dell_dc_l2
+    container: rare-archive-llama-primary
+    image: "ghcr.io/ggml-org/llama.cpp:server"
+    ports:
+      - host: 8082
+        container: 8080
+        protocol: tcp
+    status: planned
+    healthcheck: "curl -f http://localhost:8080/health"
+    gpu: "3"
+    model: "qwen3.5-35b-a3b-q8_0.gguf"
+    role: primary_inference
+
+  - id: llama_server_arena
+    node: dell_dc_l2
+    container: rare-archive-llama-arena
+    image: "ghcr.io/ggml-org/llama.cpp:server"
+    ports:
+      - host: 8083
+        container: 8080
+        protocol: tcp
+    status: planned
+    healthcheck: "curl -f http://localhost:8080/health"
+    gpu: "3"
+    model: "qwen3.5-27b-q8_0.gguf"
+    role: arena_challenger
+
+  - id: openwebui
+    node: dell_dc_l2
+    container: rare-archive-openwebui
+    image: "ghcr.io/open-webui/open-webui:main"
+    ports:
+      - host: 3000
+        container: 8080
+        protocol: tcp
+    status: planned
+    healthcheck: "curl -f http://localhost:8080/"
+    depends_on: [llama_server_primary, chromadb]
+    role: clinical_interface
+
+  - id: chromadb
+    node: dell_dc_l2
+    container: rare-archive-chromadb
+    image: "chromadb/chroma:0.5.23"
+    ports:
+      - host: 8084
+        container: 8000
+        protocol: tcp
+    status: planned
+    healthcheck: "curl -f http://localhost:8000/api/v1/heartbeat"
+    role: rag_vector_store
+
+  - id: archive_api
+    node: dell_dc_l2
+    container: rare-archive-api
+    image: "rare-archive-api:latest"
+    ports:
+      - host: 8085
+        container: 8000
+        protocol: tcp
+    status: planned
+    healthcheck: "curl -f http://localhost:8000/health"
+    depends_on: [openwebui]
+    role: elo_tracking

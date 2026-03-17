@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-compliance/schemas/adna/rare_module.schema.json",
+  "title": "Rare Archive Module Metadata",
+  "description": "aDNA schema for Rare Archive modules (models, tools). Extends Lattice Protocol ModuleMetadata.",
+  "allOf": [
+    { "$ref": "rare_envelope.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "entrypoint": { "type": "string", "default": "code/core.py" },
+        "runtime": {
+          "type": "string",
+          "enum": ["python3.10", "python3.11", "python3.12", "container"],
+          "default": "python3.11"
+        },
+        "gpu_required": { "type": "boolean" },
+        "memory_mb": { "type": "integer" },
+        "framework": {
+          "type": "string",
+          "enum": ["torch", "unsloth", "swift", "llama.cpp", "transformers"]
+        },
+        "model_type": {
+          "type": "string",
+          "enum": ["llm", "lora_adapter", "gguf", "classifier"]
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  ]
+}

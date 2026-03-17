@@ -1,0 +1,24 @@
+"""Configuration for the Archive API."""
+
+import os
+from dataclasses import dataclass
+
+
+@dataclass
+class Settings:
+    database_url: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql+asyncpg://lattice:password@localhost:5432/rare_archive",
+    )
+    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/2")
+    openwebui_url: str = os.getenv("OPENWEBUI_URL", "http://localhost:3000")
+    hf_token: str = os.getenv("HF_TOKEN", "")
+    hf_org: str = os.getenv("HF_ORG", "wilhelm-foundation")
+    hf_dataset: str = os.getenv("HF_DATASET", "rare-archive-rlhf-preferences")
+
+    # ELO settings
+    elo_k_factor: float = float(os.getenv("ELO_K_FACTOR", "32"))
+    elo_initial_rating: float = float(os.getenv("ELO_INITIAL_RATING", "1500"))
+
+
+settings = Settings()

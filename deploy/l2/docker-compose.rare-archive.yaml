@@ -1,0 +1,157 @@
+# Rare AI Archive — L2 Docker Compose Overlay
+# Extends existing lattice-l2 network (docker-compose.l2.yaml)
+# GPU 3 (A100-80GB) dedicated to inference
+#
+# Usage:
+#   docker compose -f docker-compose.rare-archive.yaml up -d
+#
+# Requires:
+#   - lattice-l2 network exists (from docker-compose.l2.yaml)
+#   - GGUF models downloaded via download_gguf_models.sh
+#   - .env.rare-archive configured
+
+services:
+  # Primary inference server — Qwen3.5-35B-A3B Q8_0
+  llama-server-primary:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: rare-archive-llama-primary
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    volumes:
+      - ${MODELS_DIR:-/data/latlab/rare-archive/models}:/models:ro
+    environment:
+      - LLAMA_ARG_MODEL=/models/${PRIMARY_MODEL:-qwen3.5-35b-a3b-q8_0.gguf}
+      - LLAMA_ARG_CTX_SIZE=${PRIMARY_CTX_SIZE:-8192}
+      - LLAMA_ARG_N_GPU_LAYERS=99
+      - LLAMA_ARG_PARALLEL=4
+      - LLAMA_ARG_CONT_BATCHING=true
+      - LLAMA_ARG_FLASH_ATTN=true
+      - LLAMA_ARG_HOST=0.0.0.0
+      - LLAMA_ARG_PORT=8080
+      - LLAMA_ARG_METRICS=true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    networks:
+      - lattice-l2
+
+  # Arena challenger server — Qwen3.5-27B Q8_0
+  llama-server-arena:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: rare-archive-llama-arena
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - ${MODELS_DIR:-/data/latlab/rare-archive/models}:/models:ro
+    environment:
+      - LLAMA_ARG_MODEL=/models/${ARENA_MODEL:-qwen3.5-27b-q8_0.gguf}
+      - LLAMA_ARG_CTX_SIZE=${ARENA_CTX_SIZE:-8192}
+      - LLAMA_ARG_N_GPU_LAYERS=99
+      - LLAMA_ARG_PARALLEL=2
+      - LLAMA_ARG_CONT_BATCHING=true
+      - LLAMA_ARG_FLASH_ATTN=true
+      - LLAMA_ARG_HOST=0.0.0.0
+      - LLAMA_ARG_PORT=8080
+      - LLAMA_ARG_METRICS=true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    networks:
+      - lattice-l2
+
+  # OpenWebUI — Clinical interface with Arena mode
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: rare-archive-openwebui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    volumes:
+      - ${DATA_DIR:-/data/latlab/rare-archive}/openwebui:/app/backend/data
+    environment:
+      - OPENAI_API_BASE_URLS=http://rare-archive-llama-primary:8080/v1;http://rare-archive-llama-arena:8080/v1
+      - OPENAI_API_KEYS=not-needed;not-needed
+      - ENABLE_SIGNUP=false
+      - ENABLE_COMMUNITY_SHARING=false
+      - ENABLE_ARENA_MODEL=true
+      - WEBUI_AUTH=true
+      - WEBUI_NAME=Rare AI Archive
+      - CHROMA_HTTP_HOST=rare-archive-chromadb
+      - CHROMA_HTTP_PORT=8000
+      - RAG_EMBEDDING_ENGINE=ollama
+      - DEFAULT_MODELS=qwen3.5-35b-a3b
+    depends_on:
+      llama-server-primary:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    networks:
+      - lattice-l2
+
+  # ChromaDB — RAG vector storage
+  chromadb:
+    image: chromadb/chroma:0.5.23
+    container_name: rare-archive-chromadb
+    restart: unless-stopped
+    ports:
+      - "8084:8000"
+    volumes:
+      - ${DATA_DIR:-/data/latlab/rare-archive}/chromadb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lattice-l2
+
+  # Archive API — FastAPI sidecar for ELO tracking
+  archive-api:
+    build:
+      context: ../../packages/rlhf/src/archive_api
+      dockerfile: Dockerfile
+    image: rare-archive-api:latest
+    container_name: rare-archive-api
+    restart: unless-stopped
+    ports:
+      - "8085:8000"
+    environment:
+      - DATABASE_URL=postgresql://lattice:${POSTGRES_PASSWORD}@lattice-postgres:5432/rare_archive
+      - REDIS_URL=rediss://default:${REDIS_PASSWORD}@lattice-redis:6379/2
+      - OPENWEBUI_URL=http://rare-archive-openwebui:8080
+      - HF_TOKEN=${HF_TOKEN:-}
+      - HF_ORG=wilhelm-foundation
+    depends_on:
+      openwebui:
+        condition: service_started
+    networks:
+      - lattice-l2
+
+networks:
+  lattice-l2:
+    external: true

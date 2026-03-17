@@ -1,0 +1,51 @@
+# HPO ↔ ORDO Alignment via HOOM (HPO-ORDO Ontological Module)
+# Source: https://www.orpha.net/consor/cgi-bin/Disease_HPOTerms.php
+# This file defines the mapping strategy, not the full data (which is downloaded at runtime)
+
+alignment:
+  name: hpo_ordo_alignment
+  version: "1.0.0"
+  description: "Mapping between Human Phenotype Ontology (HPO) and Orphanet Rare Disease Ontology (ORDO)"
+
+  sources:
+    hpo:
+      name: "Human Phenotype Ontology"
+      url: "https://hpo.jax.org/"
+      version_url: "https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo"
+      format: obo
+
+    ordo:
+      name: "Orphanet Rare Disease Ontology"
+      url: "https://www.orpha.net/consor/cgi-bin/index.php"
+      download_url: "https://www.orphadata.com/data/xml/en_product4.xml"
+      format: xml
+
+    hoom:
+      name: "HPO-ORDO Ontological Module"
+      url: "https://github.com/Orphanet/HOOM"
+      description: "Official Orphanet module mapping HPO terms to ORDO disorders"
+      format: owl
+
+  mapping_types:
+    - type: disease_to_phenotype
+      description: "Maps ORDO diseases to their HPO phenotypic features"
+      cardinality: "many-to-many"
+      frequency_qualifiers:
+        - obligate       # 100% of cases
+        - very_frequent  # 80-99%
+        - frequent       # 30-79%
+        - occasional     # 5-29%
+        - very_rare      # 1-4%
+        - excluded       # 0%
+
+    - type: disease_to_gene
+      description: "Maps ORDO diseases to causative genes"
+      source: "orphadata en_product6.xml"
+
+  download_scripts:
+    - name: download_hpo
+      command: "wget -O data/hp.obo https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo"
+    - name: download_ordo_hpo
+      command: "wget -O data/en_product4.xml https://www.orphadata.com/data/xml/en_product4.xml"
+    - name: download_ordo_genes
+      command: "wget -O data/en_product6.xml https://www.orphadata.com/data/xml/en_product6.xml"

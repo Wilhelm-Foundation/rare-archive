@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-ontology/schemas/clinical_tool.schema.json",
+  "title": "Clinical Tool",
+  "description": "A diagnostic tool in the Rare AI Archive clinical tool harness. Catalogs API specifications, dependency graphs, OpenWebUI tool definitions, and MCP server wrappers.",
+  "type": "object",
+  "required": ["tool_id", "name", "version", "api"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "properties": {
+        "@vocab": { "const": "https://wilhelm-foundation.github.io/rare-archive-ontology/ns/" }
+      }
+    },
+    "tool_id": {
+      "type": "string",
+      "pattern": "^rare_tool_[a-z0-9_]+$",
+      "description": "Unique tool identifier with rare_ namespace prefix"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable tool name",
+      "examples": ["ClinVar Variant Lookup", "Orphanet Disease Search", "PanelApp Gene Panel Query"]
+    },
+    "description": { "type": "string" },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["variant_database", "disease_database", "gene_panel", "population_genetics", "phenotype_ontology", "literature", "composite"],
+      "description": "Tool category classification"
+    },
+    "api": {
+      "type": "object",
+      "required": ["base_url", "auth_type"],
+      "properties": {
+        "base_url": { "type": "string", "format": "uri" },
+        "auth_type": {
+          "type": "string",
+          "enum": ["none", "api_key", "oauth2", "basic"],
+          "description": "Authentication method"
+        },
+        "auth_key_env": {
+          "type": "string",
+          "description": "Environment variable name for API key (if auth_type=api_key)"
+        },
+        "rate_limit": {
+          "type": "object",
+          "properties": {
+            "requests_per_second": { "type": "number" },
+            "requests_per_day": { "type": "integer" },
+            "burst": { "type": "integer" }
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "method", "description"],
+            "properties": {
+              "path": { "type": "string" },
+              "method": { "type": "string", "enum": ["GET", "POST", "PUT", "DELETE"] },
+              "description": { "type": "string" },
+              "parameters": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "required": { "type": "boolean" },
+                    "description": { "type": "string" }
+                  }
+                }
+              },
+              "response_schema": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Other tools this tool depends on",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool_id": { "type": "string" },
+          "relationship": {
+            "type": "string",
+            "enum": ["requires", "enhances", "validates"],
+            "description": "Type of dependency"
+          }
+        }
+      }
+    },
+    "openwebui": {
+      "type": "object",
+      "description": "OpenWebUI tool definition metadata",
+      "properties": {
+        "function_name": { "type": "string", "description": "Python function name in OpenWebUI" },
+        "display_name": { "type": "string" },
+        "icon": { "type": "string" },
+        "enabled_by_default": { "type": "boolean" }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "description": "MCP (Model Context Protocol) server metadata",
+      "properties": {
+        "server_name": { "type": "string" },
+        "transport": { "type": "string", "enum": ["stdio", "sse", "streamable-http"] },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "input_schema": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "patient_categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Patient categories where this tool is particularly relevant"
+    },
+    "caching": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "backend": { "type": "string", "enum": ["redis", "local", "none"] },
+        "ttl_seconds": { "type": "integer" },
+        "cache_key_pattern": { "type": "string" }
+      }
+    },
+    "adna": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "rare_clinical_tool" },
+        "namespace": { "const": "rare_" },
+        "triad": { "const": "what" },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "last_edited_by": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

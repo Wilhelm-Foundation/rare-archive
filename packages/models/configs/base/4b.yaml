@@ -1,0 +1,30 @@
+# Qwen3.5-4B base configuration
+model_name: "Qwen/Qwen3.5-4B"
+model_size: "4b"
+architecture: "dense"
+
+# LoRA
+lora_rank: 64
+lora_alpha: 128
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# Training
+max_seq_length: 4096
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 2
+learning_rate: 2e-4
+bf16: true
+gradient_checkpointing: true
+
+# Quantization
+load_in_4bit: true
+bnb_4bit_quant_type: "nf4"
+bnb_4bit_compute_dtype: "bfloat16"

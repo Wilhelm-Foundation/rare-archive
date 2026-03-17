@@ -1,0 +1,40 @@
+# RD-CDM (Rare Disease Common Data Model) Mapping
+# Aligns Archive schemas with international rare disease data standards
+
+alignment:
+  name: rdcdm_mapping
+  version: "1.0.0"
+  description: "Mapping to Rare Disease Common Data Model elements for interoperability"
+
+  sources:
+    rdcdm:
+      name: "Rare Disease Common Data Model"
+      url: "https://www.ejprarediseases.org/rd-cdm/"
+      description: "European Joint Programme on Rare Diseases Common Data Model"
+
+  field_mappings:
+    patient_category:
+      - archive_field: diseases[].disease_id
+        rdcdm_element: "Disease or Disorder"
+        rdcdm_code_system: "Orphanet/OMIM/ICD-10"
+
+      - archive_field: phenotypic_features[].hpo_id
+        rdcdm_element: "Phenotypic Feature"
+        rdcdm_code_system: "HPO"
+
+      - archive_field: diseases[].inheritance_patterns
+        rdcdm_element: "Genetic Diagnosis.Inheritance Pattern"
+        rdcdm_code_system: "HPO Inheritance"
+
+    synthetic_patient:
+      - archive_field: age_of_onset
+        rdcdm_element: "Personal Information.Age at Onset"
+        rdcdm_code_system: "HPO Age of Onset"
+
+      - archive_field: sex
+        rdcdm_element: "Personal Information.Sex"
+        rdcdm_code_system: "HL7 AdministrativeGender"
+
+      - archive_field: presenting_symptoms
+        rdcdm_element: "Clinical History.Symptoms and Signs"
+        rdcdm_code_system: "HPO"

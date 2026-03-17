@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-ontology/schemas/dataset.schema.json",
+  "title": "Dataset",
+  "description": "Tracks all HuggingFace datasets in the Rare AI Archive. Types: RareArena derivatives, synthetic patients, RLHF preferences, tool-usage logs. Includes provenance chains and consent governance.",
+  "type": "object",
+  "required": ["dataset_id", "name", "version", "dataset_type", "license"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "properties": {
+        "@vocab": { "const": "https://wilhelm-foundation.github.io/rare-archive-ontology/ns/" }
+      }
+    },
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^rare_dataset_[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "HuggingFace dataset name",
+      "examples": ["rare-archive-eval-rarearena-rds", "rare-archive-synthetic-patients"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": { "type": "string" },
+    "dataset_type": {
+      "type": "string",
+      "enum": ["rarearena_eval", "synthetic_patients", "rlhf_preferences", "tool_usage_logs", "training_data"],
+      "description": "Type classification"
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier",
+      "examples": ["CC-BY-NC-SA-4.0", "Apache-2.0", "CC-BY-4.0"]
+    },
+    "format": {
+      "type": "object",
+      "properties": {
+        "file_type": { "type": "string", "enum": ["jsonl", "parquet", "csv", "json"] },
+        "compression": { "type": "string", "enum": ["none", "gzip", "zstd"] },
+        "encoding": { "type": "string", "default": "utf-8" }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_records": { "type": "integer" },
+        "total_size_bytes": { "type": "integer" },
+        "disease_count": { "type": "integer", "description": "Distinct diseases represented" },
+        "category_count": { "type": "integer", "description": "Patient categories represented" },
+        "splits": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "records": { "type": "integer" },
+              "size_bytes": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "patient_categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Patient categories represented in this dataset"
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Original data source",
+          "examples": ["RareArena", "synthetic_generator", "rlhf_portal"]
+        },
+        "source_version": { "type": "string" },
+        "processing_pipeline": { "type": "string", "description": "Pipeline that produced this dataset" },
+        "parent_datasets": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Dataset IDs this was derived from"
+        },
+        "creation_date": { "type": "string", "format": "date" },
+        "processing_steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": { "type": "string" },
+              "description": { "type": "string" },
+              "tool_version": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "description": "Consent and governance information",
+      "properties": {
+        "phi_status": {
+          "type": "string",
+          "enum": ["no_phi", "synthetic_only", "de_identified", "consented"],
+          "description": "Protected Health Information status"
+        },
+        "irb_protocol": { "type": "string" },
+        "data_use_agreement": { "type": "string" },
+        "retention_policy": { "type": "string" }
+      }
+    },
+    "schema_definition": {
+      "type": "object",
+      "description": "JSON Schema for individual records in this dataset",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "properties": {
+        "completeness_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "validation_status": {
+          "type": "string",
+          "enum": ["draft", "validated", "reviewed", "published"]
+        },
+        "known_issues": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "huggingface": {
+      "type": "object",
+      "properties": {
+        "repo_id": { "type": "string", "description": "HuggingFace dataset repo ID" },
+        "card_template": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "adna": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "rare_dataset" },
+        "namespace": { "const": "rare_" },
+        "triad": { "const": "what" },
+        "dataset_class": {
+          "type": "string",
+          "enum": ["benchmark", "training_data", "reference"],
+          "description": "aDNA dataset_class discriminator value"
+        },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "last_edited_by": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

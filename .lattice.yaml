@@ -1,0 +1,116 @@
+lattice:
+  name: rare_ai_archive
+  version: "1.0.0"
+  lattice_type: workflow
+  description: |-
+    Complete Rare AI Archive ecosystem workflow: from ontology design through
+    training, deployment, clinician evaluation, and retraining. Orchestrates
+    the full decentralized post-training loop across all packages.
+
+  execution:
+    mode: workflow
+    runtime: ray
+    tier: L2
+
+  nodes:
+    # Phase 1: Foundation
+    - id: ontology
+      type: module
+      ref: "packages/ontology"
+      description: "4 ontology domains: Patient Category, Clinical Tool, Model, Dataset"
+
+    - id: compliance
+      type: module
+      ref: "packages/compliance"
+      description: "aDNA schemas, FAIR scoring, validation"
+
+    # Phase 2: Data + Training
+    - id: datasets
+      type: module
+      ref: "packages/datasets"
+      description: "RareArena ingestion, synthetic patients, category assignment"
+
+    - id: training
+      type: module
+      ref: "packages/models"
+      description: "4-stage training pipeline: SFT → Tool-Use → DPO → RL"
+
+    # Phase 3: Deployment + Tools
+    - id: tools
+      type: module
+      ref: "packages/tools"
+      description: "7 clinical tool integrations for OpenWebUI"
+
+    - id: deploy
+      type: module
+      ref: "deploy"
+      description: "L2 Docker Compose overlay with llama-server + OpenWebUI"
+
+    # Phase 3: RLHF
+    - id: rlhf
+      type: module
+      ref: "packages/rlhf"
+      description: "Multi-dimensional ELO, expert evaluation, preference export"
+
+    # Phase 5: Retrain loop
+    - id: retrain
+      type: process
+      description: "RLHF → DPO/GRPO retraining with clinician preferences"
+
+  edges:
+    # Foundation dependencies
+    - from: ontology
+      to: datasets
+      label: "schemas + categories"
+    - from: ontology
+      to: tools
+      label: "tool registry"
+    - from: ontology
+      to: training
+      label: "model schemas"
+    - from: compliance
+      to: training
+      label: "validation rules"
+
+    # Data → Training
+    - from: datasets
+      to: training
+      label: "RareArena + synthetic data"
+
+    # Training → Deployment
+    - from: training
+      to: deploy
+      label: "GGUF models"
+    - from: tools
+      to: deploy
+      label: "OpenWebUI tools"
+
+    # Deployment → RLHF
+    - from: deploy
+      to: rlhf
+      label: "inference endpoint"
+
+    # RLHF → Retrain (the loop)
+    - from: rlhf
+      to: retrain
+      label: "preference data"
+    - from: retrain
+      to: training
+      label: "DPO/GRPO retraining"
+
+  fair:
+    license: "Apache-2.0"
+    creators: ["Wilhelm Foundation"]
+    keywords:
+      - rare disease
+      - diagnostic AI
+      - decentralized post-training
+      - RLHF
+      - clinical tools
+      - lattice protocol
+    provenance: "Rare AI Archive v1.0"
+
+  federation:
+    shareable: true
+    source_instance: wilhelm-foundation
+    version_policy: minor

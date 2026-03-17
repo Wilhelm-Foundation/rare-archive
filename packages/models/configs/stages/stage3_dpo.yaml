@@ -1,0 +1,14 @@
+# Stage 3: DPO/GRPO — Clinician preference alignment
+method: "dpo"
+beta: 0.1
+loss_type: "sigmoid"
+num_train_epochs: 1
+learning_rate: 5e-5
+warmup_ratio: 0.1
+
+# Reduced LoRA rank for alignment
+lora_rank: 32
+lora_alpha: 64
+
+train_data: "data/rlhf_preferences.jsonl"
+output_dir: "outputs/stage3_dpo"

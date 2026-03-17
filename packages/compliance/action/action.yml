@@ -1,0 +1,52 @@
+name: 'Validate Rare Archive Compliance'
+description: 'Validates aDNA triad structure, schema compliance, FAIR scoring, and naming conventions for Rare AI Archive repos'
+author: 'Wilhelm Foundation'
+
+inputs:
+  repo-path:
+    description: 'Path to the repository to validate'
+    required: false
+    default: '.'
+  schemas-path:
+    description: 'Path to compliance schemas (defaults to this action bundled schemas)'
+    required: false
+    default: ''
+  fail-on-fair-score:
+    description: 'Minimum FAIR score to pass (0-100, 0 disables)'
+    required: false
+    default: '0'
+  check-naming:
+    description: 'Validate file naming conventions'
+    required: false
+    default: 'true'
+
+outputs:
+  fair-score:
+    description: 'Overall FAIR score (0-100)'
+  publication-ready:
+    description: 'Whether all required FAIR criteria pass'
+  validation-report:
+    description: 'JSON validation report'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        pip install jsonschema pyyaml
+
+    - name: Run validation
+      shell: bash
+      id: validate
+      run: |
+        python ${{ github.action_path }}/validate.py \
+          --repo-path "${{ inputs.repo-path }}" \
+          --schemas-path "${{ inputs.schemas-path || github.action_path + '/schemas' }}" \
+          --min-fair-score "${{ inputs.fail-on-fair-score }}" \
+          --check-naming "${{ inputs.check-naming }}"

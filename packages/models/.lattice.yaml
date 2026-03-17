@@ -1,0 +1,130 @@
+lattice:
+  name: rare_archive_training
+  version: "1.0.0"
+  lattice_type: pipeline
+  description: |-
+    4-stage progressive training pipeline for rare disease diagnostic models.
+    SFT → Tool-Use SFT → DPO/GRPO → Progressive RL, with GGUF quantization
+    and regression testing gating.
+
+  execution:
+    mode: workflow
+    runtime: ray
+    tier: L2
+
+  nodes:
+    - id: stage1_sft
+      type: module
+      description: "Stage 1: Supervised fine-tuning on RareArena + synthetic data"
+      config:
+        script: "src/rare_archive_models/training/stage1_sft.py"
+        framework: "unsloth"
+        gpu_required: true
+
+    - id: eval_stage1
+      type: module
+      description: "RareArena evaluation after Stage 1"
+      config:
+        script: "src/rare_archive_models/evaluation/rarearena_eval.py"
+
+    - id: stage2_tool_use
+      type: module
+      description: "Stage 2: Tool-use SFT with agentic diagnostic traces"
+      config:
+        script: "src/rare_archive_models/training/stage2_tool_use.py"
+        framework: "unsloth"
+        gpu_required: true
+
+    - id: eval_stage2
+      type: module
+      description: "RareArena evaluation after Stage 2"
+      config:
+        script: "src/rare_archive_models/evaluation/rarearena_eval.py"
+
+    - id: regression_check_2
+      type: module
+      description: "Regression gate: block if accuracy drops >2%"
+      config:
+        script: "src/rare_archive_models/training/regression.py"
+        max_accuracy_drop: 0.02
+
+    - id: stage3_dpo
+      type: module
+      description: "Stage 3: DPO/GRPO preference alignment"
+      config:
+        script: "src/rare_archive_models/training/stage3_dpo.py"
+        framework: "swift"
+        gpu_required: true
+
+    - id: stage4_rl
+      type: module
+      description: "Stage 4: Progressive RL (3 phases)"
+      config:
+        script: "src/rare_archive_models/training/stage4_rl.py"
+        framework: "swift"
+        gpu_required: true
+
+    - id: merge_lora
+      type: module
+      description: "Merge final LoRA adapter into base model"
+      config:
+        script: "src/rare_archive_models/quantization/merge_lora.py"
+
+    - id: quantize_gguf
+      type: module
+      description: "Convert to GGUF and quantize"
+      config:
+        script: "src/rare_archive_models/quantization/quantize_gguf.py"
+
+    - id: validate_quant
+      type: module
+      description: "Validate quantized model (perplexity, JSON generation)"
+      config:
+        script: "src/rare_archive_models/quantization/validate_quant.py"
+
+  edges:
+    - from: stage1_sft
+      to: eval_stage1
+      label: "LoRA adapter"
+    - from: eval_stage1
+      to: stage2_tool_use
+      label: "baseline metrics"
+    - from: stage1_sft
+      to: stage2_tool_use
+      label: "Stage 1 adapter"
+    - from: stage2_tool_use
+      to: eval_stage2
+    - from: eval_stage2
+      to: regression_check_2
+    - from: eval_stage1
+      to: regression_check_2
+      label: "baseline for regression"
+    - from: regression_check_2
+      to: stage3_dpo
+      label: "gated pass"
+    - from: stage2_tool_use
+      to: stage3_dpo
+      label: "Stage 2 adapter"
+    - from: stage3_dpo
+      to: stage4_rl
+      label: "Stage 3 adapter"
+    - from: stage4_rl
+      to: merge_lora
+      label: "final adapter"
+    - from: merge_lora
+      to: quantize_gguf
+      label: "merged model"
+    - from: quantize_gguf
+      to: validate_quant
+      label: "GGUF file"
+
+  fair:
+    license: "Apache-2.0"
+    creators: ["Wilhelm Foundation"]
+    keywords:
+      - rare disease
+      - diagnostic reasoning
+      - LoRA training
+      - GGUF quantization
+      - progressive RL
+    provenance: "Rare AI Archive training pipeline v1.0"

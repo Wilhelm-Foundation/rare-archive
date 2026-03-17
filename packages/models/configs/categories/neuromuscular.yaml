@@ -1,0 +1,6 @@
+# Neuromuscular Disorders category specialization
+patient_category: "rare_cat_neuromuscular"
+
+# Category-specific system prompt emphasis
+# More epochs for smaller category dataset
+num_train_epochs: 5

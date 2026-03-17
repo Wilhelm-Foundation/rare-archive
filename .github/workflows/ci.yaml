@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ontology: ${{ steps.filter.outputs.ontology }}
+      compliance: ${{ steps.filter.outputs.compliance }}
+      datasets: ${{ steps.filter.outputs.datasets }}
+      models: ${{ steps.filter.outputs.models }}
+      tools: ${{ steps.filter.outputs.tools }}
+      rlhf: ${{ steps.filter.outputs.rlhf }}
+      deploy: ${{ steps.filter.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ontology:
+              - 'packages/ontology/**'
+            compliance:
+              - 'packages/compliance/**'
+            datasets:
+              - 'packages/datasets/**'
+            models:
+              - 'packages/models/**'
+            tools:
+              - 'packages/tools/**'
+            rlhf:
+              - 'packages/rlhf/**'
+            deploy:
+              - 'deploy/**'
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile-check all Python files
+        run: find packages -name "*.py" -exec python3 -c "import py_compile; py_compile.compile('{}', doraise=True)" \;
+
+  test-ontology:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.ontology == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/ontology
+      - name: Validate schemas
+        run: python -c "import json, pathlib; [json.load(open(f)) for f in pathlib.Path('packages/ontology/schemas').glob('*.schema.json')]"
+
+  test-compliance:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.compliance == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/compliance
+      - name: Validate aDNA schemas
+        run: python -c "import json, pathlib; [json.load(open(f)) for f in pathlib.Path('packages/compliance/schemas').rglob('*.json')]"
+
+  test-datasets:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.datasets == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/ontology && pip install -e packages/datasets
+
+  test-models:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.models == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/ontology && pip install -e packages/models
+
+  test-tools:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.tools == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/ontology && pip install -e packages/tools
+
+  test-rlhf:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.rlhf == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e packages/rlhf

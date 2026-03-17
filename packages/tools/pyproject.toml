@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rare-archive-tool-harness"
+version = "0.1.0"
+description = "Clinical diagnostic tool integrations for the Rare AI Archive"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+redis = [
+    "redis>=5.0",
+]
+mcp = [
+    "mcp>=1.0",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

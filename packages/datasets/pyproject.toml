@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rare-archive-datasets"
+version = "0.1.0"
+description = "Dataset curation pipelines for the Rare AI Archive"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+hf = [
+    "datasets>=2.18.0",
+    "huggingface-hub>=0.21.0",
+]
+ontology = [
+    "rare-archive-ontology>=0.1.0",
+]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,62 @@
+# Rare AI Archive — Component Registry
+# Monorepo package paths and dependency declarations
+
+version: "1.0.0"
+
+organization: wilhelm-foundation
+repository: rare-archive
+
+packages:
+  ontology:
+    path: packages/ontology
+    description: "4 ontology domains, JSON-LD schemas, disease clustering"
+    version: "0.1.0"
+    role: foundation
+    dependencies: []
+
+  compliance:
+    path: packages/compliance
+    description: "aDNA schemas, FAIR scoring, governance, CI validation"
+    version: "0.1.0"
+    role: compliance
+    dependencies: []
+
+  datasets:
+    path: packages/datasets
+    description: "RareArena ingestion, synthetic patients, preference data"
+    version: "0.1.0"
+    role: data
+    dependencies: [ontology]
+
+  models:
+    path: packages/models
+    description: "LoRA training pipelines, eval harnesses, GGUF quantization"
+    version: "0.1.0"
+    role: training
+    dependencies: [ontology, datasets]
+
+  tools:
+    path: packages/tools
+    description: "Clinical tool-use harness (ClinVar, Orphanet, PanelApp, etc.)"
+    version: "0.1.0"
+    role: tools
+    dependencies: [ontology]
+
+  rlhf:
+    path: packages/rlhf
+    description: "RLHF portal backend, ELO system, expert matching"
+    version: "0.1.0"
+    role: alignment
+    dependencies: [ontology, models]
+
+  deploy:
+    path: deploy
+    description: "L1/L2 node deployment (Docker Compose, OpenWebUI + llama.cpp)"
+    version: "0.1.0"
+    role: deployment
+    dependencies: [models, tools]
+
+huggingface:
+  organization: wilhelm-foundation
+  models_prefix: "rare-archive-"
+  datasets_prefix: "rare-archive-"

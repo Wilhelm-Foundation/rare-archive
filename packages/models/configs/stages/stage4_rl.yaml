@@ -1,0 +1,19 @@
+# Stage 4: Progressive RL — RareArena-derived reward
+method: "grpo"
+num_generations: 4
+kl_coeff: 0.05
+num_train_epochs: 1
+learning_rate: 1e-5
+
+lora_rank: 32
+lora_alpha: 64
+
+reward_weights:
+  diagnostic_accuracy: 1.0
+  reasoning_quality: 0.3
+  tool_usage: 0.2
+  safety: 0.5
+
+train_data: "data/rarearena_rds_train.jsonl"
+eval_data: "data/rarearena_rds_eval.jsonl"
+output_dir: "outputs/stage4_rl"

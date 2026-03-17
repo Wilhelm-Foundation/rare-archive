@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-ontology/schemas/patient_category.schema.json",
+  "title": "Patient Category",
+  "description": "A cluster of rare diseases grouped by shared phenotypic and genetic features. Derived via Sanjak et al. methodology (node2vec + K-means on HPO/ORDO/Mondo disease graph). Categories — not individual diseases — are the unit of specialization for models and evaluation.",
+  "type": "object",
+  "required": ["category_id", "name", "version", "diseases", "phenotypic_features"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "description": "JSON-LD context for linked data interoperability",
+      "properties": {
+        "@vocab": { "const": "https://wilhelm-foundation.github.io/rare-archive-ontology/ns/" },
+        "hpo": { "const": "http://purl.obolibrary.org/obo/HP_" },
+        "ordo": { "const": "http://www.orpha.net/ORDO/Orphanet_" },
+        "mondo": { "const": "http://purl.obolibrary.org/obo/MONDO_" },
+        "omim": { "const": "https://omim.org/entry/" },
+        "gard": { "const": "https://rarediseases.info.nih.gov/diseases/" }
+      }
+    },
+    "category_id": {
+      "type": "string",
+      "pattern": "^rare_cat_[a-z0-9_]+$",
+      "description": "Unique category identifier with rare_ namespace prefix"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable category name",
+      "examples": ["Neuromuscular Disorders", "Inborn Errors of Metabolism", "Connective Tissue Disorders"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Clinical description of the disease category"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this category definition"
+    },
+    "clustering": {
+      "type": "object",
+      "description": "Parameters from the Sanjak et al. clustering that produced this category",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["node2vec_kmeans", "manual_expert", "hybrid"],
+          "description": "Clustering method used"
+        },
+        "k": { "type": "integer", "description": "Number of clusters (K in K-means)" },
+        "embedding_dim": { "type": "integer", "description": "node2vec embedding dimensionality" },
+        "silhouette_score": { "type": "number", "description": "Cluster quality metric" },
+        "source_graph_version": { "type": "string", "description": "Version of the HPO/ORDO/Mondo graph used" }
+      }
+    },
+    "diseases": {
+      "type": "array",
+      "description": "Diseases belonging to this category",
+      "items": {
+        "type": "object",
+        "required": ["disease_id", "name"],
+        "properties": {
+          "disease_id": {
+            "type": "string",
+            "description": "Disease identifier (ORDO, OMIM, Mondo, or GARD ID)"
+          },
+          "name": { "type": "string" },
+          "ordo_id": { "type": "string", "pattern": "^Orphanet_\\d+$" },
+          "omim_id": { "type": "string", "pattern": "^\\d{6}$" },
+          "mondo_id": { "type": "string", "pattern": "^MONDO:\\d{7}$" },
+          "gard_id": { "type": "string" },
+          "prevalence_class": {
+            "type": "string",
+            "enum": ["ultra_rare", "rare", "uncommon", "unknown"],
+            "description": "Prevalence classification"
+          },
+          "inheritance_patterns": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["autosomal_dominant", "autosomal_recessive", "x_linked", "x_linked_dominant", "x_linked_recessive", "mitochondrial", "multifactorial", "unknown"]
+            }
+          }
+        }
+      }
+    },
+    "phenotypic_features": {
+      "type": "array",
+      "description": "Shared HPO phenotypic features that define this category",
+      "items": {
+        "type": "object",
+        "required": ["hpo_id", "term"],
+        "properties": {
+          "hpo_id": {
+            "type": "string",
+            "pattern": "^HP:\\d{7}$",
+            "description": "HPO term identifier"
+          },
+          "term": { "type": "string", "description": "HPO term name" },
+          "frequency": {
+            "type": "string",
+            "enum": ["obligate", "very_frequent", "frequent", "occasional", "very_rare", "excluded"],
+            "description": "Frequency of this phenotype across category diseases"
+          },
+          "specificity_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "How specific this feature is to this category vs. others"
+          }
+        }
+      }
+    },
+    "genetic_features": {
+      "type": "array",
+      "description": "Shared genetic features (genes, pathways, chromosomal regions)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gene_symbol": { "type": "string" },
+          "ensembl_id": { "type": "string" },
+          "pathway": { "type": "string" },
+          "chromosomal_region": { "type": "string" }
+        }
+      }
+    },
+    "diagnostic_approach": {
+      "type": "object",
+      "description": "Recommended diagnostic approach for this category",
+      "properties": {
+        "primary_tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Primary diagnostic tools (references to clinical_tool schema)"
+        },
+        "recommended_panels": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Recommended gene panels (PanelApp IDs)"
+        },
+        "key_biomarkers": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "case_types": {
+      "type": "object",
+      "description": "Types of cases this category handles",
+      "properties": {
+        "diagnosed": { "type": "boolean", "description": "Handles cases with confirmed diagnosis" },
+        "undiagnosed": { "type": "boolean", "description": "Handles undiagnosed cases" },
+        "phenotype_only": { "type": "boolean", "description": "Handles cases with phenotype but no genetic data" }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "description": "Category statistics",
+      "properties": {
+        "disease_count": { "type": "integer" },
+        "estimated_global_prevalence": { "type": "string" },
+        "rarearena_case_count": { "type": "integer", "description": "Cases in RareArena matching this category" },
+        "rarearena_coverage_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "adna": {
+      "type": "object",
+      "description": "aDNA metadata envelope",
+      "properties": {
+        "type": { "const": "rare_patient_category" },
+        "namespace": { "const": "rare_" },
+        "triad": { "const": "what" },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "last_edited_by": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

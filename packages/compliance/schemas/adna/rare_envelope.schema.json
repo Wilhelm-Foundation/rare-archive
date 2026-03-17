@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-compliance/schemas/adna/rare_envelope.schema.json",
+  "title": "Rare Archive aDNA Envelope",
+  "description": "aDNA metadata envelope for Rare AI Archive artifacts. Extends Lattice Protocol ObjectMetadata with rare_ namespace fields.",
+  "type": "object",
+  "required": ["name", "version", "type", "namespace", "triad", "created", "updated", "last_edited_by"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "URL-safe artifact name (underscores, no hyphens)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "rare_patient_category",
+        "rare_clinical_tool",
+        "rare_model",
+        "rare_dataset",
+        "rare_evaluation",
+        "rare_preference"
+      ],
+      "description": "aDNA entity type with rare_ namespace prefix"
+    },
+    "namespace": {
+      "const": "rare_",
+      "description": "aDNA namespace (always rare_ for Archive artifacts)"
+    },
+    "triad": {
+      "type": "string",
+      "enum": ["what", "how", "who"],
+      "description": "aDNA triad leg classification"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Last modification date (YYYY-MM-DD)"
+    },
+    "last_edited_by": {
+      "type": "string",
+      "description": "Agent or person who last modified this artifact"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Classification tags"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable description (required for FAIR F2)"
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier (required for FAIR R1)"
+    },
+    "creators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "orcid": { "type": "string" },
+          "affiliation": { "type": "string" },
+          "role": { "type": "string", "default": "creator" }
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 3,
+      "description": "Semantic keywords for discoverability (FAIR F4)"
+    },
+    "persistent_id": {
+      "type": "string",
+      "description": "DOI, content hash, or DID (FAIR F1)"
+    },
+    "references": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Cross-references to related artifacts (FAIR I3)"
+    },
+    "module_type": {
+      "type": "string",
+      "enum": ["model", "tool", "model_wrapper", "preprocessor", "postprocessor", "mcp_server"],
+      "description": "Module type discriminator (when triad=what and type involves modules)"
+    },
+    "dataset_class": {
+      "type": "string",
+      "enum": ["benchmark", "training_data", "reference", "target", "build_kit"],
+      "description": "Dataset class discriminator (when type=rare_dataset)"
+    },
+    "lattice_protocol": {
+      "type": "object",
+      "description": "Lattice Protocol integration metadata",
+      "properties": {
+        "object_type": {
+          "type": "string",
+          "enum": ["dataset", "module", "lattice", "agent"]
+        },
+        "schema_version": { "type": "string", "default": "1.0" },
+        "fair_score": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  }
+}

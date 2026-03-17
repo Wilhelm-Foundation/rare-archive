@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-ontology/schemas/model.schema.json",
+  "title": "Model",
+  "description": "Tracks every HuggingFace model variant in the Rare AI Archive. Multi-dimensional: base architecture, parameters, quantization, LoRA stage, patient category, tool specialization, deployment tier, ELO scores, RareArena metrics.",
+  "type": "object",
+  "required": ["model_id", "name", "version", "base_model", "training_stage"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "properties": {
+        "@vocab": { "const": "https://wilhelm-foundation.github.io/rare-archive-ontology/ns/" }
+      }
+    },
+    "model_id": {
+      "type": "string",
+      "pattern": "^rare_model_[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "HuggingFace model name",
+      "examples": ["rare-archive-qwen3.5-4b-neuromuscular-sft-lora-v1"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "base_model": {
+      "type": "object",
+      "required": ["family", "size", "architecture"],
+      "properties": {
+        "family": { "type": "string", "examples": ["qwen3.5"] },
+        "size": { "type": "string", "examples": ["4b", "9b", "27b", "35b-a3b"] },
+        "architecture": {
+          "type": "string",
+          "enum": ["dense", "moe"],
+          "description": "Dense transformer or Mixture of Experts"
+        },
+        "active_params": {
+          "type": "string",
+          "description": "Active parameters for MoE models (e.g., '3b' for 35B-A3B)"
+        },
+        "context_length": { "type": "integer", "examples": [262144] },
+        "attention_type": {
+          "type": "string",
+          "examples": ["gated_deltanet_hybrid"],
+          "description": "Attention mechanism"
+        },
+        "hf_repo": {
+          "type": "string",
+          "description": "Base model HuggingFace repo ID",
+          "examples": ["Qwen/Qwen3.5-4B"]
+        },
+        "license": { "type": "string", "examples": ["Apache-2.0"] }
+      }
+    },
+    "training_stage": {
+      "type": "object",
+      "required": ["stage", "method"],
+      "properties": {
+        "stage": {
+          "type": "integer",
+          "enum": [1, 2, 3, 4],
+          "description": "Training stage: 1=SFT, 2=Tool-Use SFT, 3=DPO/GRPO, 4=Progressive RL"
+        },
+        "method": {
+          "type": "string",
+          "enum": ["sft", "tool_use_sft", "dpo", "grpo", "progressive_rl"]
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["unsloth", "swift"],
+          "description": "Training framework (Unsloth for dense, Swift for MoE)"
+        },
+        "lora_config": {
+          "type": "object",
+          "properties": {
+            "rank": { "type": "integer", "examples": [64] },
+            "alpha": { "type": "integer", "examples": [128] },
+            "target_modules": { "type": "array", "items": { "type": "string" } },
+            "precision": { "type": "string", "enum": ["4bit", "8bit", "bf16", "fp16"] }
+          }
+        },
+        "data_sources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "HuggingFace dataset IDs used for training"
+        },
+        "training_config_ref": {
+          "type": "string",
+          "description": "Path to training config YAML"
+        }
+      }
+    },
+    "patient_category": {
+      "type": "string",
+      "description": "Patient category this model specializes in (null for general)"
+    },
+    "tool_specialization": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Clinical tools this model is trained to use"
+    },
+    "quantization": {
+      "type": "object",
+      "description": "GGUF quantization details (null for LoRA-only)",
+      "properties": {
+        "format": { "type": "string", "enum": ["gguf", "gptq", "awq", "none"] },
+        "method": {
+          "type": "string",
+          "enum": ["Q4_K_M", "Q5_K_M", "Q6_K", "Q8_0", "F16"],
+          "description": "Quantization method"
+        },
+        "size_gb": { "type": "number" },
+        "perplexity_delta": {
+          "type": "number",
+          "description": "Perplexity change vs. full precision (should be small positive)"
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["L1", "L2", "L3"],
+          "description": "Target deployment tier"
+        },
+        "min_vram_gb": { "type": "number" },
+        "recommended_vram_gb": { "type": "number" },
+        "inference_engine": {
+          "type": "string",
+          "enum": ["llama.cpp", "vllm", "transformers"],
+          "description": "Recommended inference engine"
+        },
+        "serving_port": { "type": "integer" }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "description": "Evaluation results",
+      "properties": {
+        "rarearena": {
+          "type": "object",
+          "properties": {
+            "top_1_accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+            "top_5_accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+            "mean_score": { "type": "number", "minimum": 0, "maximum": 2 },
+            "split": { "type": "string", "enum": ["rds", "rdc"] },
+            "eval_date": { "type": "string", "format": "date" }
+          }
+        },
+        "elo": {
+          "type": "object",
+          "description": "Multi-dimensional ELO ratings",
+          "properties": {
+            "overall": { "type": "number" },
+            "by_category": {
+              "type": "object",
+              "additionalProperties": { "type": "number" }
+            },
+            "by_dimension": {
+              "type": "object",
+              "properties": {
+                "diagnostic_accuracy": { "type": "number" },
+                "reasoning_quality": { "type": "number" },
+                "tool_usage": { "type": "number" },
+                "safety": { "type": "number" }
+              }
+            },
+            "total_comparisons": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "description": "Published artifact locations",
+      "properties": {
+        "lora_hf_repo": { "type": "string", "description": "HF repo for LoRA adapter" },
+        "gguf_hf_repo": { "type": "string", "description": "HF repo for GGUF file" },
+        "lora_sha256": { "type": "string" },
+        "gguf_sha256": { "type": "string" }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "description": "Model lineage and provenance",
+      "properties": {
+        "parent_model_id": { "type": "string", "description": "Previous stage model ID" },
+        "training_run_id": { "type": "string" },
+        "training_date": { "type": "string", "format": "date" },
+        "training_duration_hours": { "type": "number" },
+        "hardware": { "type": "string", "examples": ["4xA100-80GB"] }
+      }
+    },
+    "adna": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "rare_model" },
+        "namespace": { "const": "rare_" },
+        "triad": { "const": "what" },
+        "module_type": { "const": "model" },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "last_edited_by": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

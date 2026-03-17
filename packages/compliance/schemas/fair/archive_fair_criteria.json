@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rare Archive FAIR Criteria",
+  "description": "FAIR scoring criteria for Rare AI Archive artifacts, extending Lattice Protocol base criteria.",
+  "version": "1.0.0",
+  "base_criteria_ref": "lattice-protocol/marketplace/fair/criteria.py",
+  "base_total_weight": 11.2,
+  "archive_extensions": [
+    {
+      "id": "RA-F1",
+      "name": "Ontology Grounding",
+      "category": "findable",
+      "weight": 0.8,
+      "required_for_publication": true,
+      "description": "Artifact references valid patient categories, clinical tools, or disease identifiers from the Archive ontology",
+      "check": "All category_id, tool_id, disease_id references resolve to valid ontology entries"
+    },
+    {
+      "id": "RA-A1",
+      "name": "HuggingFace Published",
+      "category": "accessible",
+      "weight": 0.6,
+      "required_for_publication": false,
+      "description": "Artifact is published to the wilhelm-foundation HuggingFace organization",
+      "check": "HuggingFace repo_id exists and is accessible"
+    },
+    {
+      "id": "RA-I1",
+      "name": "aDNA Envelope Valid",
+      "category": "interoperable",
+      "weight": 1.0,
+      "required_for_publication": true,
+      "description": "Artifact has valid aDNA envelope with rare_ namespace",
+      "check": "Validates against rare_envelope.schema.json"
+    },
+    {
+      "id": "RA-I2",
+      "name": "Cross-Reference Integrity",
+      "category": "interoperable",
+      "weight": 0.6,
+      "required_for_publication": false,
+      "description": "All cross-references to other Archive artifacts are valid",
+      "check": "Referenced model_id, dataset_id, tool_id exist in their respective repos"
+    },
+    {
+      "id": "RA-R1",
+      "name": "PHI Governance",
+      "category": "reusable",
+      "weight": 1.0,
+      "required_for_publication": true,
+      "description": "Datasets declare PHI status; models declare training data PHI status",
+      "check": "phi_status field present and valid for all dataset-type artifacts"
+    },
+    {
+      "id": "RA-R2",
+      "name": "Training Provenance",
+      "category": "reusable",
+      "weight": 0.8,
+      "required_for_publication": false,
+      "description": "Models include complete training lineage (parent model, stage, data sources)",
+      "check": "lineage.parent_model_id and training_stage.data_sources are present"
+    }
+  ],
+  "archive_total_weight": 4.8,
+  "combined_total_weight": 16.0,
+  "required_for_publication": ["RA-F1", "RA-I1", "RA-R1"]
+}

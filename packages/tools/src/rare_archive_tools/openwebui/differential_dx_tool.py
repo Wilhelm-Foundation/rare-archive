@@ -1,0 +1,82 @@
+"""
+title: Differential Diagnosis
+description: Generate ranked differential diagnoses using multiple clinical databases
+author: Wilhelm Foundation
+version: 0.1.0
+license: Apache-2.0
+"""
+
+import json
+
+import httpx
+
+
+class Tools:
+    def __init__(self):
+        self.hpo_url = "https://ontology.jax.org/api/hp/"
+
+    async def differential_diagnosis(
+        self,
+        symptoms: str,
+        age: str = "",
+        sex: str = "",
+        __event_emitter__=None,
+    ) -> str:
+        """
+        Generate a ranked differential diagnosis based on clinical symptoms using HPO term matching.
+
+        :param symptoms: Comma-separated list of symptoms or HPO terms
+        :param age: Patient age (optional, e.g., '5 years', 'neonatal')
+        :param sex: Patient sex (optional, 'male' or 'female')
+        :return: JSON string with ranked differential diagnoses
+        """
+        if __event_emitter__:
+            await __event_emitter__({"type": "status", "data": {"description": "Analyzing symptoms..."}})
+
+        symptom_list = [s.strip() for s in symptoms.split(",")]
+
+        # Resolve symptoms to HPO terms
+        hpo_terms = []
+        async with httpx.AsyncClient() as client:
+            for symptom in symptom_list:
+                if symptom.startswith("HP:"):
+                    hpo_terms.append(symptom)
+                else:
+                    resp = await client.get(f"{self.hpo_url}search", params={"q": symptom, "max": 1})
+                    results = resp.json()
+                    terms = results.get("terms", results.get("results", []))
+                    if terms:
+                        hpo_terms.append(terms[0].get("id", symptom))
+
+        if __event_emitter__:
+            await __event_emitter__({"type": "status", "data": {"description": f"Resolved {len(hpo_terms)} HPO terms, computing differentials..."}})
+
+        # Get diseases for each HPO term
+        disease_scores: dict[str, float] = {}
+        async with httpx.AsyncClient() as client:
+            for term in hpo_terms[:10]:
+                try:
+                    resp = await client.get(f"{self.hpo_url}terms/{term}/diseases")
+                    data = resp.json()
+                    diseases = data.get("diseases", data.get("associations", []))
+                    for d in diseases:
+                        name = d.get("diseaseName", d.get("name", "Unknown"))
+                        disease_scores[name] = disease_scores.get(name, 0) + 1
+                except Exception:
+                    continue
+
+        # Rank by number of matching HPO terms
+        ranked = sorted(disease_scores.items(), key=lambda x: x[1], reverse=True)
+
+        if __event_emitter__:
+            await __event_emitter__({"type": "status", "data": {"done": True}})
+
+        return json.dumps({
+            "input_symptoms": symptom_list,
+            "resolved_hpo_terms": hpo_terms,
+            "differentials": [
+                {"rank": i + 1, "disease": name, "matching_terms": int(score)}
+                for i, (name, score) in enumerate(ranked[:20])
+            ],
+            "note": "Ranked by number of matching HPO terms. Clinical judgement required.",
+        }, indent=2)

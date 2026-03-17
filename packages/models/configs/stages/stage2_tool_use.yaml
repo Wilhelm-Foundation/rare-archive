@@ -1,0 +1,10 @@
+# Stage 2: Tool-Use SFT — Agentic diagnostic tool invocation
+num_train_epochs: 2
+warmup_ratio: 0.05
+weight_decay: 0.01
+lr_scheduler_type: "cosine"
+
+train_data: "data/tool_use_traces.jsonl"
+eval_data: "data/tool_use_eval.jsonl"
+
+output_dir: "outputs/stage2_tool_use"

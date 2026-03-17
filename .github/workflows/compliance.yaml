@@ -1,0 +1,50 @@
+name: Compliance
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  adna-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install pyyaml
+      - name: Validate aDNA triads
+        run: python scripts/validate_archive.py .
+      - name: Validate JSON schemas
+        run: |
+          python -c "
+          import json, pathlib, sys
+          errors = []
+          for f in pathlib.Path('.').rglob('*.schema.json'):
+              try:
+                  json.load(open(f))
+              except json.JSONDecodeError as e:
+                  errors.append(f'{f}: {e}')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print(f'All JSON schemas valid')
+          "
+      - name: Validate YAML files
+        run: |
+          python -c "
+          import yaml, pathlib, sys
+          errors = []
+          for f in pathlib.Path('.').rglob('*.yaml'):
+              if '.git' in str(f):
+                  continue
+              try:
+                  yaml.safe_load(open(f))
+              except yaml.YAMLError as e:
+                  errors.append(f'{f}: {e}')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print(f'All YAML files valid')
+          "

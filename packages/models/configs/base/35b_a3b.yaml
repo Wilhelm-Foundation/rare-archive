@@ -1,0 +1,24 @@
+# Qwen3.5-35B-A3B MoE base configuration
+# Uses Swift (bf16 LoRA) — BitsAndBytes MoE QLoRA 4-bit is broken
+model_name: "Qwen/Qwen3.5-35B-A3B"
+model_size: "35b-a3b"
+architecture: "moe"
+
+lora_rank: 32
+lora_alpha: 64
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+
+max_seq_length: 4096
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+learning_rate: 1e-4
+bf16: true
+gradient_checkpointing: true
+
+# MoE uses bf16 LoRA via Swift, not QLoRA
+load_in_4bit: false

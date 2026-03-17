@@ -1,0 +1,49 @@
+# Mondo Disease Ontology Crosswalk
+# Maps between Mondo, ORDO, OMIM, GARD, and other disease identifiers
+
+alignment:
+  name: mondo_crosswalk
+  version: "1.0.0"
+  description: "Cross-reference mapping via Mondo Disease Ontology for disease identifier resolution"
+
+  sources:
+    mondo:
+      name: "Mondo Disease Ontology"
+      url: "https://mondo.monarchinitiative.org/"
+      download_url: "https://github.com/monarch-initiative/mondo/releases/latest/download/mondo.json"
+      format: json
+
+  mappings:
+    - from: mondo
+      to: ordo
+      predicate: "skos:exactMatch"
+      description: "Mondo → Orphanet ORDO exact matches"
+
+    - from: mondo
+      to: omim
+      predicate: "skos:exactMatch"
+      description: "Mondo → OMIM exact matches"
+
+    - from: mondo
+      to: gard
+      predicate: "skos:exactMatch"
+      description: "Mondo → NCATS GARD exact matches"
+
+    - from: mondo
+      to: mesh
+      predicate: "skos:closeMatch"
+      description: "Mondo → MeSH close matches"
+
+    - from: mondo
+      to: doid
+      predicate: "skos:exactMatch"
+      description: "Mondo → Disease Ontology exact matches"
+
+  usage:
+    - purpose: "Resolve disease identifiers across RareArena cases (which use mixed ID systems)"
+    - purpose: "Map patient category diseases to canonical identifiers"
+    - purpose: "Link evaluation results across naming conventions"
+
+  download_scripts:
+    - name: download_mondo
+      command: "wget -O data/mondo.json https://github.com/monarch-initiative/mondo/releases/latest/download/mondo.json"

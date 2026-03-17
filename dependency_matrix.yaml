@@ -1,0 +1,94 @@
+# Rare AI Archive — Dependency Matrix
+# Defines build order and inter-package dependencies
+
+version: "1.0.0"
+
+build_order:
+  - tier: 0
+    packages: [packages/compliance, packages/ontology]
+    description: "Foundation — no inter-package dependencies"
+
+  - tier: 1
+    packages: [packages/datasets, packages/tools]
+    description: "Data + tools — depend on ontology"
+
+  - tier: 2
+    packages: [packages/models]
+    description: "Training — depends on ontology + datasets"
+
+  - tier: 3
+    packages: [deploy, packages/rlhf]
+    description: "Deployment + alignment — depends on models + tools"
+
+dependencies:
+  packages/ontology:
+    requires: []
+    publishes:
+      - type: python_package
+        name: rare_archive_ontology
+        artifacts: [schemas, alignment_maps, clustering]
+
+  packages/compliance:
+    requires: []
+    publishes:
+      - type: github_action
+        name: validate-archive-compliance
+
+  packages/datasets:
+    requires:
+      - package: packages/ontology
+        type: python_package
+        usage: "Patient category assignment, schema validation"
+    publishes:
+      - type: huggingface_dataset
+        names: [rare-archive-eval-rarearena-rds, rare-archive-eval-rarearena-rdc]
+
+  packages/models:
+    requires:
+      - package: packages/ontology
+        type: python_package
+        usage: "Model metadata, category-specific configs"
+      - package: packages/datasets
+        type: huggingface_dataset
+        usage: "Training and evaluation data"
+    publishes:
+      - type: huggingface_model
+        pattern: "rare-archive-qwen3.5-{size}-{category}-{stage}-lora-v{version}"
+      - type: huggingface_model
+        pattern: "rare-archive-qwen3.5-{size}-{quant}-gguf"
+
+  packages/tools:
+    requires:
+      - package: packages/ontology
+        type: python_package
+        usage: "Tool registry schemas, clinical tool definitions"
+    publishes:
+      - type: openwebui_tools
+        names: [clinvar, orphanet, panelapp, gnomad, hpo, pubmed, differential_dx]
+      - type: mcp_servers
+
+  deploy:
+    requires:
+      - package: packages/models
+        type: huggingface_model
+        usage: "GGUF models for llama-server"
+      - package: packages/tools
+        type: openwebui_tools
+        usage: "Clinical tools for OpenWebUI"
+    publishes:
+      - type: docker_compose_overlay
+        name: docker-compose.rare-archive.yaml
+
+  packages/rlhf:
+    requires:
+      - package: packages/ontology
+        type: python_package
+        usage: "Patient category matching, annotation schemas"
+      - package: packages/models
+        type: huggingface_model
+        usage: "Arena model serving"
+    publishes:
+      - type: huggingface_dataset
+        name: rare-archive-rlhf-preferences
+      - type: fastapi_service
+        name: archive-api

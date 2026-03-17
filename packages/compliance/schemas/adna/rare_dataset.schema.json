@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-compliance/schemas/adna/rare_dataset.schema.json",
+  "title": "Rare Archive Dataset Metadata",
+  "description": "aDNA schema for Rare Archive datasets. Extends Lattice Protocol DatasetMetadata.",
+  "allOf": [
+    { "$ref": "rare_envelope.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "row_count": { "type": "integer" },
+        "size_bytes": { "type": "integer" },
+        "data_type": {
+          "type": "string",
+          "enum": ["text", "tabular", "multimodal"],
+          "default": "text"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["jsonl", "parquet", "csv", "json"],
+          "default": "jsonl"
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA-256 checksum of the dataset"
+        },
+        "phi_status": {
+          "type": "string",
+          "enum": ["no_phi", "synthetic_only", "de_identified", "consented"],
+          "description": "Protected Health Information classification"
+        },
+        "consent_governance": {
+          "type": "object",
+          "properties": {
+            "irb_protocol": { "type": "string" },
+            "data_use_agreement": { "type": "string" },
+            "retention_policy": { "type": "string" }
+          }
+        }
+      }
+    }
+  ]
+}

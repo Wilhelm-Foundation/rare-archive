@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "description": "Rare AI Archive — GGUF Model Catalog",
+  "organization": "wilhelm-foundation",
+  "models": [
+    {
+      "name": "qwen3.5-35b-a3b-q8_0",
+      "filename": "qwen3.5-35b-a3b-q8_0.gguf",
+      "hf_repo": "wilhelm-foundation/rare-archive-qwen3.5-35b-a3b-q8_0-gguf",
+      "hf_file": "qwen3.5-35b-a3b-q8_0.gguf",
+      "base_model": "Qwen/Qwen3.5-35B-A3B",
+      "architecture": "moe",
+      "active_params": "3b",
+      "quantization": "Q8_0",
+      "size_gb": 20.0,
+      "deployment_tier": "L2",
+      "serving_port": 8082,
+      "role": "primary",
+      "sha256": ""
+    },
+    {
+      "name": "qwen3.5-27b-q8_0",
+      "filename": "qwen3.5-27b-q8_0.gguf",
+      "hf_repo": "wilhelm-foundation/rare-archive-qwen3.5-27b-q8_0-gguf",
+      "hf_file": "qwen3.5-27b-q8_0.gguf",
+      "base_model": "Qwen/Qwen3.5-27B",
+      "architecture": "dense",
+      "quantization": "Q8_0",
+      "size_gb": 16.0,
+      "deployment_tier": "L2",
+      "serving_port": 8083,
+      "role": "arena_challenger",
+      "sha256": ""
+    },
+    {
+      "name": "qwen3.5-9b-q5_k_m",
+      "filename": "qwen3.5-9b-q5_k_m.gguf",
+      "hf_repo": "wilhelm-foundation/rare-archive-qwen3.5-9b-q5_k_m-gguf",
+      "hf_file": "qwen3.5-9b-q5_k_m.gguf",
+      "base_model": "Qwen/Qwen3.5-9B",
+      "architecture": "dense",
+      "quantization": "Q5_K_M",
+      "size_gb": 6.5,
+      "deployment_tier": "L1",
+      "sha256": ""
+    },
+    {
+      "name": "qwen3.5-4b-q5_k_m",
+      "filename": "qwen3.5-4b-q5_k_m.gguf",
+      "hf_repo": "wilhelm-foundation/rare-archive-qwen3.5-4b-q5_k_m-gguf",
+      "hf_file": "qwen3.5-4b-q5_k_m.gguf",
+      "base_model": "Qwen/Qwen3.5-4B",
+      "architecture": "dense",
+      "quantization": "Q5_K_M",
+      "size_gb": 3.0,
+      "deployment_tier": "L1",
+      "sha256": ""
+    }
+  ]
+}
