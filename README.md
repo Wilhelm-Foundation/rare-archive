@@ -6,7 +6,7 @@
 
 ---
 
-300 million people worldwide live with a rare disease. The average diagnostic odyssey takes 5–7 years. During that time, families navigate a maze of specialists, tests, and uncertainty — often without ever receiving a diagnosis.
+X million people worldwide live with a rare disease. The average diagnostic odyssey takes 5–7 years. During that time, families navigate a maze of specialists, tests, and uncertainty — often without ever receiving a diagnosis.
 
 The Rare AI Archive exists to close that gap.
 
