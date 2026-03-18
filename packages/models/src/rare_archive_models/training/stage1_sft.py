@@ -58,6 +58,9 @@ class SFTConfig:
     bnb_4bit_quant_type: str = "nf4"
     bnb_4bit_compute_dtype: str = "bfloat16"
 
+    # Logging
+    report_to: str = "tensorboard"
+
     # Output
     output_dir: str = "outputs/stage1_sft"
     hub_model_id: str = ""
@@ -188,7 +191,7 @@ def train_unsloth(config: SFTConfig) -> Path:
         eval_strategy="epoch" if eval_dataset else "no",
         max_seq_length=config.max_seq_length,
         dataset_text_field="text",
-        report_to="wandb",
+        report_to=config.report_to,
     )
 
     trainer = SFTTrainer(

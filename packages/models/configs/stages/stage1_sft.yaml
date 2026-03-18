@@ -5,7 +5,10 @@ weight_decay: 0.01
 lr_scheduler_type: "cosine"
 
 # Data (paths relative to workspace root)
-train_data: "data/rarearena_rds_train.jsonl"
-eval_data: "data/rarearena_rds_eval.jsonl"
+train_data: "data/combined_train.jsonl"
+eval_data: "data/combined_val.jsonl"
+
+# Logging
+report_to: "tensorboard"
 
 output_dir: "outputs/stage1_sft"
