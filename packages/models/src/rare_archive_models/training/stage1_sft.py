@@ -95,7 +95,18 @@ class SFTConfig:
                 data = yaml.safe_load(f) or {}
             config.update(data)
 
-        return cls(**{k: v for k, v in config.items() if k in cls.__dataclass_fields__})
+        # Coerce values to match dataclass field types (PyYAML 1.1 mis-parses e.g. 2e-4 as str)
+        coerced = {}
+        for k, v in config.items():
+            if k not in cls.__dataclass_fields__:
+                continue
+            expected = cls.__dataclass_fields__[k].type
+            if expected is float and isinstance(v, str):
+                v = float(v)
+            elif expected is int and isinstance(v, str):
+                v = int(v)
+            coerced[k] = v
+        return cls(**coerced)
 
 
 def load_training_data(
