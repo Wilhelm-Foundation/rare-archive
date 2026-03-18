@@ -33,6 +33,29 @@ HPO_FREQUENCY_MAP = {
 }
 
 
+def _parse_frequency(freq_str: str) -> str:
+    """Parse Orphadata frequency string to our qualifier.
+
+    API returns strings like "Very frequent (99-80%)", "Frequent (79-30%)", etc.
+    """
+    if not freq_str:
+        return "frequent"
+    freq_lower = freq_str.lower()
+    if "obligate" in freq_lower:
+        return "obligate"
+    elif "very frequent" in freq_lower:
+        return "very_frequent"
+    elif "frequent" in freq_lower:
+        return "frequent"
+    elif "occasional" in freq_lower:
+        return "occasional"
+    elif "very rare" in freq_lower:
+        return "very_rare"
+    elif "excluded" in freq_lower:
+        return "excluded"
+    return "frequent"
+
+
 def load_disease_index(cases_jsonl: Path) -> dict[str, dict]:
     """Extract unique diseases from ingested cases JSONL.
 
@@ -99,38 +122,31 @@ def fetch_phenotypes(orpha_id: str) -> list[dict] | None:
         return None
 
     # Parse the Orphadata response format
+    # Structure: data.results.Disorder.HPODisorderAssociation[]
     phenotypes = []
-    results = data.get("data", {}).get("results", [])
-    if isinstance(results, dict):
-        results = [results]
+    results = data.get("data", {}).get("results", {})
+    if isinstance(results, list):
+        results = results[0] if results else {}
 
-    for result in results:
-        features = result.get("DisorderDiseaseFunctionAssociationList", [])
-        if isinstance(features, dict):
-            features = features.get("DisorderDiseaseFunctionAssociation", [])
+    disorder = results.get("Disorder", results)
+    associations = disorder.get("HPODisorderAssociation", [])
+    if isinstance(associations, dict):
+        associations = [associations]
 
-        for feat in features:
-            hpo_info = feat.get("DiseaseFreeText", {})
-            if isinstance(hpo_info, list):
-                continue
+    for assoc in associations:
+        hpo_data = assoc.get("HPO", {})
+        hpo_id = hpo_data.get("HPOId", "")
+        hpo_term = hpo_data.get("HPOTerm", "")
 
-            hpo_data = feat.get("HPO", feat.get("DisorderDiseaseFunctionAssociation", {}))
-            if not hpo_data:
-                hpo_data = feat
+        freq_str = assoc.get("HPOFrequency", "")
+        frequency = _parse_frequency(freq_str)
 
-            hpo_id = hpo_data.get("HPOId", "")
-            hpo_term = hpo_data.get("HPOTerm", "")
-
-            freq_data = feat.get("HPOFrequency", {})
-            freq_id = freq_data.get("HPOId", "") if isinstance(freq_data, dict) else ""
-            frequency = HPO_FREQUENCY_MAP.get(freq_id, "frequent")
-
-            if hpo_id:
-                phenotypes.append({
-                    "hpo_id": hpo_id,
-                    "term": hpo_term,
-                    "frequency": frequency,
-                })
+        if hpo_id:
+            phenotypes.append({
+                "hpo_id": hpo_id,
+                "term": hpo_term,
+                "frequency": frequency,
+            })
 
     return phenotypes
 
