@@ -87,10 +87,18 @@ def load_chat_eval_cases(
     return cases
 
 
+def _get_text_tokenizer(tokenizer):
+    """Extract the text tokenizer from a processor (VL models) or return as-is."""
+    if hasattr(tokenizer, "tokenizer"):
+        # Processor wrapping a tokenizer (e.g., Qwen3VLProcessor)
+        return tokenizer.tokenizer
+    return tokenizer
+
+
 def load_model(model_name: str, adapter_path: str | None = None):
     """Load model via Unsloth, optionally merging a LoRA adapter.
 
-    Returns (model, tokenizer).
+    Returns (model, text_tokenizer).
     """
     from unsloth import FastLanguageModel
 
@@ -103,8 +111,9 @@ def load_model(model_name: str, adapter_path: str | None = None):
     )
 
     FastLanguageModel.for_inference(model)
-    logger.info("Model ready for inference")
-    return model, tokenizer
+    text_tokenizer = _get_text_tokenizer(tokenizer)
+    logger.info(f"Model ready for inference (tokenizer: {type(text_tokenizer).__name__})")
+    return model, text_tokenizer
 
 
 def make_model_fn(model, tokenizer, max_new_tokens: int = 512, temperature: float = 0.3):

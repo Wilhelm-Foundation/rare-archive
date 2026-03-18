@@ -147,6 +147,9 @@ def train_unsloth(config: SFTConfig) -> Path:
         load_in_4bit=config.load_in_4bit,
         dtype=torch.bfloat16 if config.bf16 else torch.float16,
     )
+    # Extract text tokenizer from processor (VL models like Qwen3.5)
+    if hasattr(tokenizer, "tokenizer"):
+        tokenizer = tokenizer.tokenizer
 
     logger.info(f"Applying LoRA: rank={config.lora_rank}, alpha={config.lora_alpha}")
     model = FastLanguageModel.get_peft_model(
