@@ -53,20 +53,28 @@ def parse_case(record: dict[str, Any], split: str) -> RareArenaCase:
     Handles multiple RareArena format variants:
     - v1: {input, output, disease_id, ...}
     - v2: {clinical_note, diagnosis, orpha_code, ...}
+    - v3: {case_report, diagnosis, Orpha_id, Orpha_name, _id, gender, ...} (actual RareArena data)
+         RDC variant adds test_results which are concatenated to the vignette.
     """
     case_id = (
         record.get("case_id")
         or record.get("id")
+        or record.get("_id")
         or f"{split}_{hash(json.dumps(record, sort_keys=True)) % 10**8:08d}"
     )
 
+    # Build vignette — for RDC, concatenate case_report + test_results
     vignette = (
         record.get("clinical_vignette")
         or record.get("input")
         or record.get("clinical_note")
+        or record.get("case_report")
         or record.get("prompt")
         or ""
     )
+    test_results = record.get("test_results")
+    if test_results and vignette == record.get("case_report"):
+        vignette = f"{vignette}\n\nTest Results:\n{test_results}"
 
     diagnosis = (
         record.get("ground_truth_diagnosis")
@@ -79,8 +87,14 @@ def parse_case(record: dict[str, Any], split: str) -> RareArenaCase:
     disease_id = (
         record.get("disease_id")
         or record.get("orpha_code")
+        or record.get("Orpha_id")
         or record.get("omim_id")
         or record.get("mondo_id")
+    )
+
+    disease_name = (
+        record.get("disease_name")
+        or record.get("Orpha_name")
     )
 
     hpo_terms = record.get("hpo_terms", record.get("phenotypes", []))
@@ -92,10 +106,10 @@ def parse_case(record: dict[str, Any], split: str) -> RareArenaCase:
         clinical_vignette=vignette,
         ground_truth_diagnosis=diagnosis,
         disease_id=disease_id,
-        disease_name=record.get("disease_name"),
+        disease_name=disease_name,
         hpo_terms=hpo_terms,
         age_of_onset=record.get("age_of_onset"),
-        sex=record.get("sex"),
+        sex=record.get("sex") or record.get("gender"),
         difficulty=record.get("difficulty"),
         split=split,
         raw_data=record,
