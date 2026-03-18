@@ -2,7 +2,7 @@
 title: Orphanet Disease Search
 description: Search Orphanet for rare disease information, prevalence, and associated genes
 author: Wilhelm Foundation
-version: 0.1.0
+version: 0.2.0
 license: Apache-2.0
 """
 
@@ -13,7 +13,7 @@ import httpx
 
 class Tools:
     def __init__(self):
-        self.base_url = "https://api.orphadata.com/rd-api/"
+        self.base_url = "https://api.orphadata.com/"
 
     async def orphanet_search(
         self,
@@ -31,21 +31,26 @@ class Tools:
 
         async with httpx.AsyncClient() as client:
             resp = await client.get(
-                f"{self.base_url}diseases/search",
-                params={"query": disease_name, "lang": "en"},
+                f"{self.base_url}rd-cross-referencing/orphacodes/names/{disease_name}",
             )
-            results = resp.json()
+            result = resp.json()
 
-        diseases = results.get("results", [])
-        if not diseases:
+        data = result.get("data", {})
+        if not data or data.get("__count", 0) == 0:
             return json.dumps({"found": False, "message": f"No Orphanet entries for '{disease_name}'"})
 
+        results = data.get("results", data)
+        name = results.get("Preferred term", disease_name)
+        orpha_code = results.get("ORPHAcode", "")
+
         if __event_emitter__:
-            await __event_emitter__({"type": "status", "data": {"description": f"Found {len(diseases)} results", "done": True}})
+            await __event_emitter__({"type": "status", "data": {"description": f"Found: {name} (ORPHA:{orpha_code})", "done": True}})
 
         return json.dumps({
             "found": True,
             "query": disease_name,
-            "total_results": len(diseases),
-            "diseases": diseases[:5],
+            "name": name,
+            "orpha_code": orpha_code,
+            "disorder_group": results.get("DisorderGroup", ""),
+            "external_references": results.get("ExternalReference", []),
         }, indent=2)

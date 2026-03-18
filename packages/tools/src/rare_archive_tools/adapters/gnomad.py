@@ -40,7 +40,6 @@ class GnomADAdapter(BaseAdapter):
                         id
                         ac
                         an
-                        af
                     }
                 }
                 exome {
@@ -51,7 +50,6 @@ class GnomADAdapter(BaseAdapter):
                         id
                         ac
                         an
-                        af
                     }
                 }
             }

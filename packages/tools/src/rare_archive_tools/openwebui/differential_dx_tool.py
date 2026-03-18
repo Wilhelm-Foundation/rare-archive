@@ -2,7 +2,7 @@
 title: Differential Diagnosis
 description: Generate ranked differential diagnoses using multiple clinical databases
 author: Wilhelm Foundation
-version: 0.1.0
+version: 0.2.0
 license: Apache-2.0
 """
 
@@ -14,6 +14,7 @@ import httpx
 class Tools:
     def __init__(self):
         self.hpo_url = "https://ontology.jax.org/api/hp/"
+        self.orphanet_url = "https://api.orphadata.com/"
 
     async def differential_diagnosis(
         self,
@@ -51,17 +52,21 @@ class Tools:
         if __event_emitter__:
             await __event_emitter__({"type": "status", "data": {"description": f"Resolved {len(hpo_terms)} HPO terms, computing differentials..."}})
 
-        # Get diseases for each HPO term
+        # Get diseases for each HPO term via Orphanet phenotype API
         disease_scores: dict[str, float] = {}
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30) as client:
             for term in hpo_terms[:10]:
                 try:
-                    resp = await client.get(f"{self.hpo_url}terms/{term}/diseases")
+                    resp = await client.get(f"{self.orphanet_url}rd-phenotypes/hpoids/{term}")
+                    if resp.status_code != 200:
+                        continue
                     data = resp.json()
-                    diseases = data.get("diseases", data.get("associations", []))
-                    for d in diseases:
-                        name = d.get("diseaseName", d.get("name", "Unknown"))
-                        disease_scores[name] = disease_scores.get(name, 0) + 1
+                    results = data.get("data", {}).get("results", [])
+                    for item in results:
+                        disorder = item.get("Disorder", {})
+                        name = disorder.get("Preferred term", "Unknown")
+                        if name != "Unknown":
+                            disease_scores[name] = disease_scores.get(name, 0) + 1
                 except Exception:
                     continue
 
@@ -78,5 +83,5 @@ class Tools:
                 {"rank": i + 1, "disease": name, "matching_terms": int(score)}
                 for i, (name, score) in enumerate(ranked[:20])
             ],
-            "note": "Ranked by number of matching HPO terms. Clinical judgement required.",
+            "note": "Ranked by number of matching HPO terms via Orphanet. Clinical judgement required.",
         }, indent=2)
