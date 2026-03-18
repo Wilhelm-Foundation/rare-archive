@@ -1,0 +1,14 @@
+# Inborn Errors of Metabolism (IEM) category specialization
+# Covers: lysosomal storage, organic acidemias, urea cycle defects,
+#         fatty acid oxidation disorders, mitochondrial diseases
+patient_category: "rare_cat_iem"
+
+# Data (override stage defaults — point to IEM-filtered subset)
+train_data: "data/iem_train.jsonl"
+eval_data: "data/iem_val.jsonl"
+
+# More epochs for smaller category dataset (~3K records)
+num_train_epochs: 5
+
+# Category-specific output
+output_dir: "outputs/stage1_sft_iem"
