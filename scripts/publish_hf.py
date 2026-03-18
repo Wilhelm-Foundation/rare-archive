@@ -59,7 +59,7 @@ ${description}
 
 ## Dataset Description
 
-- **Repository:** [wilhelm-foundation/${name}](https://huggingface.co/datasets/wilhelm-foundation/${name})
+- **Repository:** [Wilhelm-Foundation/${name}](https://huggingface.co/datasets/Wilhelm-Foundation/${name})
 - **License:** ${license}
 - **Version:** ${version}
 - **Part of:** [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive)
@@ -222,7 +222,7 @@ def publish_eval_rds(data_dir: Path) -> str:
     )
 
     return publish_dataset(
-        repo_id="wilhelm-foundation/rare-archive-eval-rarearena-rds",
+        repo_id="Wilhelm-Foundation/rare-archive-eval-rarearena-rds",
         files={"data/eval.jsonl": eval_file},
         readme_content=card,
     )
@@ -252,7 +252,7 @@ def publish_eval_rdc(data_dir: Path) -> str:
     )
 
     return publish_dataset(
-        repo_id="wilhelm-foundation/rare-archive-eval-rarearena-rdc",
+        repo_id="Wilhelm-Foundation/rare-archive-eval-rarearena-rdc",
         files={"data/eval.jsonl": eval_file},
         readme_content=card,
     )
@@ -287,7 +287,7 @@ def publish_synthetic(data_dir: Path) -> str:
         files["data/disease_profiles.jsonl"] = profiles_file
 
     return publish_dataset(
-        repo_id="wilhelm-foundation/rare-archive-synthetic-patients",
+        repo_id="Wilhelm-Foundation/rare-archive-synthetic-patients",
         files=files,
         readme_content=card,
     )
