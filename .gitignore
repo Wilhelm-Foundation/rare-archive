@@ -12,3 +12,5 @@ build/
 wandb/
 outputs/
 tests/e2e/screenshots/
+data/
+unsloth_compiled_cache/

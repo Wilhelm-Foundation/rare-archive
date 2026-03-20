@@ -106,11 +106,11 @@ def load_disease_index_from_cases(cases: list[dict]) -> dict[str, dict]:
 
 def fetch_phenotypes(orpha_id: str) -> list[dict] | None:
     """Fetch HPO phenotypes for a disease from Orphadata API."""
-    import httpx
+    import requests
 
     url = PHENOTYPE_URL.format(code=orpha_id)
     try:
-        resp = httpx.get(url, timeout=15.0, headers={
+        resp = requests.get(url, timeout=15.0, headers={
             "User-Agent": "RareArchiveEnrichment/0.1.0",
         })
         if resp.status_code == 404:
@@ -129,7 +129,7 @@ def fetch_phenotypes(orpha_id: str) -> list[dict] | None:
         results = results[0] if results else {}
 
     disorder = results.get("Disorder", results)
-    associations = disorder.get("HPODisorderAssociation", [])
+    associations = disorder.get("HPODisorderAssociation") or []
     if isinstance(associations, dict):
         associations = [associations]
 
