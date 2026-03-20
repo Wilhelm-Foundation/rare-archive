@@ -1,6 +1,6 @@
 # Rare Archive Models
 
-4-stage LoRA training pipeline, evaluation harness, and GGUF quantization for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive).
+4-stage LoRA training pipeline, evaluation harness, and GGUF quantization for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Training Pipeline
 

@@ -65,7 +65,7 @@ dependencies:
     publishes:
       - type: openwebui_tools
         names: [clinvar, orphanet, panelapp, gnomad, hpo, pubmed, differential_dx]
-      - type: mcp_servers
+      - type: mcp_servers  # planned — deferred to federation phase
 
   deploy:
     requires:

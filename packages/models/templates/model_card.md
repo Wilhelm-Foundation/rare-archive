@@ -6,7 +6,7 @@ tags:
   - rare-disease
   - clinical-diagnostics
   - lora
-  - rare-ai-archive
+  - rare-archive
   - {{ model_size }}
   - {{ training_stage }}
 language:
@@ -18,7 +18,7 @@ pipeline_tag: text-generation
 
 A LoRA adapter fine-tuned for rare disease diagnostic reasoning.
 
-**Part of the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive)** — a decentralized post-training ecosystem for rare genetic diseases.
+**Part of the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive)** — a decentralized post-training ecosystem for rare genetic diseases.
 
 ## Model Details
 
@@ -69,7 +69,7 @@ This model is intended for **research and educational purposes** in rare disease
 ## Citation
 
 ```bibtex
-@misc{rare-ai-archive-{{ model_name }},
+@misc{rare-archive-{{ model_name }},
   title={{{ model_name }}},
   author={Wilhelm Foundation},
   year={2026},

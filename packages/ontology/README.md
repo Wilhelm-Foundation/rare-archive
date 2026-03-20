@@ -1,6 +1,6 @@
 # Rare Archive Ontology
 
-Four ontology domains for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive):
+Four ontology domains for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive):
 
 1. **Patient Category** — Clusters of rare diseases grouped by shared phenotypic and genetic features
 2. **Clinical Tool** — Catalog of diagnostic tools with API specs and dependency graphs

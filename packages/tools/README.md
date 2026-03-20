@@ -1,6 +1,6 @@
 # Rare Archive Tool Harness
 
-Clinical diagnostic tool integrations for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive).
+Clinical diagnostic tool integrations for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Tools
 

@@ -8,7 +8,7 @@ tags:
   - rare-disease
   - clinical-diagnostics
   - {{ dataset_type }}
-  - rare-ai-archive
+  - rare-archive
 task_categories:
   - text-generation
   - question-answering
@@ -27,7 +27,7 @@ size_categories:
 - **Repository:** [wilhelm-foundation/{{ name }}](https://huggingface.co/datasets/wilhelm-foundation/{{ name }})
 - **License:** {{ license }}
 - **Version:** {{ version }}
-- **Part of:** [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive)
+- **Part of:** [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive)
 
 ## Dataset Structure
 
@@ -74,7 +74,7 @@ This dataset covers the following patient categories:
 If you use this dataset, please cite:
 
 ```bibtex
-@misc{rare-ai-archive-{{ name }},
+@misc{rare-archive-{{ name }},
   title={{{ name }}},
   author={Wilhelm Foundation},
   year={2026},

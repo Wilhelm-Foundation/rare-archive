@@ -1,6 +1,6 @@
 # Rare Archive RLHF
 
-RLHF portal backend for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive). Extends OpenWebUI Arena mode with multi-dimensional ELO tracking, expert matching, and preference data export.
+RLHF portal backend for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive). Extends OpenWebUI Arena mode with multi-dimensional ELO tracking, expert matching, and preference data export.
 
 ## Architecture
 

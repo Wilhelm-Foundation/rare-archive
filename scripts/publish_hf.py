@@ -43,7 +43,7 @@ tags:
   - rare-disease
   - clinical-diagnostics
   - ${dataset_type}
-  - rare-ai-archive
+  - rare-archive
 task_categories:
   - text-generation
   - question-answering
@@ -62,7 +62,7 @@ ${description}
 - **Repository:** [Wilhelm-Foundation/${name}](https://huggingface.co/datasets/Wilhelm-Foundation/${name})
 - **License:** ${license}
 - **Version:** ${version}
-- **Part of:** [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive)
+- **Part of:** [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive)
 
 ## Dataset Structure
 

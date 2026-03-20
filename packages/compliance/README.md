@@ -1,6 +1,6 @@
 # Rare Archive Compliance
 
-aDNA schema validation, FAIR scoring, and governance for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive).
+aDNA schema validation, FAIR scoring, and governance for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Schemas
 

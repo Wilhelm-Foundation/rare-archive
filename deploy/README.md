@@ -1,6 +1,6 @@
 # Rare Archive Deploy
 
-Docker Compose deployment overlays for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive).
+Docker Compose deployment overlays for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## L2 Deployment (Dell 4x A100-80GB)
 

@@ -1,6 +1,6 @@
 # Rare Archive Datasets
 
-Dataset curation pipelines for the [Rare AI Archive](https://github.com/wilhelm-foundation/rare-ai-archive).
+Dataset curation pipelines for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Pipelines
 
