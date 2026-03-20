@@ -30,7 +30,7 @@ Maps cases to ontology patient categories:
 ```python
 from rare_archive_datasets.assignment.category_mapper import map_batch
 
-mappings = map_batch(cases, categories_dir=Path("../rare-archive-ontology/schemas/categories/"))
+mappings = map_batch(cases, categories_dir=Path("../ontology/schemas/categories/"))
 ```
 
 ## Published Datasets (HuggingFace)

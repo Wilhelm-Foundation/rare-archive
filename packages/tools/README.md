@@ -5,14 +5,14 @@ Clinical diagnostic tool integrations for the [Rare AI Archive](https://github.c
 ## Tools
 
 | Tool | Source | OpenWebUI | MCP |
-|------|--------|-----------|-----|
-| ClinVar | NCBI E-Utils | clinvar_tool.py | planned |
-| Orphanet | Orphadata API | orphanet_tool.py | planned |
-| HPO | HPO JAX API | hpo_tool.py | planned |
-| PanelApp | Genomics England | panelapp_tool.py | planned |
-| gnomAD | gnomAD GraphQL | gnomad_tool.py | planned |
-| PubMed | NCBI E-Utils | pubmed_tool.py | planned |
-| Differential Dx | Composite | differential_dx_tool.py | planned |
+|------|--------|-----------|------|
+| ClinVar | NCBI E-Utils | clinvar_tool.py | — |
+| Orphanet | Orphadata API | orphanet_tool.py | — |
+| HPO | HPO JAX API | hpo_tool.py | — |
+| PanelApp | Genomics England | panelapp_tool.py | — |
+| gnomAD | gnomAD GraphQL | gnomad_tool.py | — |
+| PubMed | NCBI E-Utils | pubmed_tool.py | — |
+| Differential Dx | Composite | differential_dx_tool.py | — |
 
 ## Installation
 
@@ -35,6 +35,8 @@ result = clinvar.lookup("BRCA1 c.5266dupC")
 
 ### OpenWebUI
 Copy tool files from `src/rare_archive_tools/openwebui/` into OpenWebUI's tool directory.
+
+> **Note**: MCP tool server integration is deferred. All 7 tools are currently served as OpenWebUI native tools. MCP would require a separate server process and is tracked for future federation work.
 
 ## License
 

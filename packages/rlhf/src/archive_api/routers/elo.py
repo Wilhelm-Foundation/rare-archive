@@ -148,6 +148,10 @@ async def update_elo(
                 reasoning_quality_elo=settings.elo_initial_rating,
                 tool_usage_elo=settings.elo_initial_rating,
                 safety_elo=settings.elo_initial_rating,
+                total_comparisons=0,
+                wins=0,
+                losses=0,
+                ties=0,
             )
             db.add(rating)
         return rating

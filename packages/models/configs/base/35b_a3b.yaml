@@ -1,12 +1,14 @@
 # Qwen3.5-35B-A3B MoE base configuration
-# Uses Swift (bf16 LoRA) — BitsAndBytes MoE QLoRA 4-bit is broken
+# Uses Unsloth QLoRA (bf16) — loads in ~30s on A100-80GB
+# lora_dropout MUST be 0.0 for MoE (nonzero causes ParamWrapper gradient bugs)
+# TORCHDYNAMO_DISABLE=1 required at runtime
 model_name: "Qwen/Qwen3.5-35B-A3B"
 model_size: "35b-a3b"
 architecture: "moe"
 
 lora_rank: 32
 lora_alpha: 64
-lora_dropout: 0.05
+lora_dropout: 0.0
 target_modules:
   - q_proj
   - k_proj
@@ -20,5 +22,6 @@ learning_rate: 1e-4
 bf16: true
 gradient_checkpointing: true
 
-# MoE uses bf16 LoRA via Swift, not QLoRA
+# MoE uses Unsloth QLoRA (bf16 precision, not 4-bit despite config flag)
+# Trainable: 1.86B / 36.97B (5.04%). VRAM: ~72.3 GB on A100-80GB.
 load_in_4bit: false

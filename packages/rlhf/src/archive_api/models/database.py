@@ -91,6 +91,41 @@ class Evaluation(Base):
     expert = relationship("Expert", back_populates="evaluations")
 
 
+class Case(Base):
+    """Clinical case for arena evaluation."""
+    __tablename__ = "cases"
+
+    id = Column(Integer, primary_key=True)
+    case_id = Column(String(255), unique=True, nullable=False)
+    category = Column(String(255), nullable=False, default="general")
+    vignette = Column(Text, nullable=False)
+    known_diagnosis = Column(String(500))
+    difficulty = Column(String(50), default="medium")  # easy, medium, hard
+    source = Column(String(255))  # e.g. "combined_eval", "synthetic", "expert_submitted"
+    metadata_ = Column("metadata", JSON, default=dict)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class ClinicalFeedback(Base):
+    """Clinician feedback: corrections, annotations, suggestions."""
+    __tablename__ = "clinical_feedback"
+
+    id = Column(Integer, primary_key=True)
+    case_id = Column(String(255), ForeignKey("cases.case_id"), nullable=True)
+    evaluation_id = Column(Integer, ForeignKey("evaluations.id"), nullable=True)
+    expert_username = Column(String(255), nullable=False)
+
+    feedback_type = Column(String(50), nullable=False)
+    # diagnostic_correction | clinical_note | tool_suggestion | safety_concern
+
+    corrected_diagnosis = Column(String(500))
+    reasoning = Column(Text)
+    text = Column(Text)
+    severity = Column(String(50), default="info")  # info, warning, critical
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class PreferenceExport(Base):
     """Track preference data exports to HuggingFace."""
     __tablename__ = "preference_exports"

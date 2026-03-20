@@ -30,6 +30,7 @@ services:
       - LLAMA_ARG_HOST=0.0.0.0
       - LLAMA_ARG_PORT=8080
       - LLAMA_ARG_METRICS=true
+      - LLAMA_ARG_REASONING=off
     deploy:
       resources:
         reservations:
@@ -46,7 +47,7 @@ services:
     networks:
       - lattice-l2
 
-  # Arena challenger server — Qwen3.5-27B Q8_0
+  # Arena challenger server — Fine-tuned 4B SFT Q8_0
   llama-server-arena:
     image: ghcr.io/ggml-org/llama.cpp:server
     container_name: rare-archive-llama-arena
@@ -56,7 +57,7 @@ services:
     volumes:
       - ${MODELS_DIR:-/data/latlab/rare-archive/models}:/models:ro
     environment:
-      - LLAMA_ARG_MODEL=/models/${ARENA_MODEL:-qwen3.5-27b-q8_0.gguf}
+      - LLAMA_ARG_MODEL=/models/${ARENA_MODEL:-rare-archive-qwen-4b-sft-v1-Q8_0.gguf}
       - LLAMA_ARG_CTX_SIZE=${ARENA_CTX_SIZE:-8192}
       - LLAMA_ARG_N_GPU_LAYERS=99
       - LLAMA_ARG_PARALLEL=2
@@ -65,6 +66,7 @@ services:
       - LLAMA_ARG_HOST=0.0.0.0
       - LLAMA_ARG_PORT=8080
       - LLAMA_ARG_METRICS=true
+      - LLAMA_ARG_REASONING=off
     deploy:
       resources:
         reservations:
@@ -87,7 +89,7 @@ services:
     container_name: rare-archive-openwebui
     restart: unless-stopped
     ports:
-      - "3000:8080"
+      - "3100:8080"
     volumes:
       - ${DATA_DIR:-/data/latlab/rare-archive}/openwebui:/app/backend/data
     environment:
@@ -141,7 +143,7 @@ services:
     ports:
       - "8085:8000"
     environment:
-      - DATABASE_URL=postgresql://lattice:${POSTGRES_PASSWORD}@lattice-postgres:5432/rare_archive
+      - DATABASE_URL=postgresql+asyncpg://lattice:${POSTGRES_PASSWORD}@lattice-postgres:5432/rare_archive
       - REDIS_URL=rediss://default:${REDIS_PASSWORD}@lattice-redis:6379/2
       - OPENWEBUI_URL=http://rare-archive-openwebui:8080
       - HF_TOKEN=${HF_TOKEN:-}

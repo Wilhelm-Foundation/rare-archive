@@ -8,13 +8,14 @@ Meta-repository and front door for the Rare AI Archive: a decentralized post-tra
 - **how/**: Operations — campaign plans, session tracking, templates
 - **who/**: Organization — governance policies, team coordination
 
-## Related Repositories
-| Repo | Purpose |
-|------|---------|
-| rare-archive-ontology | 4 ontology domains, JSON-LD schemas, clustering |
-| rare-archive-models | LoRA training pipelines, eval harnesses, GGUF quantization |
-| rare-archive-datasets | RareArena ingestion, synthetic patients, preference data |
-| rare-archive-rlhf | RLHF portal, ELO system, expert matching |
-| rare-archive-tool-harness | Clinical tool-use harness (ClinVar, Orphanet, PanelApp, etc.) |
-| rare-archive-deploy | L1/L2 node deployment (Docker Compose, OpenWebUI + llama.cpp) |
-| rare-archive-compliance | aDNA schemas, FAIR scoring, governance, CI validation |
+## Monorepo Packages
+| Package | Path | Purpose |
+|---------|------|---------|
+| ontology | `packages/ontology/` | 4 ontology domains, JSON-LD schemas, clustering |
+| models | `packages/models/` | 4-stage training pipeline, eval harnesses, GGUF quantization |
+| datasets | `packages/datasets/` | RareArena ingestion, synthetic patients, preference data |
+| rlhf | `packages/rlhf/` | RLHF portal backend, ELO arena, expert matching |
+| tools | `packages/tools/` | Clinical tool harness (ClinVar, Orphanet, PanelApp, gnomAD, HPO, PubMed) |
+| compliance | `packages/compliance/` | aDNA schemas, FAIR scoring, governance, CI validation |
+| deploy | `deploy/` | L1/L2 Docker Compose overlays, nginx, GGUF download |
+| docs | `docs/` | Guides: quantization, evaluation, troubleshooting, tool integration, L1 setup |

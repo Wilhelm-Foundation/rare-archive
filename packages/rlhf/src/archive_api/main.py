@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import elo, experts, evaluations, preferences
+from .routers import elo, experts, evaluations, preferences, cases, feedback
 
 
 @asynccontextmanager
@@ -41,6 +41,8 @@ app.include_router(elo.router, prefix="/elo", tags=["ELO"])
 app.include_router(experts.router, prefix="/experts", tags=["Experts"])
 app.include_router(evaluations.router, prefix="/evaluations", tags=["Evaluations"])
 app.include_router(preferences.router, prefix="/preferences", tags=["Preferences"])
+app.include_router(cases.router, prefix="/cases", tags=["Cases"])
+app.include_router(feedback.router, prefix="/feedback", tags=["Feedback"])
 
 
 @app.get("/health")

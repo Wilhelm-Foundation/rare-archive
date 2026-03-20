@@ -12,15 +12,22 @@ Thank you for your interest in helping patients with rare diseases. This guide w
 
 ## Getting Started
 
-1. Clone the workspace: `./setup_workspace.sh`
-2. Pick a repo that matches your expertise
-3. Look for issues labeled `good-first-issue`
-4. Read the repo's README and `.agentic/AGENTS.md`
+1. Clone the repo: `git clone https://github.com/Wilhelm-Foundation/rare-archive.git`
+2. Run `./scripts/setup_dev.sh` to install all packages in development mode
+3. Pick a package that matches your expertise (see `packages/` directory)
+4. Look for issues labeled `good-first-issue`
+5. Read the repo's `README.md` and the relevant package README
+
+### Prerequisites
+
+- Python 3.11 or 3.12
+- For **training** (`packages/models/`): Linux with NVIDIA GPU, CUDA 12+, PyTorch 2.x
+- For **tools** (`packages/tools/`): Internet access for live API testing
+- For **deployment** (`deploy/`): Docker Compose v2
 
 ## Development Guidelines
 
 - Follow [Lattice Protocol naming conventions](https://github.com/lattice-protocol): underscores for files, hyphens for HuggingFace-facing names
-- All repos use the aDNA triad (`.agentic/what/`, `.agentic/how/`, `.agentic/who/`)
 - Write tests for new functionality
 - No real patient data (PHI) — synthetic patients only
 

@@ -13,7 +13,7 @@ GPU 3 (A100-80GB) — Dedicated to Archive inference
 └── (models share GPU via mmap)
 
 Services:
-├── OpenWebUI (port 3000) — Clinical interface + Arena mode
+├── OpenWebUI (port 3100) — Clinical interface + Arena mode
 ├── ChromaDB (port 8084) — RAG vector storage
 ├── archive-api (port 8085) — ELO tracking + preference export
 └── NGINX (/archive/, /elo/) — Reverse proxy
@@ -45,6 +45,8 @@ docker compose -f deploy/l2/docker-compose.rare-archive.yaml --env-file deploy/l
 | 3 | Rare AI Archive inference (dedicated) |
 
 The overlay uses `device_ids: ['3']` to isolate from existing workloads.
+
+> **Port note**: OpenWebUI runs on port 3100 (remapped from default 3000 to avoid memgraph-lab conflict on L2). Ensure port 3100 is free before deploying.
 
 ## License
 

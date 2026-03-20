@@ -62,6 +62,47 @@ Each model is rated across 5 dimensions per (model, category, mode):
 - **Tool Usage** — Appropriate use of diagnostic tools
 - **Safety** — Avoiding harmful recommendations
 
+## ELO Formula
+
+Standard ELO with K-factor adjustment for clinical evaluation:
+
+```
+Expected(A) = 1 / (1 + 10^((R_B - R_A) / 400))
+New_R_A = R_A + K * (S_A - Expected(A))
+```
+
+Where:
+- `R_A`, `R_B` = current ratings for models A and B
+- `K = 32` (default, higher for new models with few evaluations)
+- `S_A = 1.0` (win), `0.5` (tie), `0.0` (loss)
+- Starting rating: 1500 per (model, category, dimension)
+
+## Arena Mode Setup
+
+1. Deploy two models on separate llama-server instances (ports 8082, 8083)
+2. Configure OpenWebUI Arena mode: `ENABLE_ARENA_MODEL=true`
+3. Register models via archive-api: `POST /elo/ratings` with model metadata
+4. Experts see blind A/B comparisons, select winner + annotate dimensions
+
+## Preference Data Export
+
+Evaluation results export as DPO-compatible preference pairs:
+
+```json
+{
+  "prompt": "Clinical vignette text...",
+  "chosen": "Model A response (winner)...",
+  "rejected": "Model B response (loser)...",
+  "metadata": {
+    "category": "iem",
+    "expert_id": "expert_001",
+    "dimensions": {"accuracy": "A", "reasoning": "A", "safety": "tie"}
+  }
+}
+```
+
+Export to HuggingFace: `POST /preferences/export` with `repo_id` and `split` parameters.
+
 ## License
 
 Apache 2.0

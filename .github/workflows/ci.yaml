@@ -57,9 +57,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/ontology
-      - name: Validate schemas
-        run: python -c "import json, pathlib; [json.load(open(f)) for f in pathlib.Path('packages/ontology/schemas').glob('*.schema.json')]"
+      - run: pip install -e "packages/ontology[dev]"
+      - run: pytest packages/ontology/ -v
 
   test-compliance:
     needs: detect-changes
@@ -70,9 +69,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/compliance
-      - name: Validate aDNA schemas
-        run: python -c "import json, pathlib; [json.load(open(f)) for f in pathlib.Path('packages/compliance/schemas').rglob('*.json')]"
+      - run: pip install -e "packages/compliance[dev]"
+      - run: pytest packages/compliance/ -v
 
   test-datasets:
     needs: detect-changes
@@ -83,7 +81,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/ontology && pip install -e packages/datasets
+      - run: pip install -e "packages/ontology" && pip install -e "packages/datasets[dev]"
+      - run: pytest packages/datasets/ -v
 
   test-models:
     needs: detect-changes
@@ -94,7 +93,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/ontology && pip install -e packages/models
+      - run: pip install -e "packages/ontology" && pip install -e "packages/models[dev]"
+      - run: pytest packages/models/ -v
 
   test-tools:
     needs: detect-changes
@@ -105,7 +105,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/ontology && pip install -e packages/tools
+      - run: pip install -e "packages/ontology" && pip install -e "packages/tools[dev]"
+      - run: pytest packages/tools/ -v
 
   test-rlhf:
     needs: detect-changes
@@ -116,4 +117,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e packages/rlhf
+      - run: pip install -e "packages/rlhf[dev]"
+      - run: pytest packages/rlhf/ -v

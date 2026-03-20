@@ -4,11 +4,25 @@ Reads combined_train.jsonl, filters records matching keyword patterns for a
 given category, and writes category-specific train/val splits.
 
 Usage:
+    # Filter IEM cases with default 90/10 split
+    python scripts/filter_category.py \
+        --input data/combined_train.jsonl \
+        --category iem \
+        --output-dir data
+
+    # Custom validation ratio
     python scripts/filter_category.py \
         --input data/combined_train.jsonl \
         --category iem \
         --output-dir data \
-        --val-ratio 0.1
+        --val-ratio 0.2
+
+Output files:
+    data/{category}_train.jsonl  — training split
+    data/{category}_val.jsonl    — validation split
+
+Supported categories: iem (Inborn Errors of Metabolism).
+Add new categories by extending the CATEGORIES dict.
 """
 
 import argparse

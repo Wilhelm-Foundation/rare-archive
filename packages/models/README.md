@@ -46,8 +46,29 @@ configs/base/{size}.yaml         # Model-specific (LoRA rank, batch size, etc.)
 
 ## Frameworks
 
-- **Unsloth**: Dense models (0.8B-27B), QLoRA 4-bit
-- **Swift**: MoE models (35B-A3B, 122B-A10B), bf16 LoRA
+- **Unsloth**: All model sizes — QLoRA 4-bit for dense, bf16 for MoE
+- MoE models require `lora_dropout: 0.0` (ParamWrapper gradient bug) and `TORCHDYNAMO_DISABLE=1`
+
+## Expected Training Times (A100-80GB)
+
+| Model | Steps (3 epochs) | Time/Step | Total | VRAM |
+|-------|-------------------|-----------|-------|------|
+| 4B dense | ~11,853 | ~7s | ~23h | ~24 GB |
+| 9B dense | ~11,853 | ~14s | ~46h | ~40 GB |
+| 27B dense | ~11,853 | ~25s | ~82h | ~65 GB |
+| 35B MoE | ~11,853 | ~38s | ~128h | ~72 GB |
+
+> Times assume 63,212 training records, batch size 1 × 16 gradient accumulation, `max_seq_length: 4096`.
+
+## Hyperparameter Ranges
+
+| Parameter | 4B | 9B | 27B | 35B MoE |
+|-----------|----|----|-----|---------|
+| LoRA rank | 64 | 64 | 32 | 32 |
+| LoRA alpha | 128 | 128 | 64 | 64 |
+| Learning rate | 2e-4 | 2e-4 | 1e-4 | 1e-4 |
+| Dropout | 0.05 | 0.05 | 0.05 | 0.0 (required) |
+| Batch (effective) | 16 | 16 | 16 | 16 |
 
 ## License
 

@@ -36,7 +36,7 @@ python scripts/validate_archive.py .
 - **Tiers**: Always UPPERCASE (L1, L2, L3)
 
 ## Architecture Decisions
-- Unsloth for dense models, Swift for MoE (BitsAndBytes MoE QLoRA broken)
+- Unsloth for all model sizes (dense and MoE)
 - llama.cpp over vLLM for L2 inference (GGUF control, mmap loading)
 - Separate Docker Compose overlay (don't modify L2 stack)
 - GPU 3 dedicated to Archive inference
