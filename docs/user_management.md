@@ -54,6 +54,41 @@ Currently configured as Public:
 - `rare-disease-specialist` (Preset wrapping 35B with system prompt + 7 tools)
 - `arena-model` (Arena mode — admin-visible only)
 
+## Password Reset (Direct SQLite)
+
+When the admin API is inaccessible (e.g., all admin passwords stale), reset passwords via direct SQLite manipulation:
+
+```bash
+# 1. Generate bcrypt hash
+HASH=$(docker exec rare-archive-openwebui python3 -c \
+  "import bcrypt; print(bcrypt.hashpw(b'NEW_PASSWORD', bcrypt.gensalt()).decode())")
+
+# 2. Update password in SQLite
+docker exec rare-archive-openwebui sqlite3 /app/backend/data/webui.db \
+  "UPDATE auth SET password='$HASH' WHERE email='user@example.com';"
+
+# 3. CRITICAL: Restart container — ORM caches prevent seeing direct writes
+docker restart rare-archive-openwebui
+
+# 4. Verify login
+curl -s http://localhost:3100/api/v1/auths/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "NEW_PASSWORD"}' \
+  | python3 -c "import sys,json; d=json.load(sys.stdin); print('OK' if 'token' in d else 'FAIL')"
+```
+
+**Important**: The container restart in step 3 is mandatory. OpenWebUI uses SQLAlchemy ORM which caches model instances — direct SQLite changes are invisible until the process restarts.
+
+**Bulk reset** (all accounts to same password):
+
+```bash
+HASH=$(docker exec rare-archive-openwebui python3 -c \
+  "import bcrypt; print(bcrypt.hashpw(b'NEW_PASSWORD', bcrypt.gensalt()).decode())")
+docker exec rare-archive-openwebui sqlite3 /app/backend/data/webui.db \
+  "UPDATE auth SET password='$HASH';"
+docker restart rare-archive-openwebui
+```
+
 ## Environment Variables
 
 Key auth-related env vars in `docker-compose.rare-archive.yaml`:

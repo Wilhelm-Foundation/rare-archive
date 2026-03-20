@@ -48,7 +48,7 @@ graph LR
 
 ## Architecture
 
-The Archive is built on the [Lattice Protocol](https://github.com/lattice-protocol) standard and organized as a monorepo:
+The Archive is built on the [Lattice Protocol](https://github.com/LatticeProtocol) standard and organized as a monorepo:
 
 | Package | Purpose |
 |---------|---------|
@@ -114,7 +114,7 @@ Recommended workups:
 
 ## Built on Lattice Protocol
 
-The Rare AI Archive follows the [Lattice Protocol](https://github.com/lattice-protocol) standard:
+The Rare AI Archive follows the [Lattice Protocol](https://github.com/LatticeProtocol) standard:
 - **Three primitives:** Dataset, Module, Lattice
 - **aDNA metadata:** Embedded agentic DNA for each package
 - **Compute tiers:** L1 (edge), L2 (cluster), L3 (datacenter)

@@ -27,7 +27,7 @@ Thank you for your interest in helping patients with rare diseases. This guide w
 
 ## Development Guidelines
 
-- Follow [Lattice Protocol naming conventions](https://github.com/lattice-protocol): underscores for files, hyphens for HuggingFace-facing names
+- Follow [Lattice Protocol naming conventions](https://github.com/LatticeProtocol): underscores for files, hyphens for HuggingFace-facing names
 - Write tests for new functionality
 - No real patient data (PHI) — synthetic patients only
 

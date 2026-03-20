@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * 1"  # Weekly Monday 06:23 UTC
 
 jobs:
   detect-changes:
@@ -133,3 +136,16 @@ jobs:
       - run: pip install httpx
       - name: Check mock staleness (warning only)
         run: python scripts/check_mock_staleness.py
+
+  test-live-adapters:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e "packages/ontology" && pip install -e "packages/tools[dev]"
+      - name: Run live adapter tests
+        run: pytest packages/tools/tests/test_live_adapters.py -m live -v --timeout=30

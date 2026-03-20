@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+# Root-level config: only collects from tests/ (E2E).
+# Package tests run per-package: pytest packages/tools/ -v
+# This avoids conftest.py collisions across the 6 packages.
+testpaths = ["tests"]
+markers = [
+    "live: tests hitting real external APIs (skipped by default)",
+    "e2e: end-to-end tests requiring L2 deployment (skipped by default)",
+    "slow: marks tests as slow",
+]
+addopts = "-m 'not live and not e2e'"

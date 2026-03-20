@@ -11,3 +11,4 @@ build/
 *.safetensors
 wandb/
 outputs/
+tests/e2e/screenshots/

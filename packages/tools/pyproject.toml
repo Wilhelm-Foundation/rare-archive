@@ -30,7 +30,10 @@ dev = [
 testpaths = ["tests"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "live: tests hitting real external APIs (skipped by default)",
+    "e2e: end-to-end tests requiring L2 deployment (skipped by default)",
 ]
+addopts = "-m 'not live and not e2e'"
 
 [tool.setuptools.packages.find]
 where = ["src"]
