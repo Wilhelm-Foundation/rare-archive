@@ -5,6 +5,8 @@ API: Orphadata REST API (restructured 2025 — domain-based endpoints)
 
 from typing import Any
 
+import httpx
+
 from .base import AdapterConfig, BaseAdapter
 
 
@@ -48,7 +50,11 @@ class OrphanetAdapter(BaseAdapter):
 
     def lookup(self, disease_name: str) -> dict[str, Any]:
         """Search by name and return structured result."""
-        result = self.search_disease(disease_name)
+        try:
+            result = self.search_disease(disease_name)
+        except (httpx.HTTPStatusError, RuntimeError):
+            return {"found": False, "query": disease_name, "message": "No diseases found"}
+
         data = result.get("data", {})
 
         if not data or data.get("__count", 0) == 0:

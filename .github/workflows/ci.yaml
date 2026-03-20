@@ -119,3 +119,17 @@ jobs:
           python-version: "3.11"
       - run: pip install -e "packages/rlhf[dev]"
       - run: pytest packages/rlhf/ -v
+
+  mock-staleness:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.tools == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install httpx
+      - name: Check mock staleness (warning only)
+        run: python scripts/check_mock_staleness.py
