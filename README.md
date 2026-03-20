@@ -3,6 +3,7 @@
 [![CI](https://github.com/Wilhelm-Foundation/rare-archive/actions/workflows/ci.yaml/badge.svg)](https://github.com/Wilhelm-Foundation/rare-archive/actions/workflows/ci.yaml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow)](https://huggingface.co/Wilhelm-Foundation)
+[![Demo](https://img.shields.io/badge/%F0%9F%A7%AC-Clinical_Demo-blue)](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)](https://python.org)
 
 **A decentralized post-training, model validation, and clinical deployment ecosystem for rare genetic diseases.**
@@ -17,6 +18,7 @@
 | **35B MoE training** | In progress (~March 25 completion) |
 | **L2 deployment** | Live — OpenWebUI + 7 clinical tools on GPU 3 |
 | **L1 local inference** | Verified — Metal + llama.cpp (see [L1 setup guide](docs/l1_local_setup.md)) |
+| **Clinical demo** | Live — [HuggingFace Space](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo) (10 scenarios, no account needed) |
 | **RLHF arena** | Planned (M10) |
 
 ### Key Results

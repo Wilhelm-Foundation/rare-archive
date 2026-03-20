@@ -1,0 +1,354 @@
+{
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Gaucher Disease",
+      "category": "Inborn Errors of Metabolism",
+      "complexity": "Moderate",
+      "patient_presentation": "A 28-year-old Ashkenazi Jewish male presents with progressive fatigue, easy bruising, and left upper quadrant fullness. Physical exam reveals hepatosplenomegaly. Labs show thrombocytopenia (platelets 68K), mild anemia, and elevated chitotriosidase. Bone marrow biopsy shows \"crinkled paper\" macrophages. Genetic testing reveals a homozygous c.1226A>G (N370S) variant in the GBA1 gene.",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Gaucher disease\")",
+          "result": "**Gaucher disease** (ORPHA:355) — Type 1, non-neuropathic\n- **Prevalence**: 1/57,000 (general population), ~1/850 (Ashkenazi Jewish)\n- **Inheritance**: Autosomal recessive (GBA1, 1q22)\n- **Subtypes**: Type 1 (non-neuropathic, 94%), Type 2 (acute neuropathic), Type 3 (chronic neuropathic)\n- **Age of onset**: Variable — childhood to adulthood"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.1226A>G\", gene=\"GBA1\")",
+          "result": "**GBA1 c.1226A>G (p.N370S)** — Classification: **Pathogenic**\n- Condition: Gaucher disease, type 1\n- Review status: Expert panel (4 stars)\n- N370S is the most common variant in Ashkenazi Jewish populations\n- Homozygosity for N370S is protective against neurological involvement"
+        },
+        {
+          "tool": "gnomAD",
+          "query": "query_variant(\"1-155235218-T-C\")",
+          "result": "**GBA1 N370S population frequencies**:\n- Ashkenazi Jewish: AF ~0.034 (carrier frequency ~1/15)\n- European (non-Finnish): AF ~0.003\n- Global: AF ~0.001\n- This is consistent with founder effect in Ashkenazi Jewish population"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"Gaucher disease GBA1 enzyme replacement therapy\")",
+          "result": "**Treatment landscape for Gaucher disease Type 1**:\n1. **Enzyme Replacement Therapy (ERT)**: Imiglucerase (Cerezyme), velaglucerase alfa (VPRIV), taliglucerase alfa (Elelyso)\n2. **Substrate Reduction Therapy (SRT)**: Eliglustat (Cerdelga) — first-line oral option for CYP2D6 extensive/intermediate metabolizers\n3. **Monitoring**: Chitotriosidase levels as biomarker of disease activity\n4. Mistry et al. (2024): Long-term ERT outcomes show sustained hematologic and visceral improvement"
+        },
+        {
+          "tool": "HPO",
+          "query": "search_term(\"hepatosplenomegaly\")",
+          "result": "**Hepatosplenomegaly** (HP:0001433)\n- Definition: Simultaneous enlargement of liver and spleen\n- Associated with >200 rare diseases including lysosomal storage disorders, hematologic malignancies, infections\n- Key associated terms: Splenomegaly (HP:0001744), Hepatomegaly (HP:0002240)"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with Gaucher disease Type 1** (non-neuropathic).\n\n### Key Evidence\n- **Genotype**: Homozygous GBA1 N370S — the most common pathogenic variant, particularly in Ashkenazi Jewish populations (carrier frequency ~1/15)\n- **Phenotype**: Classic triad of hepatosplenomegaly, cytopenias (thrombocytopenia, anemia), and characteristic bone marrow findings (\"crinkled paper\" macrophages = Gaucher cells)\n- **Biomarker**: Elevated chitotriosidase — highly specific for Gaucher disease, useful for treatment monitoring\n\n### Prognostic Note\nN370S homozygosity is **protective against neurological involvement**, confirming Type 1 (non-neuropathic) classification. This genotype-phenotype correlation is well-established.\n\n### Management Recommendations\n1. **Treatment initiation**: ERT (imiglucerase or velaglucerase) OR oral SRT (eliglustat, if CYP2D6 status permits)\n2. **Monitoring**: Chitotriosidase levels, CBC, liver/spleen volumes (MRI), bone density (DXA)\n3. **Bone assessment**: Evaluate for avascular necrosis, pathologic fractures, Erlenmeyer flask deformity\n4. **Genetic counseling**: Autosomal recessive — both parents are carriers. Carrier screening recommended for Ashkenazi Jewish community\n\n### Additional Considerations\n- GBA1 heterozygosity is an established risk factor for **Parkinson disease** — lifetime monitoring and family counseling appropriate\n- Screen for bone disease (MRI) even if asymptomatic — skeletal manifestations are common and often underdiagnosed\n\n*Evidence level: High — well-characterized disease with established genotype-phenotype correlations and treatment guidelines.*"
+    },
+    {
+      "id": 2,
+      "title": "Phenylketonuria (PKU)",
+      "category": "Inborn Errors of Metabolism",
+      "complexity": "Low",
+      "patient_presentation": "A 5-day-old neonate has a positive newborn screening result showing elevated phenylalanine (Phe) at 22 mg/dL (normal <2 mg/dL). Confirmatory plasma amino acids show Phe of 25 mg/dL with low tyrosine. The infant is otherwise well-appearing. Parents are non-consanguineous of Northern European descent. Genetic testing identifies compound heterozygous variants in PAH: c.1222C>T (R408W) and c.842C>T (P281L).",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Phenylketonuria\")",
+          "result": "**Phenylketonuria** (ORPHA:716)\n- **Prevalence**: 1/10,000 (general population), higher in Northern Europe and Turkey\n- **Inheritance**: Autosomal recessive (PAH, 12q23.2)\n- **Subtypes**: Classic PKU (Phe >20 mg/dL), Moderate PKU, Mild PKU/HPA\n- **Newborn screening**: Universal in most developed countries since 1960s"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.1222C>T\", gene=\"PAH\")",
+          "result": "**PAH c.1222C>T (p.R408W)** — Classification: **Pathogenic**\n- Condition: Classic phenylketonuria\n- Review status: Expert panel (4 stars)\n- Most common European PKU variant (~30% of alleles in Northern Europe)\n- Associated with <1% residual PAH activity — classic severe PKU"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.842C>T\", gene=\"PAH\")",
+          "result": "**PAH c.842C>T (p.P281L)** — Classification: **Pathogenic**\n- Condition: Moderate-to-classic phenylketonuria\n- Review status: Reviewed by expert panel\n- Associated with moderate PKU phenotype when in compound heterozygosity"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"Phenylketonuria\")",
+          "result": "**Gene panels including PAH**:\n- Newborn screening gene panel — PAH confirmed (GREEN, diagnostic grade)\n- Inborn errors of metabolism panel\n- Hyperphenylalaninaemia panel\n- Note: Also evaluate BH4 metabolism genes (PTS, DHPR) to rule out BH4-responsive forms"
+        },
+        {
+          "tool": "DiffDx",
+          "query": "differential for hyperphenylalaninaemia",
+          "result": "**Differential diagnosis for elevated phenylalanine**:\n1. **Classic PKU** (PAH deficiency) — most common cause (~98%)\n2. **BH4-responsive PKU** — milder PAH variants with cofactor responsiveness\n3. **BH4 deficiency** (PTPS, DHPR, GTPCH deficiency) — critical to rule out (~2%)\n4. **Transient hyperphenylalaninaemia** — physiological in premature infants\n\n*Red flag: BH4 deficiency requires different treatment (BH4 supplementation + neurotransmitter precursors)*"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with classic phenylketonuria (PKU)** due to PAH deficiency.\n\n### Key Evidence\n- **Newborn screening**: Phe 22 mg/dL with confirmatory level of 25 mg/dL — well above classic PKU threshold (>20 mg/dL)\n- **Genotype**: Compound heterozygous PAH R408W/P281L — R408W is the most common European severe allele (<1% residual activity)\n- **Biochemistry**: Markedly elevated Phe with low tyrosine confirms PAH deficiency\n\n### Immediate Management\n1. **Dietary restriction**: Initiate Phe-restricted diet immediately — target Phe 2-6 mg/dL in infancy\n2. **Medical formula**: Phe-free amino acid formula as primary protein source\n3. **BH4 trial**: Consider sapropterin (Kuvan) trial — R408W is typically non-responsive, but P281L may confer partial BH4 responsiveness in compound heterozygotes\n4. **Rule out BH4 deficiency**: Check urine pterins and DHPR activity — critical to exclude before assuming classic PKU\n\n### Long-Term Monitoring\n- Weekly Phe levels initially, then monthly once stable\n- Neurocognitive development assessments (IQ monitoring)\n- Growth and nutritional status (protein, micronutrients)\n- Consider pegvaliase (Palynziq) if adult diet adherence is difficult\n\n### Genetic Counseling\n- **Autosomal recessive**: 25% recurrence risk for future pregnancies\n- **Maternal PKU**: Critical to counsel about strict Phe control during future pregnancies to prevent maternal PKU syndrome (teratogenic Phe levels)\n- Both parents are obligate carriers\n\n*Evidence level: High — PKU is the prototype for newborn screening with decades of treatment outcome data.*"
+    },
+    {
+      "id": 3,
+      "title": "Duchenne Muscular Dystrophy",
+      "category": "Neuromuscular",
+      "complexity": "High",
+      "patient_presentation": "A 4-year-old boy is referred for progressive difficulty climbing stairs and a waddling gait. He uses a Gowers maneuver to stand from the floor. CK is markedly elevated at 15,000 U/L (normal <200). Family history is negative. Genetic testing reveals a deletion of exons 45-50 in the DMD gene. Mother's testing confirms she is a carrier (deletion on one allele).",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Duchenne muscular dystrophy\")",
+          "result": "**Duchenne muscular dystrophy** (ORPHA:98896)\n- **Prevalence**: 1/3,500 male births\n- **Inheritance**: X-linked recessive (DMD, Xp21.2)\n- **Natural history**: Progressive proximal weakness → loss of ambulation by 10-12 years → respiratory/cardiac failure\n- **Key feature**: Out-of-frame DMD deletions → absent dystrophin"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"muscular dystrophy\")",
+          "result": "**Neuromuscular disease gene panels**:\n- DMD gene: **GREEN** (diagnostic grade)\n- Panels include: Limb-girdle MD (multiple genes), congenital MD, Emery-Dreifuss MD\n- Recommended testing: MLPA for deletions/duplications first, then sequencing if negative"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"exon 45-50 deletion\", gene=\"DMD\")",
+          "result": "**DMD exon 45-50 deletion** — Classification: **Pathogenic**\n- Condition: Duchenne muscular dystrophy\n- Reading frame: Out-of-frame deletion → absence of functional dystrophin protein\n- Exon 45-50 deletions are in the major deletion hotspot (exons 44-55)\n- This region is a target for multiple exon-skipping therapies"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"DMD exon skipping therapy 2025\")",
+          "result": "**Exon-skipping therapies for DMD**:\n1. **Eteplirsen** (exon 51 skipping) — FDA approved\n2. **Golodirsen** (exon 53 skipping) — FDA approved\n3. **Casimersen** (exon 45 skipping) — FDA approved\n4. **Viltolarsen** (exon 53 skipping) — FDA approved\n- For exon 45-50 deletion: **exon 44 skipping** (SRP-4044/NS-089/Y) would restore reading frame\n- Gene therapy: Sarepta's delandistrogene moxeparvovec (Elevidys) — micro-dystrophin AAV, accelerated approval 2023"
+        },
+        {
+          "tool": "HPO",
+          "query": "search_term(\"Gowers sign\")",
+          "result": "**Gowers sign** (HP:0003391)\n- Definition: Use of hands to \"walk up\" the legs when rising from the floor, indicating proximal muscle weakness\n- Characteristic finding in: DMD, BMD, LGMD, spinal muscular atrophy\n- Onset in DMD typically age 3-5 years"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with Duchenne muscular dystrophy (DMD)**.\n\n### Key Evidence\n- **Genotype**: DMD exon 45-50 deletion — **out-of-frame** deletion predicts absent dystrophin (Duchenne, not Becker)\n- **Phenotype**: Progressive proximal weakness with Gowers sign at age 4 — classic early presentation\n- **Biomarker**: CK 15,000 U/L (75x normal) — consistent with active muscle destruction\n- **Family**: De novo in patient, but mother confirmed as carrier\n\n### Therapeutic Opportunities\n1. **Exon skipping eligibility**: Deletion of exons 45-50 is **amenable to exon 44 skipping** — this would restore the reading frame, producing a truncated but partially functional dystrophin (Becker-like phenotype)\n2. **Gene therapy**: Delandistrogene moxeparvovec (Elevidys) — micro-dystrophin AAV gene therapy, evaluate eligibility (age window, anti-AAV antibodies)\n3. **Standard of care**: Corticosteroids (deflazacort preferred — less weight gain than prednisone)\n\n### Monitoring Protocol\n- **Cardiac**: Annual echocardiography and ECG — cardiomyopathy surveillance starting at diagnosis\n- **Pulmonary**: Annual pulmonary function tests starting at age 5-6\n- **Orthopedic**: Scoliosis screening, contracture management, physical therapy\n- **Endocrine**: Bone density monitoring (steroid-related osteoporosis)\n\n### Anticipatory Guidance\n- Loss of ambulation typically by age 10-12 years\n- Respiratory support typically needed in teens\n- Life expectancy with current care: 20s-30s (improving with cardiac/respiratory management)\n\n### Genetic Counseling\n- **X-linked recessive**: Mother is a confirmed carrier (50% risk for each male offspring)\n- Carrier females may have mild cardiac involvement — recommend baseline echocardiogram for mother\n- Prenatal/preimplantation genetic testing available for future pregnancies\n\n*Evidence level: High — DMD is among the best-characterized neuromuscular diseases with established genotype-phenotype and treatment correlations.*"
+    },
+    {
+      "id": 4,
+      "title": "Ehlers-Danlos Syndrome (Vascular Type)",
+      "category": "Connective Tissue",
+      "complexity": "High",
+      "patient_presentation": "A 32-year-old woman presents to the ED with sudden severe abdominal pain. CT reveals a spontaneous splenic artery dissection. She has a history of easy bruising, translucent skin, and a sigmoid colon perforation at age 25. She has characteristic facial features (thin lips, small chin, prominent eyes). Family history reveals her father died suddenly at age 42 from aortic rupture. Genetic testing identifies a heterozygous c.2411G>A (G804D) variant in COL3A1.",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Ehlers-Danlos syndrome vascular\")",
+          "result": "**Vascular Ehlers-Danlos syndrome** (ORPHA:286) — Type IV\n- **Prevalence**: 1/50,000–200,000\n- **Inheritance**: Autosomal dominant (COL3A1, 2q32.2)\n- **Median survival**: ~50 years (significantly reduced)\n- **Major complications**: Arterial rupture/dissection, bowel perforation, uterine rupture in pregnancy"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.2411G>A\", gene=\"COL3A1\")",
+          "result": "**COL3A1 c.2411G>A (p.G804D)** — Classification: **Pathogenic**\n- Condition: Vascular Ehlers-Danlos syndrome\n- Mechanism: Glycine substitution in the triple helix domain of type III collagen → structural protein defect\n- Glycine substitutions in the Gly-X-Y repeat are the classical pathogenic mechanism in vEDS"
+        },
+        {
+          "tool": "DiffDx",
+          "query": "differential for arterial dissection + colon perforation + translucent skin",
+          "result": "**Differential diagnosis**:\n1. **Vascular EDS (COL3A1)** — most likely given triad of arterial events + bowel perforation + skin findings\n2. **Loeys-Dietz syndrome** (TGFBR1/2, SMAD3) — aortic aneurysm but less bowel perforation\n3. **Marfan syndrome** (FBN1) — aortic root dilation but different habitus\n4. **Arterial tortuosity syndrome** — arterial tortuosity > dissection\n\n*The combination of spontaneous arterial dissection AND bowel perforation is highly specific for vEDS.*"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"vascular Ehlers-Danlos COL3A1 management guidelines\")",
+          "result": "**Management of vascular EDS**:\n1. **Celiprolol**: Beta-blocker with evidence from the Ong et al. (2010) trial — reduced arterial events by 60%\n2. **Surveillance**: Annual vascular imaging (CT or MR angiography)\n3. **Avoid**: Invasive procedures when possible (tissue fragility → surgical complications)\n4. **Pregnancy**: High risk — uterine rupture in 3rd trimester; multidisciplinary management essential\n5. **Frank et al. (2015)**: Median survival 51 years; first major complication typically in 20s"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"aortic disease\")",
+          "result": "**Aortopathy gene panels**:\n- COL3A1: **GREEN** (diagnostic grade)\n- Panel includes: FBN1 (Marfan), TGFBR1/2 (Loeys-Dietz), SMAD3, ACTA2, MYH11\n- Recommended for all patients with premature aortic disease or arterial dissection"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with vascular Ehlers-Danlos syndrome (Type IV)**.\n\n### CRITICAL — This is a Life-Threatening Diagnosis\n\n### Key Evidence\n- **Genotype**: COL3A1 G804D — glycine substitution in the triple helix domain is the classical pathogenic mechanism\n- **Clinical criteria (2017 Villefranche)**: Major criteria met — spontaneous arterial dissection, bowel perforation, characteristic facies, family history of sudden death\n- **Family history**: Father deceased at 42 from aortic rupture — consistent with autosomal dominant inheritance with severe vascular phenotype\n\n### Immediate Management\n1. **Current event**: Manage splenic artery dissection conservatively if possible — surgery carries high risk due to tissue fragility\n2. **Celiprolol**: Initiate beta-blocker therapy — only medication with randomized trial evidence in vEDS (60% reduction in arterial events)\n3. **Blood pressure**: Strict control to reduce shear stress on compromised vessels\n\n### Long-Term Surveillance\n- Annual vascular imaging (head-to-pelvis CT or MR angiography)\n- **Avoid**: Contact sports, isometric exercise, heavy lifting\n- **Avoid**: Invasive vascular procedures unless life-threatening emergency\n- **Pregnancy counseling**: 3rd-trimester uterine rupture risk — high-risk obstetric management required\n\n### Family Screening\n- **50% risk for children** — presymptomatic genetic testing recommended for all first-degree relatives\n- Father's cause of death is consistent — other paternal relatives should be offered testing\n- Median age of first major complication: ~20s; early identification allows preventive measures\n\n*Evidence level: High for diagnosis. Moderate for treatment (single randomized trial for celiprolol, expert consensus for surveillance).*"
+    },
+    {
+      "id": 5,
+      "title": "Severe Combined Immunodeficiency (X-SCID)",
+      "category": "Immunodeficiency",
+      "complexity": "High",
+      "patient_presentation": "A 3-month-old male presents with persistent oral thrush, failure to thrive, and Pneumocystis jirovecii pneumonia. Newborn screening TREC assay was abnormal (TRECs <25 copies/\u00b5L). Flow cytometry shows absent T cells (CD3+ <300/\u00b5L), present but non-functional B cells, and absent NK cells. The T-B+NK- SCID phenotype suggests an IL2RG or JAK3 defect. Genetic testing reveals a hemizygous c.690C>A (C229X) nonsense variant in IL2RG (X-linked).",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"X-linked severe combined immunodeficiency\")",
+          "result": "**X-linked severe combined immunodeficiency** (ORPHA:276)\n- **Prevalence**: Most common SCID subtype (~45% of all SCID)\n- **Inheritance**: X-linked recessive (IL2RG, Xq13.1)\n- **Mechanism**: Absent common gamma chain → defective IL-2/4/7/9/15/21 signaling\n- **Immunophenotype**: T-B+NK- (absent T and NK cells, present but non-functional B cells)"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.690C>A\", gene=\"IL2RG\")",
+          "result": "**IL2RG c.690C>A (p.C229X)** — Classification: **Pathogenic**\n- Condition: X-linked severe combined immunodeficiency\n- Mechanism: Nonsense mutation → premature stop codon → null common gamma chain protein\n- Review status: Reviewed by expert panel"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"primary immunodeficiency\")",
+          "result": "**Primary immunodeficiency panels**:\n- IL2RG: **GREEN** (diagnostic grade) for SCID\n- SCID panel includes: IL2RG, JAK3, RAG1, RAG2, DCLRE1C, IL7R, ADA, RMRP\n- IL2RG and JAK3 share the T-B+NK- phenotype — genetic testing distinguishes them"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"IL2RG SCID gene therapy lentiviral 2025\")",
+          "result": "**Treatment options for X-SCID**:\n1. **HCT from matched sibling donor**: >90% survival — gold standard when available\n2. **Haploidentical HCT**: 70-80% survival — used when no matched donor\n3. **Gene therapy**: Lentiviral vector (LV)-based GT for IL2RG — Phase I/II trials showing >90% T-cell reconstitution without leukemogenesis (unlike early retroviral trials)\n4. **Mamcarz et al. (2019)**: Lentiviral IL2RG gene therapy in 8 infants — all achieved functional T-cell immunity\n5. **Timing is critical**: Best outcomes with treatment before 3.5 months of age"
+        },
+        {
+          "tool": "HPO",
+          "query": "search_term(\"T-cell lymphopenia\")",
+          "result": "**T-cell lymphopenia** (HP:0005403)\n- Definition: Abnormally low T-lymphocyte count\n- Key associated conditions: SCID (various subtypes), DiGeorge syndrome, HIV/AIDS, idiopathic CD4 lymphopenia\n- SCID-defining threshold: CD3+ <300/\u00b5L in infant"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with X-linked severe combined immunodeficiency (X-SCID)**.\n\n### URGENT — This is a Pediatric Emergency\n\n### Key Evidence\n- **Genotype**: IL2RG C229X — nonsense mutation producing null common gamma chain → complete loss of IL-2/4/7/9/15/21 receptor signaling\n- **Immunophenotype**: T-B+NK- SCID — pathognomonic for IL2RG or JAK3 deficiency; genetic testing confirms IL2RG\n- **Clinical presentation**: PJP pneumonia + oral thrush + FTT at 3 months — classic infectious pattern of SCID\n- **Newborn screening**: Abnormal TRECs detected — demonstrates the life-saving value of SCID newborn screening\n\n### Immediate Actions (Time-Critical)\n1. **Protective isolation**: Strict infection prevention — positive-pressure room, no live vaccines, prophylactic antibiotics/antifungals\n2. **Treat active infections**: IV TMP-SMX for PJP, fluconazole for candidiasis\n3. **Irradiated blood products only**: To prevent transfusion-associated GVHD\n4. **CMV monitoring**: PCR surveillance — CMV is a major cause of mortality in SCID\n5. **HLA typing**: Immediate — begin donor search for HCT\n\n### Definitive Treatment\n- **Option 1 — Matched sibling HCT**: >90% survival — best option if available\n- **Option 2 — Matched unrelated donor HCT**: 80-85% survival with current protocols\n- **Option 3 — Haploidentical HCT**: 70-80% survival — available immediately (parent as donor)\n- **Option 4 — Gene therapy**: Lentiviral IL2RG GT — clinical trial enrollment if eligible (>90% T-cell reconstitution in trials)\n\n### Prognosis\n- **Without treatment**: Fatal within the first 1-2 years of life\n- **With early HCT** (before 3.5 months): >90% survival with good immune reconstitution\n- This patient is at the optimal treatment window — urgent action required\n\n### Genetic Counseling\n- **X-linked recessive**: Mother is an obligate carrier\n- **50% risk** for each male offspring; carrier testing for female relatives\n- Prenatal and preimplantation genetic testing available\n\n*Evidence level: High — SCID is well-characterized with established treatment protocols. Gene therapy evidence is strong and growing.*"
+    },
+    {
+      "id": 6,
+      "title": "MELAS Syndrome",
+      "category": "Inborn Errors of Metabolism (Mitochondrial)",
+      "complexity": "High",
+      "patient_presentation": "A 19-year-old woman presents with recurrent migraine-like headaches, seizures, and acute-onset left hemiparesis. MRI shows stroke-like lesions in the occipital and temporal lobes that do not follow vascular territories. Serum lactate is elevated at 4.2 mmol/L (normal <2.0). She has sensorineural hearing loss and short stature. Muscle biopsy shows ragged red fibers. Mitochondrial DNA testing reveals the m.3243A>G variant in MT-TL1 with 65% heteroplasmy in muscle.",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"MELAS syndrome\")",
+          "result": "**MELAS syndrome** (ORPHA:550) — Mitochondrial Encephalomyopathy, Lactic Acidosis, and Stroke-like episodes\n- **Prevalence**: 1/4,000 (carrier frequency for m.3243A>G)\n- **Inheritance**: Maternal (mitochondrial DNA)\n- **Most common variant**: m.3243A>G in MT-TL1 (>80% of MELAS cases)\n- **Variable expressivity**: Due to heteroplasmy — symptom severity correlates with mutation load"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"m.3243A>G\", gene=\"MT-TL1\")",
+          "result": "**MT-TL1 m.3243A>G** — Classification: **Pathogenic**\n- Conditions: MELAS, MIDD (maternally inherited diabetes and deafness), progressive external ophthalmoplegia\n- Most common pathogenic mitochondrial DNA variant\n- Review status: Expert panel\n- Phenotype depends on heteroplasmy level and tissue distribution"
+        },
+        {
+          "tool": "DiffDx",
+          "query": "differential for stroke-like episodes + lactic acidosis + hearing loss",
+          "result": "**Differential diagnosis**:\n1. **MELAS** (m.3243A>G) — most likely given non-vascular stroke pattern + lactic acidosis\n2. **MERRF** (m.8344A>G) — myoclonus more prominent than stroke-like episodes\n3. **Leigh syndrome** — brainstem/basal ganglia lesions, typically younger onset\n4. **Kearns-Sayre syndrome** — ophthalmoplegia, retinopathy, cardiac conduction defects\n5. **Moyamoya disease** — true vascular strokes following arterial territories"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"MELAS m.3243A>G treatment arginine 2025\")",
+          "result": "**MELAS management**:\n1. **Acute stroke-like episodes**: IV L-arginine (0.5 g/kg) — improves NO-mediated vasodilation, reduces severity\n2. **Chronic prevention**: Oral L-arginine (0.15-0.3 g/kg/day) + oral L-citrulline\n3. **CoQ10/Idebenone**: Electron transport chain support (variable evidence)\n4. **Seizure management**: Levetiracetam preferred — AVOID valproate (mitochondrial toxicity)\n5. **Koenig et al. (2024)**: L-arginine + L-citrulline combination showed 67% reduction in stroke-like episode frequency"
+        },
+        {
+          "tool": "HPO",
+          "query": "search_term(\"stroke-like episode\")",
+          "result": "**Stroke-like episode** (HP:0002401)\n- Definition: Acute neurological deficit resembling stroke but not following vascular territories\n- Characteristic of mitochondrial disorders, especially MELAS\n- Associated terms: Lactic acidosis (HP:0003128), Sensorineural hearing loss (HP:0000407)"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with MELAS syndrome** (Mitochondrial Encephalomyopathy, Lactic Acidosis, and Stroke-like episodes).\n\n### Key Evidence\n- **Genotype**: m.3243A>G in MT-TL1 at 65% heteroplasmy in muscle — above the typical symptom threshold (~60-70%)\n- **Neuroimaging**: Stroke-like lesions NOT following vascular territories — pathognomonic for MELAS\n- **Biochemistry**: Elevated lactate (4.2 mmol/L) — reflects impaired mitochondrial oxidative phosphorylation\n- **Histology**: Ragged red fibers on muscle biopsy — subsarcolemmal mitochondrial accumulation\n- **Associated features**: Sensorineural hearing loss, short stature — common MELAS comorbidities\n\n### Heteroplasmy Note\n- **65% in muscle** — blood heteroplasmy is typically lower (may underestimate disease burden)\n- Heteroplasmy levels can shift over time and vary between tissues\n- Muscle biopsy is the gold standard for heteroplasmy assessment\n\n### Management\n1. **Acute episodes**: IV L-arginine (0.5 g/kg) during stroke-like episodes — improves cerebral vasodilation\n2. **Chronic prevention**: Oral L-arginine + L-citrulline daily\n3. **Supplementation**: CoQ10 (300-600 mg/day), riboflavin (100-400 mg/day)\n4. **Seizure control**: Levetiracetam preferred\n5. **AVOID**: Valproate (mitochondrial toxicity), aminoglycosides (ototoxicity risk), prolonged fasting, high-intensity exercise\n\n### Surveillance\n- **Cardiac**: Annual echocardiography (cardiomyopathy risk)\n- **Endocrine**: Annual glucose tolerance test — m.3243A>G causes MIDD (maternally inherited diabetes and deafness)\n- **Renal**: Monitor for focal segmental glomerulosclerosis\n- **Ophthalmology**: Annual exam for pigmentary retinopathy\n- **Audiology**: Serial hearing assessments\n\n### Genetic Counseling\n- **Maternal inheritance**: All maternal relatives are at risk — variable phenotype due to heteroplasmy\n- Prenatal testing is possible but limited by heteroplasmy variability between tissues\n- Mitochondrial donation (\"three-parent IVF\") is available in some countries to prevent transmission\n\n*Evidence level: High for diagnosis. Moderate for treatment (L-arginine has observational evidence, no large RCTs).*"
+    },
+    {
+      "id": 7,
+      "title": "Common Variable Immunodeficiency (CVID)",
+      "category": "Immunodeficiency",
+      "complexity": "Moderate",
+      "patient_presentation": "A 28-year-old woman is referred after her fourth episode of bacterial pneumonia in two years. She has a history of chronic sinusitis since childhood and one episode of Giardia enteritis. Immunoglobulin levels show IgG 280 mg/dL (normal 700-1,600), IgA <7 mg/dL, and IgM 35 mg/dL. Vaccine responses to pneumococcal polysaccharide are absent despite vaccination. B cells are present but memory B cells (CD27+) are markedly reduced. Genetic testing reveals a heterozygous pathogenic variant in TNFRSF13B (TACI): c.310T>C (C104R).",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Common variable immunodeficiency\")",
+          "result": "**Common variable immunodeficiency** (ORPHA:1572)\n- **Prevalence**: 1/25,000-50,000 — most common symptomatic primary immunodeficiency\n- **Inheritance**: Complex — monogenic in ~30%, polygenic/multifactorial in majority\n- **Diagnosis**: Age >4 years, low IgG + low IgA/IgM, absent vaccine responses, exclusion of secondary causes\n- **Complications**: Infections, autoimmunity (20%), granulomatous disease (8-22%), lymphoma (5-8%)"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.310T>C\", gene=\"TNFRSF13B\")",
+          "result": "**TNFRSF13B c.310T>C (p.C104R)** — Classification: **Pathogenic/Risk factor**\n- Condition: CVID susceptibility\n- Mechanism: Disrupts cysteine-rich domain of TACI → impaired B-cell maturation\n- **Incomplete penetrance**: Many carriers are unaffected — genetic counseling is nuanced\n- Found in ~10% of CVID patients (vs ~1% of general population)"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"primary immunodeficiency\")",
+          "result": "**Antibody deficiency panels**:\n- TNFRSF13B (TACI): Included in antibody deficiency panel\n- Other CVID-associated genes: ICOS, BAFF-R (TNFRSF13C), CD19, CD81, NFKB1, NFKB2, PIK3CD\n- Note: TACI variants are risk factors with incomplete penetrance, not fully deterministic"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"CVID immunoglobulin replacement therapy monitoring\")",
+          "result": "**CVID treatment**:\n1. **IgG replacement**: IV (IVIg every 3-4 weeks) or subcutaneous (SCIg weekly/biweekly)\n2. **Trough target**: IgG >500-700 mg/dL (individualize based on infection frequency)\n3. **Infection reduction**: IgG replacement reduces bacterial infections by >80%\n4. **Monitoring**: Trough IgG levels, liver function, complete blood count\n5. **Complication screening**: CT chest (bronchiectasis, granulomas), spleen assessment, autoimmune markers annually"
+        },
+        {
+          "tool": "Orphanet",
+          "query": "get_disease_phenotypes(\"1572\")",
+          "result": "**CVID phenotype spectrum**:\n- **Infections**: Sinopulmonary (most common), GI (Giardia, Campylobacter), bronchiectasis\n- **Autoimmunity**: ITP (12%), AIHA (5-7%), autoimmune thyroid disease\n- **Granulomatous disease**: GLILD (granulomatous-lymphocytic interstitial lung disease)\n- **Lymphoproliferation**: Splenomegaly, lymphadenopathy, lymphoma risk (5-8%)\n- **GI**: Nodular lymphoid hyperplasia, celiac-like disease, inflammatory bowel disease-like"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with Common Variable Immunodeficiency (CVID)**.\n\n### Key Evidence\n- **Immunoglobulins**: IgG 280 mg/dL (severely low), IgA <7 mg/dL, IgM 35 mg/dL — fulfills diagnostic criteria\n- **Functional assessment**: Absent pneumococcal vaccine responses — confirms functional antibody deficiency\n- **B-cell phenotype**: Reduced memory B cells (CD27+) — common finding in CVID, associated with increased complication risk\n- **Genetics**: TACI C104R — found in ~10% of CVID patients, but incomplete penetrance means counseling is nuanced\n- **Clinical pattern**: Recurrent sinopulmonary infections + Giardia — classic CVID infection profile\n\n### Management\n1. **IgG replacement therapy**: Lifelong — start IV or subcutaneous immunoglobulin\n   - Target trough IgG >500-700 mg/dL (individualize to infection-free threshold)\n   - Expect >80% reduction in bacterial infections\n2. **Treat active infections**: Appropriate antibiotics for current and chronic infections\n3. **Pulmonary assessment**: CT chest to evaluate for bronchiectasis (may already be established given recurrent pneumonias)\n\n### Complication Surveillance\n- **Autoimmune cytopenias**: Annual CBC with differential (ITP in 12%, AIHA in 5-7%)\n- **Granulomatous disease**: Lung imaging for GLILD (8-22% of CVID patients)\n- **Lymphoma**: Increased risk (5-8%) — monitor for lymphadenopathy, unexplained weight loss\n- **GI**: Screen for celiac-like enteropathy, nodular lymphoid hyperplasia if GI symptoms persist\n- **Liver**: Monitor for granulomatous hepatitis, nodular regenerative hyperplasia\n\n### Genetic Counseling\n- TACI C104R has **incomplete penetrance** — many carriers are completely unaffected\n- First-degree relatives should be offered immunoglobulin levels, but genetic testing is less predictive than for monogenic diseases\n- The genetic contribution to CVID is complex and often polygenic\n\n### Important Exclusions\n- Rule out secondary causes: medications (rituximab, anticonvulsants), protein-losing enteropathy, lymphoproliferative disease\n\n*Evidence level: High for diagnosis and IgG replacement. Moderate for complication surveillance protocols.*"
+    },
+    {
+      "id": 8,
+      "title": "Wilson Disease",
+      "category": "Inborn Errors of Metabolism",
+      "complexity": "Moderate",
+      "patient_presentation": "A 16-year-old male presents with declining school performance, personality changes, and a new tremor. Slit-lamp exam reveals golden-brown Kayser-Fleischer rings. Labs show low ceruloplasmin (8 mg/dL, normal 20-40), elevated 24-hour urine copper (180 \u00b5g/day, normal <40), and mildly elevated transaminases. Liver biopsy shows hepatic copper content of 320 \u00b5g/g dry weight (normal <50). Genetic testing reveals compound heterozygous variants in ATP7B: c.3207C>A (H1069Q) and c.2333G>T (R778L).",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Wilson disease\")",
+          "result": "**Wilson disease** (ORPHA:905)\n- **Prevalence**: 1/30,000\n- **Inheritance**: Autosomal recessive (ATP7B, 13q14.3)\n- **Mechanism**: Defective copper-transporting ATPase → hepatic copper accumulation → copper deposition in brain, cornea, other organs\n- **Presentations**: Hepatic (childhood), Neuropsychiatric (adolescence/young adult), Mixed"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.3207C>A\", gene=\"ATP7B\")",
+          "result": "**ATP7B c.3207C>A (p.H1069Q)** — Classification: **Pathogenic**\n- Condition: Wilson disease\n- Most common variant in European populations (~35-45% of alleles)\n- Associated with later-onset, predominantly neurological presentation"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.2333G>T\", gene=\"ATP7B\")",
+          "result": "**ATP7B c.2333G>T (p.R778L)** — Classification: **Pathogenic**\n- Condition: Wilson disease\n- Most common variant in East Asian populations (~30-50% of alleles)\n- Associated with earlier-onset, predominantly hepatic presentation"
+        },
+        {
+          "tool": "gnomAD",
+          "query": "query_variant(\"13-51421838-G-T\")",
+          "result": "**ATP7B H1069Q population frequencies**:\n- European (non-Finnish): AF ~0.006 (carrier frequency ~1/90)\n- East Asian: AF ~0.001\n- Ashkenazi Jewish: AF ~0.01\n- Global: AF ~0.003"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"Wilson disease ATP7B chelation therapy penicillamine trientine\")",
+          "result": "**Wilson disease treatment**:\n1. **Chelation therapy**: Trientine (preferred for neurological Wilson) or penicillamine (more side effects)\n2. **Zinc therapy**: Maintenance phase — blocks intestinal copper absorption\n3. **Initial treatment for neurologic Wilson**: Trientine preferred — penicillamine can cause paradoxical neurological worsening in 10-50%\n4. **Liver transplant**: Curative for hepatic Wilson with acute liver failure\n5. **Weiss et al. (2025)**: WTX101 (bis-choline tetrathiomolybdate) Phase III — promising for neurological Wilson with fewer worsening events"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with Wilson disease** with neuropsychiatric presentation.\n\n### Key Evidence\n- **Leipzig Score**: >4 (diagnostic) — Kayser-Fleischer rings (+2), low ceruloplasmin (+2), elevated urinary copper (+2), elevated hepatic copper (+2), two pathogenic ATP7B variants (+4)\n- **Genotype**: Compound heterozygous H1069Q/R778L — interesting combination of most common European and East Asian variants (may suggest mixed ancestry or independent occurrence)\n- **Presentation**: Neuropsychiatric (personality changes, tremor, declining academics) — typical for adolescent onset\n\n### Management\n1. **Initial chelation**: **Trientine** is preferred over penicillamine for neurological Wilson disease\n   - Penicillamine causes paradoxical neurological worsening in 10-50% of neurologic cases\n   - Monitor 24-hour urine copper to assess decoppering progress\n2. **Transition to maintenance**: Zinc acetate once copper levels normalize — blocks intestinal copper absorption\n3. **Dietary copper restriction**: Avoid high-copper foods (shellfish, liver, chocolate, mushrooms, nuts)\n\n### Monitoring\n- Neurological assessment: serial exams, consider MRI brain for basal ganglia copper deposition\n- Hepatic: LFTs, albumin, INR — assess for underlying cirrhosis\n- Ophthalmologic: Kayser-Fleischer rings should diminish with treatment\n- Urinary copper: Monitor decoppering; target 24h urine copper 200-500 \u00b5g/day during chelation\n\n### Important Warning\n- Neuropsychiatric symptoms may **initially worsen** with chelation therapy — close monitoring in first 3-6 months is critical\n- If worsening occurs with one chelator, consider switching or adding zinc\n\n### Family Screening\n- **25% risk for siblings** — ALL siblings must be screened (ceruloplasmin, 24h urine copper, LFTs, slit-lamp, ATP7B genotyping)\n- Presymptomatic treatment prevents organ damage — early detection is critical\n- Autosomal recessive: both parents are obligate carriers\n\n*Evidence level: High — Wilson disease has established diagnostic scoring (Leipzig) and treatment protocols.*"
+    },
+    {
+      "id": 9,
+      "title": "Fabry Disease",
+      "category": "Inborn Errors of Metabolism (Lysosomal Storage)",
+      "complexity": "High",
+      "patient_presentation": "A 38-year-old man presents with progressive renal failure (GFR 45 mL/min), left ventricular hypertrophy (septum 16mm) without hypertension, and a history of childhood acroparesthesias (burning pain in hands/feet with fevers). He has clustered angiokeratomas on his trunk and cornea verticillata on slit-lamp exam. Alpha-galactosidase A enzyme activity is low at 0.8 nmol/hr/mL (normal >3.0). Genetic testing reveals a hemizygous c.644A>G (N215S) variant in GLA.",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"Fabry disease\")",
+          "result": "**Fabry disease** (ORPHA:324)\n- **Prevalence**: 1/40,000-117,000 (higher with newborn screening)\n- **Inheritance**: X-linked (GLA, Xq22.1)\n- **Mechanism**: Alpha-galactosidase A deficiency → Gb3 accumulation in vascular endothelium, podocytes, cardiomyocytes\n- **Classic male**: Childhood onset (acroparesthesias, angiokeratomas) → adult complications (renal, cardiac, stroke)\n- **Diagnostic delay**: Average 13-18 years from first symptom to diagnosis"
+        },
+        {
+          "tool": "ClinVar",
+          "query": "search_variant(\"c.644A>G\", gene=\"GLA\")",
+          "result": "**GLA c.644A>G (p.N215S)** — Classification: **Pathogenic**\n- Condition: Fabry disease\n- Associated with later-onset cardiac/renal phenotype\n- **Migalastat amenable**: This variant is responsive to oral chaperone therapy\n- Review status: Expert panel"
+        },
+        {
+          "tool": "DiffDx",
+          "query": "differential for LVH + renal failure + acroparesthesias",
+          "result": "**Differential diagnosis for unexplained LVH + renal disease**:\n1. **Fabry disease** — most likely given acroparesthesias + angiokeratomas + cornea verticillata\n2. **Hypertensive heart disease** — excluded (no hypertension)\n3. **Cardiac amyloidosis** — amyloid deposition in heart, but different systemic features\n4. **Hypertrophic cardiomyopathy** — sarcomeric mutations, no renal involvement\n5. **Danon disease** — LAMP2 mutations, more severe cardiomyopathy"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"Fabry disease enzyme replacement therapy migalastat chaperone\")",
+          "result": "**Fabry disease treatment**:\n1. **ERT**: Agalsidase alfa (Replagal, 0.2 mg/kg) or agalsidase beta (Fabrazyme, 1.0 mg/kg) IV biweekly\n2. **Oral chaperone**: Migalastat (Galafold) 123 mg every other day — for **amenable GLA variants only**\n3. **N215S is migalastat-amenable** — check the official amenability table\n4. **Adjunctive**: ACEi/ARB for proteinuria, pain management (gabapentin/carbamazepine for neuropathic pain)\n5. **Hughes et al. (2024)**: 5-year migalastat data shows stable eGFR and cardiac mass in amenable patients"
+        },
+        {
+          "tool": "Orphanet",
+          "query": "get_disease_phenotypes(\"324\")",
+          "result": "**Fabry disease organ involvement spectrum**:\n- **Renal**: Proteinuria → progressive CKD → ESRD (median age 40-50 in classic males)\n- **Cardiac**: LVH, arrhythmias, heart failure (leading cause of death)\n- **Cerebrovascular**: Stroke/TIA (young-onset)\n- **Pain**: Acroparesthesias (childhood onset), triggered by heat/exercise/fever\n- **Skin**: Angiokeratomas (clustered, bathing-trunk distribution)\n- **Eyes**: Cornea verticillata (pathognomonic), tortuous retinal vessels\n- **GI**: Abdominal pain, diarrhea, early satiety"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with Fabry disease** (classic male phenotype).\n\n### Key Evidence\n- **Enzyme activity**: Alpha-gal A 0.8 nmol/hr/mL (severely reduced) — diagnostic in males\n- **Genotype**: GLA N215S — pathogenic, associated with later-onset cardiac/renal phenotype\n- **Clinical triad**: Renal failure (GFR 45) + unexplained LVH (16mm, no hypertension) + childhood acroparesthesias\n- **Pathognomonic findings**: Cornea verticillata on slit-lamp, clustered angiokeratomas\n\n### Diagnostic Delay Noted\nThis patient experienced a **>20-year diagnostic delay** (acroparesthesias in childhood → diagnosis at age 38). This is unfortunately typical — average delay is 13-18 years, highlighting the need for increased awareness.\n\n### Treatment\n1. **Primary**: **Migalastat (Galafold)** — N215S is a migalastat-amenable variant\n   - Oral chaperone therapy (123 mg every other day) — stabilizes residual enzyme\n   - Preferred over ERT for amenable variants (oral, no infusion reactions, stable efficacy at 5 years)\n2. **Alternative**: ERT (agalsidase alfa or beta) if migalastat not tolerated/available\n3. **Renal**: ACEi/ARB for proteinuria management; nephrology co-management; renal transplant evaluation if progression\n4. **Pain**: Gabapentin or carbamazepine for neuropathic pain; avoid trigger exposure (heat, heavy exercise)\n\n### Surveillance\n- **Cardiac**: Annual echocardiography + cardiac MRI (assess for fibrosis — late gadolinium enhancement)\n- **Renal**: Serial eGFR and proteinuria monitoring every 3-6 months\n- **Cerebrovascular**: Brain MRI (white matter lesions, silent strokes)\n- **Hearing**: Audiometry (sensorineural hearing loss common)\n\n### Family Screening\n- **X-linked**: Obligate carrier females (mother, sisters) may have attenuated symptoms\n- Screen all at-risk females with enzyme activity + genetic testing (enzyme alone is unreliable in heterozygous females)\n- Sons of affected males will NOT be affected (X from mother); all daughters will be carriers\n\n*Evidence level: High — Fabry disease has established diagnostic criteria and two approved treatment modalities with long-term efficacy data.*"
+    },
+    {
+      "id": 10,
+      "title": "22q11.2 Deletion Syndrome",
+      "category": "Complex Genetic (Multi-System)",
+      "complexity": "High",
+      "patient_presentation": "A 2-year-old girl is evaluated for recurrent infections and failure to thrive. She was born with a cleft palate (repaired at 9 months) and had neonatal hypocalcemia requiring NICU admission. Echocardiography at birth showed a right aortic arch and aberrant subclavian artery. Immunological workup shows low but present T cells with reduced thymic output (low TRECs). She has subtle facial dysmorphism (hooded eyelids, tubular nose). Chromosomal microarray reveals a 2.5 Mb deletion at 22q11.21.",
+      "tool_calls": [
+        {
+          "tool": "Orphanet",
+          "query": "search_disease(\"22q11.2 deletion syndrome\")",
+          "result": "**22q11.2 deletion syndrome** (ORPHA:567) — also known as DiGeorge syndrome, velocardiofacial syndrome\n- **Prevalence**: 1/4,000 — most common microdeletion syndrome\n- **Inheritance**: Autosomal dominant (most de novo, ~90%)\n- **Key gene**: TBX1 — drives most cardiac and pharyngeal features\n- **Variability**: >180 associated features; no two patients are identical"
+        },
+        {
+          "tool": "HPO",
+          "query": "search_term(\"velopharyngeal insufficiency\")",
+          "result": "**Velopharyngeal insufficiency** (HP:0000220)\n- Definition: Incomplete closure of the velopharyngeal sphincter during speech and swallowing\n- Associated with: 22q11.2 deletion, cleft palate spectrum, neurological conditions\n- In 22q11.2: Submucous cleft palate is more common than overt cleft"
+        },
+        {
+          "tool": "PanelApp",
+          "query": "search_panels(\"22q11 deletion\")",
+          "result": "**Relevant gene panels**:\n- Cardiac panels: TBX1 region included for conotruncal heart defects\n- Immunodeficiency panels: For T-cell lymphopenia evaluation\n- Chromosomal microarray: First-tier test for suspected 22q11.2 deletion\n- FISH for 22q11.2: Alternative if microarray unavailable"
+        },
+        {
+          "tool": "PubMed",
+          "query": "search(\"22q11.2 deletion syndrome psychiatric risk schizophrenia\")",
+          "result": "**Psychiatric risk in 22q11.2 deletion syndrome**:\n1. **Schizophrenia/psychotic disorders**: 25-30% lifetime risk (vs 1% general population)\n2. **ADHD**: ~40% prevalence in childhood\n3. **Anxiety disorders**: ~35% prevalence\n4. **ASD features**: ~15-20% prevalence\n5. **Schneider et al. (2024)**: Early psychiatric screening and intervention improves outcomes\n6. **Critical period**: Psychotic symptoms typically emerge in late adolescence/early adulthood"
+        },
+        {
+          "tool": "DiffDx",
+          "query": "differential for cleft palate + cardiac defect + T-cell lymphopenia + hypocalcemia",
+          "result": "**Differential diagnosis**:\n1. **22q11.2 deletion syndrome (DiGeorge)** — most likely given CATCH-22 features\n2. **CHARGE syndrome** (CHD7) — coloboma, choanal atresia, cranial nerve anomalies\n3. **Alagille syndrome** (JAG1/NOTCH2) — bile duct paucity, butterfly vertebrae, cardiac\n4. **Kabuki syndrome** (KMT2D/KDM6A) — distinctive facial features, skeletal anomalies\n\n*CATCH-22 mnemonic: Cardiac, Abnormal facies, Thymic hypoplasia, Cleft palate, Hypocalcemia — 22q11.2*"
+        }
+      ],
+      "clinical_assessment": "## Clinical Assessment\n\n### Diagnosis\nFindings are **consistent with 22q11.2 deletion syndrome** (DiGeorge/velocardiofacial syndrome).\n\n### Key Evidence\n- **Cytogenetics**: 2.5 Mb deletion at 22q11.21 — the typical recurrent deletion encompassing TBX1\n- **CATCH-22 features present**: Cardiac (right aortic arch + aberrant subclavian), Abnormal facies (hooded eyelids, tubular nose), Thymic hypoplasia (low TRECs, reduced T cells), Cleft palate (repaired), Hypocalcemia (neonatal NICU admission)\n- **Immunological**: Partial DiGeorge — T cells present but reduced thymic output (better prognosis than complete DiGeorge)\n\n### Current Management Priorities\n1. **Immunological**: \n   - Partial DiGeorge (T cells present) — may improve with age as thymic function matures\n   - **Avoid live vaccines** until T-cell counts and function are adequate (typically CD4 >500, normal mitogen responses)\n   - Irradiated blood products if transfusion needed\n2. **Calcium**: Monitor closely — hypoparathyroidism may be permanent or transient\n3. **Cardiac**: Already identified — ongoing cardiology follow-up\n4. **Speech**: Velopharyngeal function assessment post-palate repair — speech therapy essential\n\n### Developmental & Psychiatric Surveillance (Critical)\n- **Learning disability**: ~70-90% have some degree — early intervention services\n- **ADHD**: Screen from age 4-5 (40% prevalence)\n- **Anxiety**: Monitor from school age (35% prevalence)\n- **Psychotic disorders**: **25-30% lifetime risk** — psychiatric screening should begin in adolescence with annual assessments from age 12\n- Proactive mental health support reduces severity and improves outcomes\n\n### Additional Screening\n- **Endocrine**: Thyroid function (hypothyroidism risk), growth hormone assessment\n- **Renal**: Ultrasound (renal anomalies in ~30%)\n- **Skeletal**: Scoliosis screening, cervical spine evaluation\n- **Feeding**: Assess for pharyngeal dysphagia, gastroesophageal reflux\n- **Autoimmunity**: Monitor for juvenile idiopathic arthritis, autoimmune cytopenias\n\n### Genetic Counseling\n- **De novo in >90% of cases** — recurrence risk for parents is very low (confirm with parental testing)\n- **50% risk** if the affected individual has children\n- Highly variable expressivity — family members with the same deletion can have vastly different phenotypes\n\n*Evidence level: High — 22q11.2 deletion syndrome is the most common microdeletion with extensive longitudinal outcome data and established management guidelines.*"
+    }
+  ]
+}
