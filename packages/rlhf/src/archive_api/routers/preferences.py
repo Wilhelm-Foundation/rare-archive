@@ -2,7 +2,6 @@
 
 import json
 import logging
-from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -16,6 +15,59 @@ from ..models.database import Evaluation, PreferenceExport, get_db
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# Stable path in HF repo — one canonical file that grows via append
+HF_PREFERENCES_PATH = "data/preferences.jsonl"
+
+
+def _load_existing_ids(jsonl_path: Path) -> set[int]:
+    """Load evaluation_ids already present in a JSONL file."""
+    ids: set[int] = set()
+    if not jsonl_path.exists():
+        return ids
+    with open(jsonl_path) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+                eid = record.get("metadata", {}).get("evaluation_id")
+                if eid is not None:
+                    ids.add(int(eid))
+            except (json.JSONDecodeError, ValueError):
+                continue
+    return ids
+
+
+def _download_existing(tmpdir: Path) -> Path:
+    """Download existing preferences JSONL from HuggingFace, if it exists.
+
+    Returns the local path (may be empty/nonexistent if no prior export).
+    """
+    local_path = tmpdir / "existing_preferences.jsonl"
+    if not settings.hf_token:
+        return local_path
+
+    try:
+        from huggingface_hub import hf_hub_download
+        downloaded = hf_hub_download(
+            repo_id=f"{settings.hf_org}/{settings.hf_dataset}",
+            filename=HF_PREFERENCES_PATH,
+            repo_type="dataset",
+            token=settings.hf_token,
+            local_dir=str(tmpdir),
+            local_dir_use_symlinks=False,
+        )
+        # hf_hub_download may place it at tmpdir/data/preferences.jsonl
+        downloaded_path = Path(downloaded)
+        if downloaded_path != local_path and downloaded_path.exists():
+            downloaded_path.rename(local_path)
+        return local_path
+    except Exception:
+        # File doesn't exist on HF yet — first export
+        logger.debug("No existing preferences file on HuggingFace (first export)")
+        return local_path
 
 
 @router.get("/pairs")
@@ -61,10 +113,14 @@ async def get_preference_pairs(
 @router.post("/export")
 async def export_to_huggingface(
     patient_category: str | None = None,
+    append_only: bool = True,
     db: AsyncSession = Depends(get_db),
 ):
-    """Export preference pairs to HuggingFace dataset."""
-    # Get pairs
+    """Export preference pairs to HuggingFace dataset.
+
+    With append_only=True (default), downloads existing data from HF,
+    deduplicates by evaluation_id, and appends only new pairs.
+    """
     pairs_response = await get_preference_pairs(patient_category, limit=10000, db=db)
     pairs = pairs_response["pairs"]
 
@@ -72,31 +128,63 @@ async def export_to_huggingface(
         return {"status": "no_data", "message": "No preference pairs to export"}
 
     with TemporaryDirectory() as tmpdir:
-        # Write JSONL
-        jsonl_path = Path(tmpdir) / "preferences.jsonl"
-        with open(jsonl_path, "w") as f:
-            for pair in pairs:
-                f.write(json.dumps(pair, ensure_ascii=False) + "\n")
+        tmpdir_path = Path(tmpdir)
+
+        # Determine which pairs are new
+        existing_ids: set[int] = set()
+        existing_path = tmpdir_path / "existing_preferences.jsonl"
+
+        if append_only and settings.hf_token:
+            existing_path = _download_existing(tmpdir_path)
+            existing_ids = _load_existing_ids(existing_path)
+
+        new_pairs = [
+            p for p in pairs
+            if p["metadata"]["evaluation_id"] not in existing_ids
+        ]
+
+        if not new_pairs and append_only:
+            return {
+                "status": "no_new_data",
+                "message": f"All {len(pairs)} pairs already exported",
+                "existing_count": len(existing_ids),
+            }
+
+        # Build merged file: existing lines + new pairs
+        merged_path = tmpdir_path / "preferences.jsonl"
+        with open(merged_path, "w") as out:
+            # Copy existing lines verbatim
+            if existing_path.exists():
+                with open(existing_path) as existing:
+                    for line in existing:
+                        out.write(line)
+            # Append new pairs
+            for pair in new_pairs:
+                out.write(json.dumps(pair, ensure_ascii=False) + "\n")
 
         # Upload to HuggingFace
         commit_hash = ""
+        pairs_to_report = new_pairs if append_only else pairs
         if settings.hf_token:
             try:
                 from huggingface_hub import HfApi
                 api = HfApi(token=settings.hf_token)
 
                 api.upload_file(
-                    path_or_fileobj=str(jsonl_path),
-                    path_in_repo=f"data/preferences_{datetime.utcnow().strftime('%Y%m%d')}.jsonl",
+                    path_or_fileobj=str(merged_path),
+                    path_in_repo=HF_PREFERENCES_PATH,
                     repo_id=f"{settings.hf_org}/{settings.hf_dataset}",
                     repo_type="dataset",
                 )
                 commit_hash = "uploaded"
-                logger.info(f"Exported {len(pairs)} preference pairs to HuggingFace")
+                logger.info(
+                    f"Exported {len(pairs_to_report)} new preference pairs "
+                    f"(total: {len(existing_ids) + len(new_pairs)}) to HuggingFace"
+                )
             except Exception as e:
                 logger.error(f"HuggingFace export failed: {e}")
                 export = PreferenceExport(
-                    evaluation_count=len(pairs),
+                    evaluation_count=len(pairs_to_report),
                     hf_dataset_id=f"{settings.hf_org}/{settings.hf_dataset}",
                     status="failed",
                 )
@@ -106,7 +194,7 @@ async def export_to_huggingface(
 
         # Record export
         export = PreferenceExport(
-            evaluation_count=len(pairs),
+            evaluation_count=len(pairs_to_report),
             hf_dataset_id=f"{settings.hf_org}/{settings.hf_dataset}",
             hf_commit_hash=commit_hash,
             status="success",
@@ -116,6 +204,8 @@ async def export_to_huggingface(
 
     return {
         "status": "success",
-        "pairs_exported": len(pairs),
+        "new_pairs_exported": len(new_pairs),
+        "existing_pairs": len(existing_ids),
+        "total_pairs": len(existing_ids) + len(new_pairs),
         "hf_dataset": f"{settings.hf_org}/{settings.hf_dataset}",
     }

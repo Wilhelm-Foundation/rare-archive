@@ -16,6 +16,9 @@ class Settings:
     hf_org: str = os.getenv("HF_ORG", "wilhelm-foundation")
     hf_dataset: str = os.getenv("HF_DATASET", "rare-archive-rlhf-preferences")
 
+    # ChromaDB (container-to-container on lattice-l2 network)
+    chromadb_url: str = os.getenv("CHROMADB_URL", "http://rare-archive-chromadb:8000")
+
     # ELO settings
     elo_k_factor: float = float(os.getenv("ELO_K_FACTOR", "32"))
     elo_initial_rating: float = float(os.getenv("ELO_INITIAL_RATING", "1500"))

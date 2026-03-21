@@ -29,7 +29,7 @@ services:
       - LLAMA_ARG_FLASH_ATTN=true
       - LLAMA_ARG_HOST=0.0.0.0
       - LLAMA_ARG_PORT=8080
-      - LLAMA_ARG_METRICS=true
+      - LLAMA_ARG_ENDPOINT_METRICS=true
       - LLAMA_ARG_REASONING=off
     deploy:
       resources:
@@ -65,7 +65,7 @@ services:
       - LLAMA_ARG_FLASH_ATTN=true
       - LLAMA_ARG_HOST=0.0.0.0
       - LLAMA_ARG_PORT=8080
-      - LLAMA_ARG_METRICS=true
+      - LLAMA_ARG_ENDPOINT_METRICS=true
       - LLAMA_ARG_REASONING=off
     deploy:
       resources:
@@ -148,9 +148,12 @@ services:
       - OPENWEBUI_URL=http://rare-archive-openwebui:8080
       - HF_TOKEN=${HF_TOKEN:-}
       - HF_ORG=wilhelm-foundation
+      - CHROMADB_URL=http://rare-archive-chromadb:8000
     depends_on:
       openwebui:
         condition: service_started
+      chromadb:
+        condition: service_healthy
     networks:
       - lattice-l2
 

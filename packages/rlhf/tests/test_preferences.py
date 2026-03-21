@@ -1,5 +1,11 @@
 """Tests for preference pair extraction and export."""
 
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from archive_api.routers.preferences import _load_existing_ids
+
 
 class TestGetPairs:
     """Tests for GET /preferences/pairs."""
@@ -54,9 +60,63 @@ class TestExport:
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "success"
-        assert data["pairs_exported"] >= 1
+        assert data["new_pairs_exported"] >= 1
+        assert data["total_pairs"] >= 1
 
     async def test_no_data_handled(self, client):
         resp = await client.post("/preferences/export")
         assert resp.status_code == 200
         assert resp.json()["status"] == "no_data"
+
+
+class TestAppendDeduplication:
+    """Tests for append-mode deduplication logic."""
+
+    def test_load_existing_ids_empty_file(self):
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "empty.jsonl"
+            assert _load_existing_ids(path) == set()
+
+    def test_load_existing_ids_nonexistent(self):
+        assert _load_existing_ids(Path("/nonexistent/file.jsonl")) == set()
+
+    def test_load_existing_ids_parses_evaluation_ids(self):
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "prefs.jsonl"
+            records = [
+                {"metadata": {"evaluation_id": 1}, "prompt": "x", "chosen": "a", "rejected": "b"},
+                {"metadata": {"evaluation_id": 2}, "prompt": "y", "chosen": "c", "rejected": "d"},
+                {"metadata": {"evaluation_id": 5}, "prompt": "z", "chosen": "e", "rejected": "f"},
+            ]
+            with open(path, "w") as f:
+                for r in records:
+                    f.write(json.dumps(r) + "\n")
+
+            ids = _load_existing_ids(path)
+            assert ids == {1, 2, 5}
+
+    def test_load_existing_ids_handles_corrupt_lines(self):
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "prefs.jsonl"
+            with open(path, "w") as f:
+                f.write(json.dumps({"metadata": {"evaluation_id": 10}}) + "\n")
+                f.write("not valid json\n")
+                f.write(json.dumps({"metadata": {"evaluation_id": 20}}) + "\n")
+                f.write("\n")  # blank line
+
+            ids = _load_existing_ids(path)
+            assert ids == {10, 20}
+
+    async def test_export_twice_no_duplicates(self, client, sample_evaluation):
+        """Export twice — second export should still succeed (no HF in test mode)."""
+        resp1 = await client.post("/preferences/export")
+        assert resp1.status_code == 200
+        assert resp1.json()["status"] == "success"
+        count1 = resp1.json()["new_pairs_exported"]
+
+        resp2 = await client.post("/preferences/export")
+        assert resp2.status_code == 200
+        # Without HF, both exports report all pairs as "new" (no download)
+        # but the core dedup logic is tested via _load_existing_ids above
+        assert resp2.json()["status"] == "success"
+        assert resp2.json()["new_pairs_exported"] == count1
