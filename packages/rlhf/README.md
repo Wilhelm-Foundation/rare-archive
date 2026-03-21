@@ -1,6 +1,8 @@
 # Rare Archive RLHF
 
-RLHF portal backend for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive). Extends OpenWebUI Arena mode with multi-dimensional ELO tracking, expert matching, and preference data export.
+RLHF portal backend for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive). Extends OpenWebUI Arena mode with multi-dimensional ELO tracking, expert matching, preference data export, and clinical correction feedback loops.
+
+For the full system architecture with diagrams, see [ARCHITECTURE.md](../../ARCHITECTURE.md).
 
 ## Architecture
 
@@ -22,8 +24,18 @@ Expert → JupyterHub SSO → OpenWebUI Arena
               ELO Update           Preference Pair
               (per category,       (DPO-compatible)
                per dimension)            │
-                                    HuggingFace
-                                    Export
+                    │               HuggingFace
+                    │               Export (append + dedup)
+                    │
+         Correction Feedback
+                    │
+          ┌────────┴────────┐
+          │                 │
+     PostgreSQL         ChromaDB
+     (primary)       (embeddings)
+          │                 │
+     SFT Export      Semantic Search
+     (JSONL)         (RAG retrieval)
 ```
 
 ## API Endpoints
@@ -39,7 +51,18 @@ Expert → JupyterHub SSO → OpenWebUI Arena
 | `/evaluations/submit` | POST | Submit Arena evaluation |
 | `/evaluations/stats` | GET | Evaluation statistics |
 | `/preferences/pairs` | GET | Extract DPO preference pairs |
-| `/preferences/export` | POST | Export to HuggingFace |
+| `/preferences/export` | POST | Export to HuggingFace (append + dedup) |
+| `/cases/create` | POST | Add a clinical case |
+| `/cases/batch` | POST | Batch insert (skip duplicates) |
+| `/cases/{case_id}` | GET | Retrieve case by ID |
+| `/cases/random/pick` | GET | Random case (optional category) |
+| `/cases/` | GET | List with pagination |
+| `/feedback/correction` | POST | Submit correction → PostgreSQL + ChromaDB |
+| `/feedback/annotation` | POST | Submit free-text annotation |
+| `/feedback/corrections/search` | GET | Semantic search via ChromaDB |
+| `/feedback/corrections/{case_id}` | GET | Get corrections for a case |
+| `/feedback/export-training` | GET | Export corrections as SFT JSONL |
+| `/feedback/stats` | GET | Feedback counts by type + severity |
 
 ## Quick Start
 
@@ -101,7 +124,30 @@ Evaluation results export as DPO-compatible preference pairs:
 }
 ```
 
-Export to HuggingFace: `POST /preferences/export` with `repo_id` and `split` parameters.
+Export to HuggingFace: `POST /preferences/export`. Uses append-only logic — downloads existing dataset, deduplicates by `evaluation_id`, appends new pairs, uploads merged file to stable path `data/preferences.jsonl`.
+
+## ChromaDB Integration
+
+Clinical corrections are stored in both PostgreSQL (primary record) and ChromaDB (semantic embeddings) for RAG-style retrieval:
+
+- **Collection**: `clinical_corrections`
+- **Embedding model**: all-MiniLM-L6-v2 (via `chromadb==0.5.23`)
+- **Store**: `POST /feedback/correction` dual-writes (ChromaDB is best-effort — failures don't block the request)
+- **Search**: `GET /feedback/corrections/search?query=Gaucher disease` returns semantically similar corrections
+- **Config**: `CHROMADB_URL` env var (default: `http://rare-archive-chromadb:8000`)
+
+## Correction → Retrain Cycle
+
+Corrections can be exported as SFT training data and merged into the next fine-tuning run:
+
+1. Expert submits correction: `POST /feedback/correction`
+2. Correction stored in PostgreSQL + ChromaDB
+3. Export as JSONL: `GET /feedback/export-training` (system/user/assistant chat format)
+4. Merge with existing training data (69,635 records)
+5. Run SFT with Unsloth QLoRA
+6. Deploy improved GGUF model to llama.cpp
+
+See [ARCHITECTURE.md](../../ARCHITECTURE.md) for detailed diagrams.
 
 ## License
 

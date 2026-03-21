@@ -20,12 +20,15 @@
 | **L1 local inference** | Verified — Metal + llama.cpp (see [L1 setup guide](docs/l1_local_setup.md)) |
 | **Clinical demo** | Live — [HuggingFace Space](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo) (10 scenarios, no account needed) |
 | **RLHF arena** | Planned (M10) |
+| **Feedback system** | Live — corrections, ChromaDB embeddings, SFT export |
+| **Observability** | Live — Prometheus + 9-panel Grafana dashboard |
 
 ### Key Results
 
 - **4B SFT**: 21.5% Top-1 accuracy (21.5x improvement over base model)
-- **Training data**: 63,212 records across 4 disease categories
+- **Training data**: 69,635 records across 9,100 rare diseases
 - **Clinical tools**: 7 live adapters (ClinVar, Orphanet, HPO, PanelApp, gnomAD, PubMed, DiffDx)
+- **Correction→retrain cycle**: operational end-to-end
 
 ---
 
@@ -46,7 +49,10 @@ graph LR
     M --> T
     Deploy --> R["⚖️ RLHF Arena<br/>ELO · clinician feedback"]
     R -->|"preference data"| M
+    R -->|"corrections"| D
 ```
+
+> For detailed architecture, dependency graphs, and data flow diagrams, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 ## Architecture
 
@@ -57,7 +63,7 @@ The Archive is built on the [Lattice Protocol](https://github.com/LatticeProtoco
 | **[packages/ontology](packages/ontology)** | Disease clustering, clinical tool registry, model/dataset schemas |
 | **[packages/models](packages/models)** | 4-stage training pipeline: SFT → Tool-Use → DPO/GRPO → RL |
 | **[packages/datasets](packages/datasets)** | RareArena ingestion, synthetic patients, preference data |
-| **[packages/rlhf](packages/rlhf)** | Clinician evaluation portal with multi-dimensional ELO |
+| **[packages/rlhf](packages/rlhf)** | Clinician evaluation portal: multi-dimensional ELO, feedback loops, ChromaDB embeddings |
 | **[packages/tools](packages/tools)** | Clinical tool integrations (ClinVar, Orphanet, PanelApp, gnomAD, HPO, PubMed) |
 | **[packages/compliance](packages/compliance)** | FAIR scoring, aDNA schema validation, governance |
 | **[deploy](deploy)** | Docker Compose overlays for L1/L2 deployment |

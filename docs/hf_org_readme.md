@@ -17,9 +17,9 @@
 
 | Dataset | Records | Description |
 |---------|---------|-------------|
-| [RareArena](https://huggingface.co/datasets/Wilhelm-Foundation/rare-arena) | 63,212 | Clinical vignettes across 4 disease categories |
-| [rare-archive-synthetic-patients](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-synthetic-patients) | 5,000+ | Synthetic patient presentations for training |
-| [rare-archive-preference](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-preference) | — | Clinician preference data for RLHF (collecting) |
+| [RareArena](https://huggingface.co/datasets/Wilhelm-Foundation/rare-arena) | 69,635 | Clinical vignettes across 9,100 rare diseases |
+| [rare-archive-synthetic-patients](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-synthetic-patients) | 12,984 | Synthetic patient presentations for training |
+| [rare-archive-preference](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-preference) | — | Clinician preference data for RLHF (append-safe export) |
 
 ## Clinical Tool Pipeline
 
@@ -33,21 +33,36 @@ Our models are augmented with 7 live clinical tool adapters:
 - **PubMed** — Literature search for diagnosis and management
 - **DiffDx** — Structured differential diagnosis
 
+## Feedback & Correction System
+
+Expert corrections flow through a dual-storage pipeline:
+
+- **Corrections** stored in PostgreSQL (primary) + ChromaDB (semantic embeddings)
+- **Semantic search** retrieves relevant prior corrections during inference (RAG)
+- **SFT export** converts corrections to training data format
+- **Correction→retrain cycle**: correction → training data → fine-tuning → improved model
+
+This enables the system to learn continuously from clinical expert feedback.
+
 ## Architecture
 
 ```
-Ontology (4 domains · 4K+ diseases) → Datasets (RareArena · synthetic)
-    ↓                                       ↓
-Clinical Tools (7 adapters)          Models (4-stage pipeline)
-    ↓                                       ↓
-                    Deploy (L1/L2/L3)
-                         ↓
-                  RLHF Arena (ELO · clinician feedback)
+Ontology (4 domains · 9,100 diseases) → Datasets (RareArena · synthetic)
+    ↓                                         ↓
+Clinical Tools (7 adapters)            Models (4-stage pipeline)
+    ↓                                         ↓
+                      Deploy (L1/L2/L3)
+                           ↓
+                    RLHF Arena (ELO · clinician feedback)
+                           ↓
+                  Corrections → ChromaDB → Retrain
 ```
 
 **Training pipeline**: SFT → Tool-Use SFT → DPO/GRPO → Progressive RL
 
 **Frameworks**: [Unsloth](https://github.com/unslothai/unsloth) + QLoRA for all model sizes
+
+For detailed architecture with diagrams: [ARCHITECTURE.md](https://github.com/Wilhelm-Foundation/rare-archive/blob/main/ARCHITECTURE.md)
 
 ## Interactive Demo
 
