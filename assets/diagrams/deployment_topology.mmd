@@ -1,0 +1,29 @@
+%% Rare AI Archive — Deployment Topology
+%% Spatial composition guide for branded diagram generation
+%% Brand palette: Navy #0A1628, Blue #1A73E8, Teal #00897B, Amber #F9A825, Coral #E57373
+
+graph LR
+    subgraph L1["L1 — EDGE / RURAL CLINIC"]
+        L1_HW["MacBook / Laptop\nApple Silicon / CPU"]
+        L1_MOD["Qwen3.5-4B\nGGUF Q8_0 · 3GB"]
+        L1_RT["llama.cpp\nMetal acceleration"]
+        L1_HW --> L1_MOD --> L1_RT
+    end
+
+    subgraph L2["L2 — HOSPITAL GPU CLUSTER"]
+        L2_HW["Dell PowerEdge R7525\n4× A100-80GB"]
+        L2_MOD["Qwen3.5-35B-A3B\nMoE · Full precision"]
+        L2_SVC["9 Docker Containers\nOpenWebUI · Archive API\nChromaDB · llama.cpp\nPostgreSQL · Redis"]
+        L2_TOOLS["7 Clinical Tools\nRLHF Arena\nCorrection→Retrain"]
+        L2_HW --> L2_MOD
+        L2_HW --> L2_SVC
+        L2_SVC --> L2_TOOLS
+    end
+
+    subgraph L3["L3 — ELASTIC CLOUD (PLANNED)"]
+        L3_HW["Cloud GPU Instances\nBurst Capacity"]
+        L3_CAP["Horizontal Scaling\nMulti-Region"]
+    end
+
+    L1 <-->|"Federation\nTailscale Mesh"| L2
+    L2 <-->|"Future\nFederation"| L3

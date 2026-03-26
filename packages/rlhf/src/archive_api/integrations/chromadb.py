@@ -10,8 +10,14 @@ Target: chromadb/chroma:0.5.23 server.
 import json
 import logging
 from typing import Any
+from urllib.parse import urlparse
 
-import chromadb
+try:
+    import chromadb
+    HAS_CHROMADB = True
+except ImportError:
+    chromadb = None  # type: ignore[assignment]
+    HAS_CHROMADB = False
 
 from ..config import settings
 
@@ -22,13 +28,16 @@ COLLECTION_NAME = "clinical_corrections"
 _client = None
 
 
-def _get_client() -> chromadb.HttpClient:
+def _get_client():
     """Get or create the ChromaDB HTTP client (singleton)."""
+    if not HAS_CHROMADB:
+        raise RuntimeError(
+            "chromadb is not installed. "
+            "Install with: pip install rare-archive-rlhf[chromadb]"
+        )
     global _client
     if _client is None:
         url = settings.chromadb_url.rstrip("/")
-        # Parse host and port from URL
-        from urllib.parse import urlparse
         parsed = urlparse(url)
         host = parsed.hostname or "rare-archive-chromadb"
         port = parsed.port or 8000

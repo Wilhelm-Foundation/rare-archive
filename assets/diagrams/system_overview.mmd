@@ -1,0 +1,46 @@
+%% Rare AI Archive — System Overview
+%% Spatial composition guide for branded diagram generation
+%% Brand palette: Navy #0A1628, Blue #1A73E8, Teal #00897B, Amber #F9A825, Coral #E57373
+
+graph TB
+    subgraph T3["TIER 3 — DEPLOYMENT & FEEDBACK"]
+        RLHF["Archive API\nRLHF Arena\nFeedback Loop"]
+        OWUI["OpenWebUI\nClinical Interface"]
+    end
+
+    subgraph T2["TIER 2 — TRAINING"]
+        MOD["4-Stage Pipeline\nSFT → Tool-Use → DPO → RL\n69,635 training records"]
+    end
+
+    subgraph T1["TIER 1 — DATA & TOOLS"]
+        DS["Datasets\nRareArena\n9,100 diseases"]
+        TOOLS["Clinical Tools\n7 adapters\nClinVar · Orphanet · HPO\nPanelApp · gnomAD · PubMed · DiffDx"]
+    end
+
+    subgraph T0["TIER 0 — FOUNDATION"]
+        ONT["Ontology\nDisease Clustering\n4 domains"]
+        COMP["Compliance\naDNA Validation\nFAIR Scoring"]
+    end
+
+    subgraph EXT["EXTERNAL SERVICES"]
+        PG["PostgreSQL"]
+        REDIS["Redis"]
+        CHROMA["ChromaDB"]
+        HF["HuggingFace Hub"]
+        LLAMA["llama.cpp\nGPU Inference"]
+    end
+
+    ONT --> DS
+    ONT --> TOOLS
+    COMP -.-> DS
+    COMP -.-> MOD
+    DS --> MOD
+    TOOLS --> OWUI
+    MOD --> RLHF
+    LLAMA --> OWUI
+    OWUI --> RLHF
+    RLHF --> PG
+    RLHF --> REDIS
+    RLHF --> CHROMA
+    RLHF --> HF
+    RLHF -->|"corrections feed back"| DS

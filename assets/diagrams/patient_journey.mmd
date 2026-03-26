@@ -1,0 +1,32 @@
+%% Rare AI Archive — Patient Diagnostic Journey
+%% Spatial composition guide for branded diagram generation
+%% Brand palette: Navy #0A1628, Blue #1A73E8, Teal #00897B, Amber #F9A825, Coral #E57373
+%% Split view: Traditional (coral, left) vs AI-Assisted (teal, right)
+
+graph TD
+    subgraph BEFORE["TRADITIONAL PATH (5-7 Years)"]
+        PC["Primary Care\n(stethoscope)"]
+        S1["Specialist 1\n?"]
+        S2["Specialist 2\n?"]
+        LAB["Lab Tests\n(test tube)"]
+        S3["Specialist 3\n?"]
+        GEN["Genetic Testing\n(DNA)"]
+        MORE["More Specialists\n???"]
+        DX_Q["Diagnosis?\n(uncertain)"]
+
+        PC --> S1 --> S2 --> LAB --> S3 --> GEN --> MORE --> DX_Q
+    end
+
+    subgraph AFTER["AI-ASSISTED PATH (Weeks)"]
+        SYM["Patient Symptoms\n(clipboard)"]
+        AI["Rare AI Archive\n(brain/AI icon)"]
+        TOOLS["7 Clinical Tools\nClinVar · Orphanet · HPO\nPanelApp · gnomAD · PubMed · DiffDx"]
+        DDX["Differential Diagnosis\n(ranked list)"]
+        REV["Clinician Review\n(doctor)"]
+        DX["Diagnosis\n(confident)"]
+
+        SYM --> AI --> TOOLS --> DDX --> REV --> DX
+    end
+
+    style BEFORE fill:#0A1628,stroke:#E57373,color:#fff
+    style AFTER fill:#0A1628,stroke:#00897B,color:#fff

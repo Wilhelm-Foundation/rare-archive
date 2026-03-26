@@ -1,0 +1,13 @@
+%% Rare AI Archive — Training Pipeline
+%% Spatial composition guide for branded diagram generation
+%% Brand palette: Navy #0A1628, Blue #1A73E8, Teal #00897B, Amber #F9A825, Coral #E57373
+
+graph LR
+    S1["STAGE 1\nSFT\n69,635 records\nQwen3.5-4B\n21.5x improvement"]
+    S2["STAGE 2\nTool-Use SFT\n7 clinical tools\nGold traces\nFunction calling"]
+    S3["STAGE 3\nDPO / GRPO\nClinician preferences\nA/B Arena feedback\nELO-ranked"]
+    S4["STAGE 4\nProgressive RL\nReward optimization\nMulti-objective\nSafety constraints"]
+
+    S1 -->|"fine-tuned\nweights"| S2
+    S2 -->|"tool-augmented\nmodel"| S3
+    S3 -->|"preference-aligned\nmodel"| S4

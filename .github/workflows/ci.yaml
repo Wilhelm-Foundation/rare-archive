@@ -146,6 +146,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -e "packages/ontology" && pip install -e "packages/tools[dev]"
+      - run: pip install -e "packages/ontology" && pip install -e "packages/tools[dev]" && pip install pytest-timeout
       - name: Run live adapter tests
         run: pytest packages/tools/tests/test_live_adapters.py -m live -v --timeout=30
