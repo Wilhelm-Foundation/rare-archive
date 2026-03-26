@@ -51,6 +51,12 @@ The Rare AI Archive is not a single model. It is a **decentralized, collaborativ
 
 Each role feeds the next. The more communities participate, the smarter the system becomes.
 
+### Where the Context Comes From
+
+The most valuable training data for rare disease AI isn't in a database — it's in the heads of the clinicians, geneticists, and patient advocates who navigate diagnostic odysseys every day. The [**Undiagnosed Patient Hackathon**](https://www.nature.com/articles/d41586-026-00302-8) series ([video](https://youtu.be/zPGp0gqTYbo)) is a core practice where this expert knowledge reaches critical mass: structured events where specialists reason through the hardest cases together, producing tool invocation patterns, diagnostic reasoning chains, and phenotype-to-gene mappings — all without PHI.
+
+These events generate exactly the context that makes AI systems useful: not patient data, but **clinical reasoning patterns** — which tools to invoke, in what order, for which symptom constellations. Combined with structured vignettes from the undiagnosed patient movement and organizations like [NORD](https://rarediseases.org), [Rare as One](https://chanzuckerberg.com/rare-as-one/), and rare disease advocacy groups, this creates a continuously growing corpus of expert diagnostic context that feeds model training, tool tuning, and system validation.
+
 ### Why Open Source Matters
 
 | | |
@@ -133,16 +139,34 @@ python scripts/validate_archive.py .   # Validate the archive
 
 ---
 
-## Training Pipeline
+## Training Agentic Diagnostic Systems
+
+We don't just train models — we train, tune, test, and validate **complete agentic systems**: a language model that reasons about clinical presentations, invokes real clinical tools to gather evidence, synthesizes findings into a differential diagnosis, and improves through clinician feedback. The model is one component; the system is what reaches patients.
 
 We fine-tune [Qwen 3.5](https://huggingface.co/Qwen) models across 4 progressive stages using [Unsloth](https://github.com/unslothai/unsloth) (QLoRA):
 
-| Stage | What it does | Status |
-|-------|-------------|--------|
-| **1. SFT** | Supervised fine-tuning on 69K+ RareArena + synthetic cases for clinical reasoning | **Complete** |
-| **2. Tool-Use** | Agentic SFT teaching the model to invoke ClinVar, Orphanet, PanelApp, HPO | In progress |
-| **3. DPO/GRPO** | Preference alignment from clinician evaluations on L2 | Planned |
-| **4. Progressive RL** | Reward optimization for Top-1 diagnostic accuracy | Planned |
+| Stage | What the system learns | Status |
+|-------|----------------------|--------|
+| **1. SFT** | Clinical diagnostic reasoning from 69K+ rare disease cases | **Complete** |
+| **2. Tool-Use** | When and how to invoke ClinVar, Orphanet, PanelApp, HPO, gnomAD, PubMed — learning the expert's diagnostic workflow | In progress |
+| **3. DPO/GRPO** | What good reasoning looks like, from clinician preference judgments across 5 quality dimensions | Planned |
+| **4. Progressive RL** | Optimizing the full system for diagnostic accuracy, tool appropriateness, and safety | Planned |
+
+**Stage 2 trains on gold-standard agentic traces** — multi-turn diagnostic conversations capturing how expert clinicians reason through cases: *Reason* (analyze presentation) → *Lookup* (query clinical databases) → *Match* (cross-reference findings) → *Search* (broaden when needed) → *Diagnose* (synthesize differential). Each trace includes real tool API responses, so the model learns to interpret actual clinical data — not hallucinated results.
+
+### The Arena: Proving Ground for Diagnostic AI
+
+Clinicians are not passive evaluators — they are **active participants** who determine when a model is ready for patients. The ELO Arena runs blind comparisons where rare disease specialists evaluate model outputs across **5 quality dimensions** per disease category:
+
+| Dimension | What it measures |
+|-----------|-----------------|
+| **Diagnostic Accuracy** | Did the system identify the correct diagnosis? |
+| **Reasoning Quality** | Is the clinical reasoning sound and well-structured? |
+| **Tool Usage** | Were clinical tools invoked appropriately and effectively? |
+| **Safety** | Did it avoid harmful or misleading recommendations? |
+| **Overall** | Which system would you trust in clinical practice? |
+
+Each comparison produces a multi-dimensional ELO update — not a single "win/loss" but a **quality profile** that reveals exactly where a model excels and where it needs improvement. When a clinician identifies an error, their correction enters the **correction-to-retrain loop**: stored in the feedback database, exported as training data, and incorporated into the next model version. The Arena is where models earn clinical trust — and the clinicians who use the system are the ones who decide when it's ready.
 
 ---
 
