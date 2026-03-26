@@ -135,12 +135,12 @@ python scripts/validate_archive.py .   # Validate the archive
 
 We fine-tune [Qwen 3.5](https://huggingface.co/Qwen) models across 4 progressive stages using [Unsloth](https://github.com/unslothai/unsloth) (QLoRA):
 
-| Stage | Method | Data Source | Goal | Status |
-|-------|--------|-------------|------|--------|
-| **1. SFT** | Supervised fine-tuning | RareArena + synthetic cases | Clinical diagnostic reasoning | **Complete** |
-| **2. Tool-Use** | Agentic traces | Gold-standard tool invocations | ClinVar/Orphanet/PanelApp usage | In progress |
-| **3. DPO/GRPO** | Preference alignment | Clinician evaluations | Expert-aligned reasoning | Planned |
-| **4. Progressive RL** | Reward optimization | RareArena-derived reward | Top-1 diagnostic accuracy | Planned |
+| Stage | What it does | Status |
+|-------|-------------|--------|
+| **1. SFT** | Supervised fine-tuning on 69K+ RareArena + synthetic cases for clinical reasoning | **Complete** |
+| **2. Tool-Use** | Agentic SFT teaching the model to invoke ClinVar, Orphanet, PanelApp, HPO | In progress |
+| **3. DPO/GRPO** | Preference alignment from clinician evaluations on L2 | Planned |
+| **4. Progressive RL** | Reward optimization for Top-1 diagnostic accuracy | Planned |
 
 ---
 
@@ -187,15 +187,7 @@ Specialized models for disease clusters — each trained on domain-specific data
 
 ## Community
 
-We welcome contributions from **clinicians**, **ML engineers**, **bioinformaticians**, and **patient advocates**.
-
-| Role | What you do |
-|------|------------|
-| **Clinical Validators** | Evaluate model outputs, identify errors, submit corrections that improve the next training run |
-| **Context Creators** | Contribute structured clinical case narratives grounded in lived diagnostic experience |
-| **Model Builders** | Fine-tune condition-specific models using clinician feedback and publish on HuggingFace |
-
-**Get involved:**
+Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **patient advocate** — there's a role for you in the ecosystem ([see roles above](#the-ecosystem)).
 
 - **[Contributing Guide](CONTRIBUTING.md)** — how to start
 - **[GitHub Discussions](https://github.com/Wilhelm-Foundation/rare-archive/discussions)** — questions, ideas, feedback
@@ -217,7 +209,13 @@ We welcome contributions from **clinicians**, **ML engineers**, **bioinformatici
 
 ## Related Work
 
-We build on and acknowledge outstanding work in rare disease AI: [DeepRare](https://doi.org/10.1038/s41591-025-03547-w) (2025) leads on accuracy with 57.18% Recall@1; [RareSeek R1](https://arxiv.org/abs/2503.07632) (2025) achieves physician-parity on EHR narratives; [Zebra-Llama](https://arxiv.org/abs/2410.12045) (2024) demonstrates single-disease specialization. Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better.
+The rare disease AI space is advancing rapidly. We build on and acknowledge outstanding work:
+
+- **[DeepRare](https://doi.org/10.1038/s41591-025-03547-w)** (2025) — 57.18% Recall@1 with 40+ tools (closed-source)
+- **[RareSeek R1](https://arxiv.org/abs/2503.07632)** (2025) — physician-parity on EHR narratives
+- **[Zebra-Llama](https://arxiv.org/abs/2410.12045)** (2024) — single-disease specialization for EDS
+
+Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 
 ## License
 
