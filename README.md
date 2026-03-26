@@ -121,6 +121,8 @@ Recommended workups:
 
 </details>
 
+**Want to help?** We're actively seeking **clinicians** to validate outputs, **ML engineers** to train condition-specific models, and **patient advocates** to contribute clinical context. See [Contributing](CONTRIBUTING.md) or [join the discussion](https://github.com/Wilhelm-Foundation/rare-archive/discussions).
+
 **Development setup:**
 
 ```bash
