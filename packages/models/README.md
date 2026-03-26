@@ -1,5 +1,7 @@
 # Rare Archive Models
 
+The models package implements the 4-stage agentic training pipeline — from supervised fine-tuning on 69K+ rare disease cases to progressive RL with clinician feedback. Each stage teaches the system a new capability: diagnostic reasoning (SFT), clinical tool invocation (Tool-Use), preference alignment (DPO/GRPO), and reward-optimized behavior (RL). Part of the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive) ecosystem.
+
 4-stage LoRA training pipeline, evaluation harness, and GGUF quantization for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Training Pipeline

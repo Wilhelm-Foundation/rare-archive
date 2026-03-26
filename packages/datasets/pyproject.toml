@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rare-archive-datasets"
 version = "0.1.0"
-description = "Dataset curation pipelines for the Rare AI Archive"
+description = "Dataset curation — RareArena ingestion, synthetic patient generation, and category assignment for the Rare AI Archive"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10"
 dependencies = [

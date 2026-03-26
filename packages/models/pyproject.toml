@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rare-archive-models"
 version = "0.1.0"
-description = "4-stage LoRA training pipeline, evaluation, and GGUF quantization for the Rare AI Archive"
+description = "4-stage agentic training pipeline (SFT, Tool-Use, DPO, RL), evaluation, and GGUF quantization for the Rare AI Archive"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10"
 dependencies = [

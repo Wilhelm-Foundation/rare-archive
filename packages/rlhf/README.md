@@ -1,5 +1,7 @@
 # Rare Archive RLHF
 
+The RLHF package closes the loop between deployed models and clinical expertise. Through the ELO Arena, clinicians evaluate model outputs in blind A/B comparisons across 5 quality dimensions. Their corrections flow back into training data via the correction-to-retrain cycle — making the system smarter with every interaction.
+
 RLHF portal backend for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive). Extends OpenWebUI Arena mode with multi-dimensional ELO tracking, expert matching, preference data export, and clinical correction feedback loops.
 
 For the full system architecture with diagrams, see [ARCHITECTURE.md](../../ARCHITECTURE.md).

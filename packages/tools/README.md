@@ -1,5 +1,7 @@
 # Rare Archive Tool Harness
 
+The tools package provides the clinical tool adapters that make the Rare AI Archive an agentic system, not just a model. These 7 tools — ClinVar, Orphanet, HPO, PanelApp, gnomAD, PubMed, and DiffDx — are the diagnostic instruments that the model learns to invoke during Stage 2 tool-use training, enabling expert-like diagnostic workflows.
+
 Clinical diagnostic tool integrations for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Tools

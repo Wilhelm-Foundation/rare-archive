@@ -38,3 +38,21 @@ The Rare AI Archive processes clinical decision-support scenarios. While we use 
 - All training data uses synthetic patients generated from published medical literature.
 - Clinical tool adapters query public APIs (ClinVar, Orphanet, etc.) — no PHI is sent.
 - See our [CONTRIBUTING.md](CONTRIBUTING.md) for the PHI-free commitment.
+
+## Federated Deployment Security
+
+The Archive is designed for multi-site deployment where training data never leaves the originating institution:
+
+- **Node-to-node authentication**: Tailscale mesh networking with TLS for all inter-node communication
+- **Data sovereignty**: Model weights and GGUF artifacts can be distributed; raw training data stays local
+- **Access control**: JupyterHub SSO with per-user role assignments for Arena evaluators and operators
+- **Container isolation**: All services run in Docker containers on an isolated bridge network with NGINX reverse proxy
+
+## Arena Data Governance
+
+The ELO Arena produces evaluation data (preference pairs, corrections, ELO ratings) that feeds back into model training:
+
+- **No PHI in evaluations**: All Arena cases use synthetic vignettes — clinician evaluations contain clinical reasoning, not patient data
+- **Correction audit trail**: Every correction is logged with expert ID, timestamp, and case reference in PostgreSQL
+- **Preference export transparency**: HuggingFace exports use evaluation_id-based deduplication and are publicly auditable
+- **Role-based access**: Correction submission requires registered expert status; export operations require operator credentials

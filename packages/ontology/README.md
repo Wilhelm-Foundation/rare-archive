@@ -1,5 +1,7 @@
 # Rare Archive Ontology
 
+The ontology package is the foundation of the Rare AI Archive's disease intelligence. It clusters 9,100 rare diseases into clinically meaningful categories that drive condition-specific model training, Arena evaluation dimensions, and clinical tool routing across the ecosystem.
+
 Four ontology domains for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive):
 
 1. **Patient Category** — Clusters of rare diseases grouped by shared phenotypic and genetic features

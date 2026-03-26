@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rare-archive-tool-harness"
 version = "0.1.0"
-description = "Clinical diagnostic tool integrations for the Rare AI Archive"
+description = "7 clinical tool adapters (ClinVar, Orphanet, HPO, PanelApp, gnomAD, PubMed, DiffDx) for the Rare AI Archive agentic system"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10"
 dependencies = [

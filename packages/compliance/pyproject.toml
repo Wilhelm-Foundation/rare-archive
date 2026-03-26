@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rare-archive-compliance"
 version = "0.1.0"
-description = "aDNA validation, FAIR scoring, and governance for the Rare AI Archive"
+description = "aDNA validation, FAIR scoring, and governance for federated Rare AI Archive deployments"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10"
 dependencies = [

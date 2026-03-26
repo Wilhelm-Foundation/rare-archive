@@ -1,5 +1,7 @@
 # Rare Archive Compliance
 
+The compliance package ensures every artifact in the Rare AI Archive meets FAIR data principles and aDNA metadata standards. It validates that modules, datasets, and models carry the provenance, licensing, and governance metadata required for responsible federated deployment across clinical research sites.
+
 aDNA schema validation, FAIR scoring, and governance for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Schemas

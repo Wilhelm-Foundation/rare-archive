@@ -1,5 +1,7 @@
 # Rare Archive Datasets
 
+The datasets package curates the training and evaluation data that powers the Rare AI Archive's agentic diagnostic system. It ingests expert-validated cases from [RareArena](https://github.com/zhao-zy15/RareArena), generates synthetic patients from Orphanet disease profiles, and assigns cases to disease categories for condition-specific model training.
+
 Dataset curation pipelines for the [Rare AI Archive](https://github.com/Wilhelm-Foundation/rare-archive).
 
 ## Pipelines
