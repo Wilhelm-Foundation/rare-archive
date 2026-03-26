@@ -53,9 +53,17 @@ Each role feeds the next. The more communities participate, the smarter the syst
 
 ### Where the Context Comes From
 
-The most valuable training data for rare disease AI isn't in a database — it's in the heads of the clinicians, geneticists, and patient advocates who navigate diagnostic odysseys every day. The [**Undiagnosed Patient Hackathon**](https://www.nature.com/articles/d41586-026-00302-8) series ([video](https://youtu.be/zPGp0gqTYbo)) is a core practice where this expert knowledge reaches critical mass: structured events where specialists reason through the hardest cases together, producing tool invocation patterns, diagnostic reasoning chains, and phenotype-to-gene mappings — all without PHI.
+The most valuable training data for rare disease AI isn't in a database — it's in the heads of the clinicians, geneticists, and patient advocates who navigate diagnostic odysseys every day.
 
-These events generate exactly the context that makes AI systems useful: not patient data, but **clinical reasoning patterns** — which tools to invoke, in what order, for which symptom constellations. Combined with structured vignettes from the undiagnosed patient movement and organizations like [NORD](https://rarediseases.org), [Rare as One](https://chanzuckerberg.com/rare-as-one/), and rare disease advocacy groups, this creates a continuously growing corpus of expert diagnostic context that feeds model training, tool tuning, and system validation.
+The [**Undiagnosed Patient Hackathon**](https://www.nature.com/articles/d41586-026-00302-8) series ([video](https://youtu.be/zPGp0gqTYbo)) is where this expert knowledge reaches critical mass. In these structured events, specialists reason through the hardest cases together — producing the exact context that makes AI systems useful:
+
+- **Clinical reasoning patterns** — which tools to invoke, in what order, for which symptom constellations
+- **Diagnostic workflow traces** — how experts navigate from presentation to differential to confirmed diagnosis
+- **Phenotype-to-gene mappings** — validated links between clinical features and genetic variants
+
+All without PHI. The training signal is the *pattern*, not the patient.
+
+Combined with structured vignettes from the undiagnosed patient movement — [NORD](https://rarediseases.org), [Rare as One](https://chanzuckerberg.com/rare-as-one/), and rare disease advocacy groups worldwide — this creates a continuously growing corpus of expert context that feeds model training, tool tuning, and system validation.
 
 ### Why Open Source Matters
 
@@ -90,6 +98,8 @@ The Archive is built on the [Lattice Protocol](https://github.com/LatticeProtoco
 ---
 
 ## Quick Start
+
+Ready to see it in action? Start here.
 
 **Try the demo** (no install needed): Visit the **[Clinical Demo Space](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo)** — 10 pre-built clinical scenarios.
 
@@ -229,7 +239,7 @@ Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **pati
   year      = {2026},
   url       = {https://github.com/Wilhelm-Foundation/rare-archive},
   license   = {Apache-2.0},
-  note      = {A decentralized post-training ecosystem for rare genetic diseases}
+  note      = {Decentralized post-training ecosystem for rare disease diagnostics}
 }
 ```
 
