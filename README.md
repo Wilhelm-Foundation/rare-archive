@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Wilhelm-Foundation/rare-archive">
-    <img src="assets/hero_banner.png" alt="Rare AI Archive — Open-source clinical AI for rare disease diagnostics" width="100%">
+    <img src="assets/hero_banner.png" alt="Rare AI Archive" width="100%">
   </a>
 </p>
 
@@ -18,9 +18,11 @@
 
 **The Rare AI Archive exists to close that gap.**
 
-We build open-source AI models specialized in rare disease diagnostics, validated by the clinicians who treat these patients, and deployable at every scale — from a laptop in a rural clinic to a GPU cluster in a research hospital.
+We are building an open ecosystem for rare disease AI — where patient communities create clinical context, rare disease centers validate it, and open-source model builders turn it into deployed diagnostic tools that improve with every clinician interaction.
 
 *A program of the [Wilhelm Foundation](https://wilhelm.foundation)*
+
+> **Research Use Only.** The Rare AI Archive is a clinical decision support system, not a diagnostic tool. It is **not FDA/CE-cleared** for medical use. All outputs require expert clinical validation and must not be used for autonomous patient care decisions.
 
 ### Key Results
 
@@ -31,11 +33,32 @@ We build open-source AI models specialized in rare disease diagnostics, validate
 
 ---
 
+## The Ecosystem
+
+The Rare AI Archive is not a single model. It is a **decentralized, collaborative post-training ecosystem** — where the people closest to rare diseases contribute the context that makes AI useful, and the models improve as the community grows.
+
+![Rare AI Archive Ecosystem Flywheel](assets/diagrams/ecosystem_flywheel.png)
+
+Three roles drive the ecosystem:
+
+- **Context Creators** — Patients, families, and clinicians capture structured clinical vignettes — symptom timelines, genetic results, diagnostic journeys — feeding the data that models learn from.
+- **Validators** — Rare disease centers, clinical research partners, and patient advocacy organizations validate and curate training data, ensuring clinical accuracy and safety.
+- **Model Builders** — Open-source contributors train, fine-tune, and publish condition-specific models on HuggingFace — turning curated data into deployed diagnostic tools.
+
+Each role feeds the next. Patients and clinicians create context. Centers validate it. Community builders turn it into published AI. Clinicians use it, their corrections flow back into training data — and the cycle accelerates.
+
+### Why Open Source Matters
+
+- **Open** — every line of code, every training record, every model weight is inspectable. Rare disease patients deserve visibility, not proprietary lockdown.
+- **Federated** — your data never leaves your institution. Models can be fine-tuned locally with your cases.
+- **Composable** — built on [aDNA modules](https://github.com/LatticeProtocol) that can be independently improved, replaced, or combined. Swap the base model, add new tools, extend datasets.
+- **Deployed** — running on production hardware with 7 live clinical tools, not just a paper.
+
+---
+
 ## System Architecture
 
-<p align="center">
-  <img src="assets/diagrams/system_overview.png" alt="Rare AI Archive — System Architecture" width="90%">
-</p>
+![Rare AI Archive System Architecture](assets/diagrams/system_overview.png)
 
 > For full architecture diagrams, dependency graphs, and data flow details, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
@@ -145,6 +168,8 @@ We fine-tune [Qwen 3.5](https://huggingface.co/Qwen) models across 4 progressive
 
 ## Models
 
+### Foundation Models
+
 | Priority | Model | Params | GGUF Size | Deployment | Status |
 |----------|-------|--------|-----------|------------|--------|
 | 1 | [Qwen3.5-4B](https://huggingface.co/Wilhelm-Foundation/rare-archive-qwen-4b-sft-v1) | 4B dense | ~3 GB | L1 standard | **Published** |
@@ -152,21 +177,32 @@ We fine-tune [Qwen 3.5](https://huggingface.co/Qwen) models across 4 progressive
 | 3 | Qwen3.5-27B | 27B dense | ~16 GB | L2 standard | Planned |
 | 4 | Qwen3.5-35B-A3B | 35B MoE (3B active) | ~37 GB | L2 efficient | Training |
 
+### Condition-Specific Models
+
+Specialized models for disease clusters — each trained on domain-specific data and owned by its community:
+
+| Disease Cluster | Diseases | Cases | Foundation | Status |
+|----------------|----------|-------|------------|--------|
+| **IEM / Lysosomal Storage** | Gaucher, Fabry, Pompe, Niemann-Pick | ~2,400 | Qwen3.5-4B | **Adapter complete** |
+| **Neuromuscular Disorders** | Duchenne, SMA, Myasthenia Gravis, CMT | ~300 | Qwen3.5-4B | **Adapter complete** |
+| **Connective Tissue** | Ehlers-Danlos, Marfan, Loeys-Dietz | ~1,800 | Qwen3.5-4B | Planned |
+| **Autoimmune** | Sjogren's, Systemic Lupus, Scleroderma | ~1,500 | Qwen3.5-4B | Planned |
+| **Mitochondrial** | MELAS, Leigh Syndrome, Kearns-Sayre | ~1,000 | Qwen3.5-4B | Planned |
+
 > **Download models:** All published models are available at [huggingface.co/Wilhelm-Foundation](https://huggingface.co/Wilhelm-Foundation) in GGUF format for local inference.
 
 ## Roadmap
 
-| Stage | Focus | Status |
-|-------|-------|--------|
-| **Stage 1** | Supervised fine-tuning (SFT) on RareArena + synthetic cases | **Complete** — 21.5% Top-1 (21.5x over baseline) |
-| **Stage 2** | Tool-use SFT with gold-standard clinical tool traces | In progress |
-| **Stage 3** | DPO/GRPO preference alignment from clinician evaluations | Planned |
-| **Stage 4** | Progressive RL with RareArena-derived reward signal | Planned |
-
-**Infrastructure goals:**
-- Multi-site federated deployment (hospitals retain data sovereignty)
-- Rare disease diagnosis leaderboard (open benchmarking)
-- Community-driven correction pipeline scaling
+| Milestone | Focus | Status |
+|-----------|-------|--------|
+| **Stage 1 SFT** | Supervised fine-tuning on RareArena + synthetic cases | **Complete** — 21.5% Top-1 (21.5x over baseline) |
+| **Condition-Specific Models** | IEM and Neuromuscular adapters, then Connective Tissue + Autoimmune | **In progress** — 2 adapters complete |
+| **Stage 2 Tool-Use** | Tool-use SFT with gold-standard clinical tool traces | In progress |
+| **Community Onboarding** | Templates for disease communities to contribute vignettes and train models | Planned |
+| **Rare Disease Leaderboard** | Public benchmark space for comparing diagnostic systems | Planned |
+| **Federated Deployment** | Multi-site deployment — hospitals retain data sovereignty | Planned |
+| **Stage 3 DPO/GRPO** | Preference alignment from clinician evaluations | Planned |
+| **Stage 4 Progressive RL** | Reward optimization with RareArena-derived reward signal | Planned |
 
 ## Cite Us
 
@@ -185,11 +221,17 @@ If you use the Rare AI Archive in your research, please cite:
 
 ## Community
 
-We welcome contributions from clinicians, ML engineers, bioinformaticians, and patient advocates.
+We welcome contributions from clinicians, ML engineers, bioinformaticians, and patient advocates. Three roles drive the ecosystem:
 
-- **[Contributing Guide](CONTRIBUTING.md)** — how to get involved
+- **Clinical Validators** — Rare disease specialists who evaluate model outputs, identify errors, and submit corrections that improve the next training run
+- **Context Creators** — Clinicians and patient advocates who contribute structured clinical case narratives grounded in lived diagnostic experience
+- **Model Builders** — ML engineers who fine-tune condition-specific models using clinician feedback and publish them on HuggingFace
+
+All three roles are essential. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for how to get involved.
+
 - **[GitHub Discussions](https://github.com/Wilhelm-Foundation/rare-archive/discussions)** — questions, ideas, and feedback
 - **[Clinical Demo](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo)** — try it before you build on it
+- **[Complete Toolkit](https://huggingface.co/collections/Wilhelm-Foundation/rare-ai-archive-complete-toolkit-69c4b1e14800a370fe028851)** — model + datasets + demo collection on HuggingFace
 - **[Wilhelm Foundation](https://wilhelm.foundation)** — the organization behind this work
 
 ## Related Work
@@ -200,14 +242,7 @@ We build on and acknowledge outstanding work in rare disease AI:
 - **[RareBench](https://arxiv.org/abs/2409.04110)** (2024) — benchmarking framework for rare disease diagnosis
 - **[Zebra-Llama](https://arxiv.org/abs/2411.02657)** (2024) — focused single-disease LLM for Ehlers-Danlos Syndrome
 
-Our contribution: the first **open-source, federated, composable, deployed** rare disease diagnostic AI.
-
-## Built on Lattice Protocol
-
-The Rare AI Archive follows the [Lattice Protocol](https://github.com/LatticeProtocol) standard:
-- **Three primitives:** Dataset, Module, Lattice
-- **aDNA metadata:** Embedded agentic DNA for each package
-- **Compute tiers:** L1 (edge), L2 (cluster), L3 (datacenter)
+Our approach is complementary — focused not on one model or one benchmark, but on building the open ecosystem where many models, many communities, and many deployment sites collaborate to make rare disease AI continuously better.
 
 ## License
 
