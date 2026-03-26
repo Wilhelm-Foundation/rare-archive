@@ -128,7 +128,7 @@ The Archive is built on the [Lattice Protocol](https://github.com/LatticeProtoco
 | **[packages/tools](packages/tools)** | Clinical tool integrations (ClinVar, Orphanet, PanelApp, gnomAD, HPO, PubMed) |
 | **[packages/compliance](packages/compliance)** | FAIR scoring, aDNA schema validation, governance |
 | **[deploy](deploy)** | Docker Compose overlays for L1/L2 deployment |
-| **[docs](docs)** | Guides: [quantization](docs/quantization_guide.md), [evaluation](docs/evaluation_metrics.md), [troubleshooting](docs/troubleshooting.md), [tool integration](docs/tool_integration_spec.md), [tool adapters](docs/tool_adapters.md), [L1 setup](docs/l1_local_setup.md) |
+| **[docs](docs#readme)** | [11 guides](docs#readme): quantization, evaluation, troubleshooting, tool integration, L1 setup, and more |
 
 ## Training Pipeline
 
