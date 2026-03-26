@@ -1,8 +1,26 @@
 # Architecture
 
-A technical overview of the Rare AI Archive system — its packages, data flows, and external integrations.
+The Rare AI Archive is not a model — it is an **agentic diagnostic system** that reasons about clinical presentations, invokes real clinical tools to gather evidence, synthesizes findings into a differential diagnosis, and improves through clinician feedback. This document describes the system's architecture, data flows, and deployment infrastructure.
 
-![Architecture Overview](docs/images/architecture_overview.png)
+![System Architecture — L1 Edge, L2 HPC, L3 Cloud](assets/diagrams/system_architecture.png)
+
+## Agentic Diagnostic System
+
+Traditional clinical AI produces a prediction from an input. The Rare AI Archive produces a **diagnostic reasoning trace** — a multi-turn process where the model decides which tools to invoke, interprets their results, and synthesizes a differential diagnosis:
+
+```
+Reason  →  Identify symptom constellation, form initial hypothesis
+Lookup  →  Query clinical databases (ClinVar, Orphanet, HPO, PanelApp, gnomAD)
+Match   →  Cross-reference findings against phenotype-gene mappings
+Search  →  Broaden when initial hypotheses don't explain all findings (PubMed, DiffDx)
+Diagnose → Synthesize evidence into ranked differential with confidence and next steps
+```
+
+This trace pattern is what makes the system agentic: the model doesn't just answer — it *works through the case* the way a rare disease specialist does. Stage 2 of the training pipeline teaches the model this workflow by training on gold-standard traces where expert clinicians navigate real diagnostic cases with real tool API responses.
+
+The [Undiagnosed Patient Hackathon](https://www.nature.com/articles/d41586-026-00302-8) series is where many of these expert reasoning patterns originate — structured events where specialists reason through the hardest cases together, producing the exact diagnostic workflow traces that train agentic systems.
+
+---
 
 ## System Overview
 
@@ -100,7 +118,23 @@ graph TD
 
 **SFT Format**: Each correction exports as a chat-format JSONL record with `system` (diagnostician prompt), `user` (case vignette), and `assistant` (corrected diagnosis + reasoning). This matches the existing training data format for seamless merging.
 
+## Condition-Specific Model Architecture
+
+The Archive trains both foundation models (broad rare disease coverage) and condition-specific adapters (deep expertise in disease clusters). Both share the same base architecture — the adapters add a LoRA layer trained on domain-specific cases.
+
+| Disease Cluster | Key Diseases | Training Cases | Adapter Status |
+|----------------|-------------|----------------|----------------|
+| **IEM / Lysosomal Storage** | Gaucher, Fabry, Pompe | ~2,400 | **Complete** |
+| **Neuromuscular** | Duchenne, SMA, Myasthenia Gravis | ~300 | **Complete** |
+| **Connective Tissue** | Ehlers-Danlos, Marfan | ~1,800 | Planned |
+| **Autoimmune** | Sjogren's, Lupus | ~1,500 | Planned |
+| **Mitochondrial** | MELAS, Leigh Syndrome | ~1,000 | Planned |
+
+The **ontology** package drives cluster assignment: each disease maps to a category via Orphanet classifications, and categories determine which adapter to apply at inference time. This is also how the Arena tracks per-category ELO ratings — ensuring that model quality is measured where it matters, not just in aggregate.
+
 ## Data Flow
+
+The training data comes from two sources: structured vignettes generated from medical literature (69,635 synthetic cases) and expert diagnostic traces captured during [Undiagnosed Patient Hackathons](https://www.nature.com/articles/d41586-026-00302-8) and clinical validation sessions. Both feed the 4-stage pipeline; corrections from the Arena close the loop.
 
 ```mermaid
 graph LR
@@ -178,6 +212,18 @@ Deployed on L2 (4× A100-80GB) via Docker Compose:
 | `lattice-grafana` | 3000 | Dashboards (via NGINX at `/grafana/`) |
 
 All containers on the `lattice-l2` Docker network. NGINX reverse proxy at port 8000.
+
+## Deployment Tiers
+
+The Archive is designed to run at three scales. The same model weights and tool adapters work at every tier — what changes is the infrastructure around them.
+
+| Tier | Environment | Hardware | What Runs | Use Case |
+|------|------------|----------|-----------|----------|
+| **L1 (Edge)** | Laptop or clinic workstation | Apple Silicon / consumer GPU | llama.cpp + GGUF model, OpenWebUI, clinical tools | Single-clinician diagnostic support. Rural clinics, research fellows, offline use. |
+| **L2 (HPC)** | On-premises server | 4× A100-80GB, Docker Compose | Full stack: multi-model inference, Arena mode, Archive API, ChromaDB, Grafana | Research hospitals, training runs, clinician evaluation campaigns, multi-model comparison. |
+| **L3 (Cloud)** | Elastic compute (planned) | GPU instances on demand | Federated training, multi-site Arena, burst inference | Multi-institution collaborations, federated model training without data movement. |
+
+L1 nodes can operate independently or connect to an L2 hub for model updates and federated feedback. L3 extends this to cross-institutional collaboration where training data never leaves the originating site.
 
 ## Configuration
 
