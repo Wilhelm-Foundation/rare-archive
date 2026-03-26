@@ -20,7 +20,7 @@
 
 We are building an open ecosystem for rare disease AI — where patient communities create clinical context, rare disease centers validate it, and open-source model builders turn it into deployed diagnostic tools that improve with every clinician interaction.
 
-*A program of the [Wilhelm Foundation](https://wilhelm.foundation) &middot; Powered by [Lattice Protocol](https://github.com/LatticeProtocol)*
+*A program of the [Wilhelm Foundation](https://wilhelm.foundation) &middot; Powered by [Lattice Protocol](https://github.com/LatticeProtocol) (open infrastructure for composable, federated AI workflows)*
 
 > **Research Use Only.** The Rare AI Archive is a clinical decision support system, not a diagnostic tool. It is **not FDA/CE-cleared** for medical use. All outputs require expert clinical validation.
 
@@ -181,6 +181,7 @@ Specialized models for disease clusters — each trained on domain-specific data
 | Federated multi-site deployment — data sovereignty | Planned |
 | Stage 3 DPO/GRPO — clinician preference alignment | Planned |
 | Stage 4 Progressive RL — reward-optimized reasoning | Planned |
+| Regulatory pathway exploration — FDA/CE AI-as-SaMD guidance | Future |
 
 ---
 
