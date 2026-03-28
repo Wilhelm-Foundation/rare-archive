@@ -213,7 +213,7 @@ Specialized models for disease clusters — each trained on domain-specific data
 | Condition-specific models — IEM + Neuromuscular adapters | **Complete** |
 | Stage 2 Tool-Use — gold-standard clinical tool traces | In progress |
 | Community onboarding — templates for disease communities | Planned |
-| Rare disease diagnosis leaderboard — open benchmarking | Planned |
+| [Rare disease diagnosis leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard) — open benchmarking | **Live** |
 | Federated multi-site deployment — data sovereignty | Planned |
 | Stage 3 DPO/GRPO — clinician preference alignment | Planned |
 | Stage 4 Progressive RL — reward-optimized reasoning | Planned |
@@ -228,6 +228,7 @@ Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **pati
 - **[Contributing Guide](CONTRIBUTING.md)** — how to start
 - **[GitHub Discussions](https://github.com/Wilhelm-Foundation/rare-archive/discussions)** — questions, ideas, feedback
 - **[Clinical Demo](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo)** — try it before you build on it
+- **[Diagnosis Leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard)** — open benchmarks for rare disease AI
 - **[HuggingFace Collection](https://huggingface.co/collections/Wilhelm-Foundation/rare-ai-archive-complete-toolkit-69c4b1e14800a370fe028851)** — model + 3 datasets + demo
 
 ## Cite Us

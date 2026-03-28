@@ -45,6 +45,8 @@ A LoRA adapter fine-tuned for rare disease diagnostic reasoning.
 | Top-5 Accuracy | {{ top_5_accuracy }}% |
 | Mean Score | {{ mean_score }} |
 
+See the full [Diagnosis Leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard) for comparison with other models.
+
 ## Usage
 
 ```python
