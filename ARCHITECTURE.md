@@ -18,7 +18,7 @@ Diagnose → Synthesize evidence into ranked differential with confidence and ne
 
 This trace pattern is what makes the system agentic: the model doesn't just answer — it *works through the case* the way a rare disease specialist does. Stage 2 of the training pipeline teaches the model this workflow by training on gold-standard traces where expert clinicians navigate real diagnostic cases with real tool API responses.
 
-The [Undiagnosed Patient Hackathon](https://www.nature.com/articles/d41586-026-00302-8) series is where many of these expert reasoning patterns originate — structured events where specialists reason through the hardest cases together, producing the exact diagnostic workflow traces that train agentic systems.
+**Context drives tool selection.** The model's understanding of the patient's clinical presentation determines which tools to query, in what order, and how to interpret their outputs. A variant-centric case calls for ClinVar first; a phenotype-driven presentation starts with HPO. This context-driven reasoning is what distinguishes an agentic diagnostic system from a simple classifier — and it's the same reasoning that specialists bring to the [Undiagnosed Patient Hackathon](https://www.nature.com/articles/d41586-026-00302-8) series. The system is designed to integrate structured tool usage context — interpretation guides, workflow patterns, data-source-specific knowledge (e.g., how to read Oxford Nanopore structural variant calls) — alongside the tools themselves, so that models learn not just *what* tools exist but *when and why* to use them for specific clinical scenarios.
 
 ---
 

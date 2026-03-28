@@ -65,6 +65,14 @@ All without PHI. The training signal is the *pattern*, not the patient.
 
 Combined with structured vignettes from the undiagnosed patient movement — [NORD](https://rarediseases.org), [Rare as One](https://chanzuckerberg.com/rare-as-one/), and rare disease advocacy groups worldwide — this creates a continuously growing corpus of expert context that feeds model training, tool tuning, and system validation.
 
+### Context-Driven Tool Usage
+
+Modern AI systems don't just know facts — they use tools. When a rare disease specialist sees hepatosplenomegaly with Ashkenazi Jewish ancestry, they don't just *know* to suspect Gaucher disease — they know to check the GBA variant in ClinVar, cross-reference carrier frequency in gnomAD for Ashkenazi populations, and confirm the phenotype mapping in HPO. That's not just knowledge. It's a **context-driven diagnostic workflow** — and it's exactly what we're training our models to do.
+
+Under the Wilhelm Foundation banner, the world's leading rare disease experts are building the curated context that powers these systems: not only what each clinical tool provides, but *when* to invoke it, *how* to interpret its outputs, and *why* certain tools matter for specific clinical presentations. This includes structured tool usage guides, data interpretation context (e.g., how to read Oxford Nanopore long-read sequencing results for structural variant detection), and diagnostic workflow patterns that capture the reasoning of specialists who have spent careers navigating diagnostic odysseys.
+
+The goal is to bring the full diagnostic power of an [Undiagnosed Patient Hackathon](https://youtu.be/zPGp0gqTYbo) to every deserving patient — by capturing the expert context that drives those events and embedding it into AI systems that can operate at global scale.
+
 ### Why Open Source Matters
 
 | | |
@@ -158,7 +166,7 @@ We fine-tune [Qwen 3.5](https://huggingface.co/Qwen) models across 4 progressive
 | Stage | What the system learns | Status |
 |-------|----------------------|--------|
 | **1. SFT** | Clinical diagnostic reasoning from 69K+ rare disease cases | **Complete** |
-| **2. Tool-Use** | When and how to invoke ClinVar, Orphanet, PanelApp, HPO, gnomAD, PubMed — learning the expert's diagnostic workflow | In progress |
+| **2. Tool-Use** | Context-driven tool usage — learning *when, why, and how* to invoke ClinVar, Orphanet, PanelApp, HPO, gnomAD, PubMed based on the patient's clinical presentation. Trained on gold-standard agentic traces from expert clinicians. | In progress |
 | **3. DPO/GRPO** | What good reasoning looks like, from clinician preference judgments across 5 quality dimensions | Planned |
 | **4. Progressive RL** | Optimizing the full system for diagnostic accuracy, tool appropriateness, and safety | Planned |
 
