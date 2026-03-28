@@ -271,9 +271,10 @@ represented in the evaluation data.
 
 ### Related Work
 
-- Chen et al. (2024). "[RareBench: Can LLMs Serve as Rare Diseases Specialists?](https://arxiv.org/abs/2402.06341)" KDD 2024.
-- Shlain et al. (2025). "[Rare Disease Differential Diagnosis at Scale](https://arxiv.org/abs/2502.15069)." arXiv.
-- Zhao et al. (2026). "[DeepRare: Agentic Rare Disease Diagnosis](https://arxiv.org/abs/2506.20430)." Nature.
+- Groza T, Baynam G, Jamuar SS. "[Reimagining care of people living with rare diseases with AI](https://doi.org/10.1371/journal.pmed.1004966)." *PLOS Medicine* 2026.
+- Reese JT et al. "[Systematic benchmarking of LLMs vs traditional rare disease tools](https://doi.org/10.1038/s41431-026-02054-5)." *EJHG* 2026.
+- Zhao et al. "[DeepRare: Agentic Rare Disease Diagnosis](https://doi.org/10.1038/s41586-025-10097-9)." *Nature* 2026.
+- Chen et al. "[RareBench: Can LLMs Serve as Rare Diseases Specialists?](https://arxiv.org/abs/2402.06341)" *KDD* 2024.
 
 ### Citation
 

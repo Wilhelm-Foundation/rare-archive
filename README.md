@@ -246,11 +246,16 @@ Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **pati
 
 ## Related Work
 
-The rare disease AI space is advancing rapidly. We build on and acknowledge outstanding work:
+The rare disease AI space is advancing rapidly. We build on and acknowledge outstanding work across computational phenotyping, diagnostic AI, and health-system screening:
 
-- **[DeepRare](https://doi.org/10.1038/s41591-025-03547-w)** (2025) — 57.18% Recall@1 with 40+ tools (closed-source)
+- **[Groza, Baynam & Jamuar](https://doi.org/10.1371/journal.pmed.1004966)** (2026) — Patient-Clinician-AI triad framework for rare disease care (*PLOS Medicine*)
+- **[Groza et al.](https://doi.org/10.1038/s41746-025-02096-x)** (2025) — Health-system screening via SNOMED CT information content (*npj Digital Medicine*)
+- **[Reese et al.](https://doi.org/10.1038/s41431-026-02054-5)** (2026) — Systematic LLM benchmarking on 5,213 phenopackets: o1-preview 23.6% vs Exomiser 35.5% (*EJHG*)
+- **[DeepRare](https://doi.org/10.1038/s41586-025-10097-9)** (2026) — 57.18% Recall@1 with 40+ tools (*Nature*)
 - **[RareSeek R1](https://arxiv.org/abs/2503.07632)** (2025) — physician-parity on EHR narratives
 - **[Zebra-Llama](https://arxiv.org/abs/2410.12045)** (2024) — single-disease specialization for EDS
+
+The Rare AI Archive's clinical tool pipeline builds directly on the [Human Phenotype Ontology](https://hpo.jax.org/) and the [GA4GH Phenopacket](https://phenopacket-schema.readthedocs.io/) standard — foundational work by Robinson, Groza, and colleagues that enables computable phenotyping across the rare disease ecosystem.
 
 Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 

@@ -239,3 +239,15 @@ Environment variables for the Archive API (`config.py`):
 | `HF_DATASET` | `rare-archive-rlhf-preferences` | Preference dataset name |
 | `ELO_K_FACTOR` | `32` | ELO K-factor |
 | `ELO_INITIAL_RATING` | `1500` | Starting ELO for new models |
+
+---
+
+## References
+
+This architecture builds on foundational work in computational phenotyping and rare disease informatics:
+
+- Groza T, Baynam G, Jamuar SS. Reimagining care of people living with rare diseases with AI. *PLOS Medicine*. 2026. [DOI: 10.1371/journal.pmed.1004966](https://doi.org/10.1371/journal.pmed.1004966)
+- Groza T et al. Information content as a health system screening tool for rare diseases. *npj Digital Medicine*. 2025;8:720. [DOI: 10.1038/s41746-025-02096-x](https://doi.org/10.1038/s41746-025-02096-x)
+- Reese JT et al. Systematic benchmarking demonstrates LLMs have not reached diagnostic accuracy of traditional tools. *EJHG*. 2026. [DOI: 10.1038/s41431-026-02054-5](https://doi.org/10.1038/s41431-026-02054-5)
+- Jacobsen JOB et al. The GA4GH Phenopacket schema defines a computable representation of clinical data. *Nature Biotechnology*. 2022;40:817-820. [DOI: 10.1038/s41587-022-01357-4](https://doi.org/10.1038/s41587-022-01357-4)
+- Köhler S et al. The Human Phenotype Ontology: Semantic Unification of Common and Rare Disease. *AJHG*. 2015;97(1):111-124. [DOI: 10.1016/j.ajhg.2015.05.020](https://doi.org/10.1016/j.ajhg.2015.05.020)

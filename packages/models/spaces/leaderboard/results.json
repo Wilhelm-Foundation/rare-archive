@@ -4,7 +4,7 @@
     "benchmark_version": "1.0",
     "eval_cases": 200,
     "diseases": "4000+",
-    "last_updated": "2026-03-27",
+    "last_updated": "2026-03-28",
     "categories": ["IEM", "RDS", "RDC", "NMD"]
   },
   "results": [
@@ -78,6 +78,42 @@
       "tools": 40,
       "notes": "Scores from Zhao et al. (Nature 2026). Avg Recall@1 across 9 datasets (HPO input only). Not evaluated on RareArena — not directly comparable.",
       "submitted": "2026-03-27",
+      "source": "literature"
+    },
+    {
+      "model": "Exomiser (phenotype-only)",
+      "model_url": "https://github.com/exomiser/Exomiser",
+      "org": "Monarch Initiative",
+      "type": "Rule-based",
+      "params_b": null,
+      "open_source": true,
+      "license": "AGPL-3.0",
+      "recall_1": 35.5,
+      "recall_5": null,
+      "mrr": null,
+      "mean_score": null,
+      "training_data": "HPO + OMIM + Orphanet curated annotations",
+      "tools": 0,
+      "notes": "Phenotype-only mode (no genomic data). Scores from Reese et al. (EJHG 2026) on 5,213 phenopackets. Not evaluated on RareArena — not directly comparable.",
+      "submitted": "2026-03-28",
+      "source": "literature"
+    },
+    {
+      "model": "o1-preview",
+      "model_url": null,
+      "org": "OpenAI",
+      "type": "Proprietary",
+      "params_b": null,
+      "open_source": false,
+      "license": "Proprietary",
+      "recall_1": 23.6,
+      "recall_5": null,
+      "mrr": null,
+      "mean_score": null,
+      "training_data": "General pretraining + RLHF + reasoning",
+      "tools": 0,
+      "notes": "Best LLM tested in Reese et al. (EJHG 2026) on 5,213 phenopackets. Not evaluated on RareArena — not directly comparable.",
+      "submitted": "2026-03-28",
       "source": "literature"
     }
   ]
