@@ -17,9 +17,9 @@
 
 | Dataset | Records | Description |
 |---------|---------|-------------|
-| [RareArena](https://huggingface.co/datasets/Wilhelm-Foundation/rare-arena) | 69,635 | Clinical vignettes across 9,100 rare diseases |
-| [rare-archive-synthetic-patients](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-synthetic-patients) | 12,984 | Synthetic patient presentations for training |
-| [rare-archive-preference](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-preference) | — | Clinician preference data for RLHF (append-safe export) |
+| [rare-archive-eval-rarearena-rds](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-eval-rarearena-rds) | 8,562 | Clinical vignettes from Rare Disease Specialists across 4,000+ diseases |
+| [rare-archive-eval-rarearena-rdc](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-eval-rarearena-rdc) | 4,376 | Clinical cases with test results for diagnostic reasoning evaluation |
+| [rare-archive-synthetic-patients](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-synthetic-patients) | 12,984 | Synthetic patient presentations across ~4,500 diseases at 3 difficulty levels |
 
 ## Clinical Tool Pipeline
 

@@ -100,19 +100,25 @@ THEME = gr.themes.Soft(
 
 CSS = """
 .disclaimer {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
+    background: #fbe9e7;
+    border: 1px solid #e57373;
     border-radius: 8px;
     padding: 12px 16px;
     margin-bottom: 16px;
     font-size: 0.9em;
-    color: #856404;
+    color: #b71c1c;
 }
-.disclaimer-dark {
-    background: #332d00;
-    border-color: #665a00;
-    color: #ffc107;
+.dark .disclaimer {
+    background: #3e1a1a;
+    border-color: #e57373;
+    color: #ef9a9a;
 }
+.header-subtitle {
+    color: #666;
+    font-size: 0.85em;
+    margin-top: -8px;
+}
+.dark .header-subtitle { color: #aaa; }
 footer { display: none !important; }
 """
 
@@ -125,6 +131,8 @@ with gr.Blocks(
     gr.Markdown("""
 # Rare AI Archive — Clinical Demo
 
+*A program of the [Wilhelm Foundation](https://wilhelm.foundation) · Built on [Lattice Protocol](https://github.com/LatticeProtocol)*
+
 Explore how AI-assisted rare disease diagnostics works. Select a clinical
 scenario to see the full diagnostic workflow: patient presentation, clinical
 tool queries, and structured clinical assessment.
@@ -135,9 +143,10 @@ complex multi-system disorders.
 
     gr.HTML("""
 <div class="disclaimer">
-    <strong>Research Use Only.</strong> All patient data is synthetic.
-    This is not a diagnostic tool — outputs require clinical validation.
-    Responses are pre-computed from the Rare Disease Specialist model.
+    <strong>NOT a medical device. NOT FDA/CE-cleared.</strong>
+    For research and educational use only. All patient data is synthetic.
+    This is not a diagnostic tool — outputs require expert clinical validation
+    and must not be used for patient care decisions.
 </div>
     """)
 
@@ -219,10 +228,19 @@ The system uses 7 clinical tool adapters for evidence-based reasoning:
 - **PubMed** — Literature search
 - **DiffDx** — Structured differential diagnosis
 
+### Datasets
+
+| Dataset | Records | Purpose |
+|---------|---------|---------|
+| [Synthetic Patients](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-synthetic-patients) | 12,984 | SFT training data from Orphanet profiles |
+| [RareArena RDS](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-eval-rarearena-rds) | 8,562 | Evaluation benchmark — clinical vignettes |
+| [RareArena RDC](https://huggingface.co/datasets/Wilhelm-Foundation/rare-archive-eval-rarearena-rdc) | 4,376 | Evaluation benchmark — vignettes with lab results |
+
 ### Links
 
+- [Complete Toolkit Collection](https://huggingface.co/collections/Wilhelm-Foundation/rare-ai-archive-complete-toolkit-69c4b1e14800a370fe028851) — all models, datasets, and this demo
 - [GitHub Repository](https://github.com/Wilhelm-Foundation/rare-archive)
-- [HuggingFace Models](https://huggingface.co/Wilhelm-Foundation)
+- [HuggingFace Organization](https://huggingface.co/Wilhelm-Foundation)
 - [4B Model (GGUF)](https://huggingface.co/Wilhelm-Foundation/rare-archive-qwen-4b-sft-v1)
 - [Contributing Guide](https://github.com/Wilhelm-Foundation/rare-archive/blob/main/CONTRIBUTING.md)
 
@@ -231,7 +249,7 @@ The system uses 7 clinical tool adapters for evidence-based reasoning:
 A program of the [Wilhelm Foundation](https://wilhelm.foundation).
 Built on [Lattice Protocol](https://github.com/LatticeProtocol) infrastructure.
 
-*Built by people who believe that no disease is too rare to matter.*
+*No disease is too rare to matter.*
             """)
 
 demo.launch()
