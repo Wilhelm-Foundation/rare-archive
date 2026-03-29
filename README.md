@@ -267,6 +267,12 @@ The Rare AI Archive's clinical tool pipeline builds directly on the [Human Pheno
 
 Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 
+## Acknowledgments
+
+This project owes a deep debt to **Tristan Carlisle** and the [Rare Care Centre](https://rarecare.world/) for their pioneering work on swarm-driven optimization of small-language-model agents at the edge. Tristan's vision — that diagnostic AI should meet patients where they are, running on local hardware rather than behind API walls — has profoundly shaped how we think about federated deployment and edge-native inference. His thought leadership and generous collaboration continue to push the boundaries of what's possible in diagnostic AI for rare disease.
+
+We also gratefully acknowledge **Tudor Groza**, **Gareth Baynam**, and the broader computational phenotyping community whose foundational work on HPO, Phenopackets, and systematic LLM evaluation created the scientific bedrock this project builds upon.
+
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE) for details.
