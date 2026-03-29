@@ -44,6 +44,11 @@ def validate_dataset(data: dict[str, Any]) -> list[str]:
     return _validate(data, "dataset")
 
 
+def validate_context_file(data: dict[str, Any]) -> list[str]:
+    """Validate a context file against its schema. Returns list of errors."""
+    return _validate(data, "context_file")
+
+
 def _validate(data: dict[str, Any], schema_name: str) -> list[str]:
     """Validate data against a named schema. Returns list of error messages."""
     schema = _load_schema(schema_name)

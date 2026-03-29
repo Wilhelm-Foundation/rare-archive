@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wilhelm-foundation.github.io/rare-archive-ontology/schemas/context_file.schema.json",
+  "title": "Context File",
+  "description": "Structured expert knowledge about when, why, and how to use clinical tools for rare disease diagnostics. Context files capture the tacit reasoning that specialists bring to the Undiagnosed Patient Hackathon — diagnostic workflows, interpretation guidelines, data source expertise, and patient journey insights.",
+  "type": "object",
+  "required": ["context_id", "title", "version", "category", "description", "when_to_use"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "description": "JSON-LD context for linked data interoperability",
+      "properties": {
+        "@vocab": { "const": "https://wilhelm-foundation.github.io/rare-archive-ontology/ns/" },
+        "hpo": { "const": "http://purl.obolibrary.org/obo/HP_" },
+        "ordo": { "const": "http://www.orpha.net/ORDO/Orphanet_" },
+        "mondo": { "const": "http://purl.obolibrary.org/obo/MONDO_" },
+        "omim": { "const": "https://omim.org/entry/" },
+        "gard": { "const": "https://rarediseases.info.nih.gov/diseases/" }
+      }
+    },
+    "context_id": {
+      "type": "string",
+      "pattern": "^rare_ctx_[a-z0-9_]+$",
+      "description": "Unique context file identifier with rare_ctx_ namespace prefix"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable context file title",
+      "examples": [
+        "Lysosomal Storage Disease Diagnostic Workflow",
+        "Oxford Nanopore Long-Read Sequencing Data Source Guide",
+        "Gaucher Disease Phenotype Pattern"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this context file"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "diagnostic_workflow",
+        "interpretation_guide",
+        "data_source_guide",
+        "tool_sequence",
+        "phenotype_pattern",
+        "diagnostic_odyssey"
+      ],
+      "description": "Context category — determines the primary knowledge type captured. diagnostic_workflow: step-by-step reasoning from presentation to diagnosis. interpretation_guide: how to read tool/database outputs. data_source_guide: which databases matter and why. tool_sequence: recommended tool invocation order with branching logic. phenotype_pattern: clinical feature clusters with gene-disease mappings. diagnostic_odyssey: patient journey lessons and community knowledge."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "What this context file covers (FAIR F2)"
+    },
+    "quality_tier": {
+      "type": "string",
+      "enum": ["draft", "reviewed", "validated", "published"],
+      "description": "Publication readiness. draft: captured but not reviewed. reviewed: 2+ specialist sign-off. validated: reviewed + schema valid + novelty assessed. published: committed to repo with FAIR metadata."
+    },
+    "when_to_use": {
+      "type": "object",
+      "description": "Clinical scenarios where this context is relevant",
+      "properties": {
+        "presenting_features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "HPO terms or clinical descriptions that trigger this context"
+        },
+        "patient_context": {
+          "type": "string",
+          "description": "Relevant demographics, ancestry, history"
+        },
+        "trigger_condition": {
+          "type": "string",
+          "description": "What combination of features activates this context"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What must be available before this context applies"
+        }
+      }
+    },
+    "disease_associations": {
+      "type": "array",
+      "description": "Diseases this context file relates to",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "orpha_id": { "type": "string", "pattern": "^Orphanet_\\d+$" },
+          "omim_id": { "type": "string", "pattern": "^\\d{6}$" },
+          "mondo_id": { "type": "string", "pattern": "^MONDO:\\d{7}$" },
+          "relevance": {
+            "type": "string",
+            "enum": ["primary", "differential", "related"],
+            "description": "How central this disease is to the context"
+          }
+        }
+      }
+    },
+    "tool_connections": {
+      "type": "array",
+      "description": "Clinical tools referenced by this context file",
+      "items": {
+        "type": "object",
+        "required": ["tool_id"],
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "pattern": "^rare_tool_[a-z0-9_]+$",
+            "description": "References a clinical_tool.schema.json entity"
+          },
+          "role": {
+            "type": "string",
+            "description": "How this tool is used in the context (e.g., 'primary lookup', 'confirmation', 'population frequency check')"
+          }
+        }
+      }
+    },
+    "workflow_steps": {
+      "type": "array",
+      "description": "Ordered diagnostic reasoning steps (primary for diagnostic_workflow and tool_sequence categories)",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "reasoning"],
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Step number in the workflow"
+          },
+          "action": {
+            "type": "string",
+            "description": "What to do at this step"
+          },
+          "tool_id": {
+            "type": "string",
+            "pattern": "^rare_tool_[a-z0-9_]+$",
+            "description": "Clinical tool invoked at this step (if applicable)"
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Why this step — the expert reasoning behind the action"
+          },
+          "expected_output": {
+            "type": "string",
+            "description": "What you expect to find"
+          },
+          "decision_branch": {
+            "type": "object",
+            "properties": {
+              "if_positive": { "type": "string", "description": "Next action if result confirms hypothesis" },
+              "if_negative": { "type": "string", "description": "Next action if result contradicts hypothesis" },
+              "if_ambiguous": { "type": "string", "description": "Next action if result is inconclusive" }
+            }
+          }
+        }
+      }
+    },
+    "interpretation_notes": {
+      "type": "array",
+      "description": "How to interpret tool/database outputs (primary for interpretation_guide category)",
+      "items": {
+        "type": "object",
+        "required": ["context", "guidance"],
+        "properties": {
+          "context": {
+            "type": "string",
+            "description": "Specific result or scenario being interpreted"
+          },
+          "guidance": {
+            "type": "string",
+            "description": "How to interpret — thresholds, caveats, population-specific notes"
+          },
+          "tool_id": {
+            "type": "string",
+            "pattern": "^rare_tool_[a-z0-9_]+$",
+            "description": "Which tool's output this interpretation applies to"
+          }
+        }
+      }
+    },
+    "phenotype_cluster": {
+      "type": "object",
+      "description": "Clinical feature cluster definition (primary for phenotype_pattern category)",
+      "properties": {
+        "cardinal_features": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "term": { "type": "string" },
+              "hpo_id": { "type": "string", "pattern": "^HP:\\d{7}$" },
+              "frequency": {
+                "type": "string",
+                "enum": ["obligate", "very_frequent", "frequent", "occasional", "very_rare", "excluded"]
+              },
+              "specificity_score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "supporting_features": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "red_flag_features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Features whose presence changes the differential"
+        },
+        "exclusion_features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Features whose absence is informative"
+        }
+      }
+    },
+    "odyssey_pattern": {
+      "type": "object",
+      "description": "Diagnostic journey pattern (primary for diagnostic_odyssey category)",
+      "properties": {
+        "typical_time_to_diagnosis": { "type": "string" },
+        "average_specialists_consulted": { "type": "integer" },
+        "common_misdiagnoses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "misdiagnosis": { "type": "string" },
+              "why_it_happens": { "type": "string" },
+              "how_long_it_persists": { "type": "string" }
+            }
+          }
+        },
+        "breakthrough_moments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "trigger": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "description": "Concrete clinical scenarios demonstrating this context",
+      "items": {
+        "type": "object",
+        "required": ["scenario", "expected_behavior"],
+        "properties": {
+          "scenario": {
+            "type": "string",
+            "description": "Clinical scenario description"
+          },
+          "expected_behavior": {
+            "type": "string",
+            "description": "What a well-informed system should do"
+          },
+          "tool_sequence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Expected tool invocation order for this scenario"
+          }
+        }
+      }
+    },
+    "confidence_assessment": {
+      "type": "object",
+      "description": "Overall confidence and limitations of this context",
+      "properties": {
+        "overall": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "limiting_factors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "alternative_differentials": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Other diagnoses to consider"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "References — papers, guidelines, and expert contributors",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["paper", "guideline", "expert", "database"],
+            "description": "Source type"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Citation, DOI, or contributor identifier"
+          },
+          "contributor_role": {
+            "type": "string",
+            "enum": ["clinician", "genetic_counselor", "computational_biologist", "patient_advocate"],
+            "description": "Role of expert contributor (when type=expert)"
+          },
+          "capture_mode": {
+            "type": "string",
+            "enum": ["scribed", "reflection", "presentation", "async"],
+            "description": "How this knowledge was captured (when type=expert)"
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "description": "Hackathon or event provenance (when context was captured at an event)",
+      "properties": {
+        "name": { "type": "string", "description": "Event name" },
+        "location": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "team": { "type": "string", "description": "Team that produced this context" }
+      }
+    },
+    "fair": {
+      "type": "object",
+      "description": "FAIR metadata for discoverability and reuse",
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 3,
+          "description": "Semantic keywords (FAIR F4)"
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier (FAIR R1)"
+        },
+        "creators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "orcid": { "type": "string" },
+              "affiliation": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "adna": {
+      "type": "object",
+      "description": "aDNA metadata envelope",
+      "properties": {
+        "type": { "const": "rare_context_file" },
+        "namespace": { "const": "rare_" },
+        "triad": { "const": "what" },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "last_edited_by": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

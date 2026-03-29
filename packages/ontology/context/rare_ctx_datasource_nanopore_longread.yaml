@@ -1,0 +1,295 @@
+# Context File: Oxford Nanopore Long-Read Sequencing Data Source Guide
+# Schema: context_file.schema.json v1.0.0
+# Category: data_source_guide
+
+context_id: rare_ctx_datasource_nanopore_longread
+title: "Oxford Nanopore Long-Read Sequencing Data Source Guide"
+version: "1.0.0"
+category: data_source_guide
+quality_tier: validated
+
+description: >-
+  Expert knowledge for interpreting Oxford Nanopore long-read sequencing data
+  in rare disease diagnostics. Covers what long-read sequencing reveals that
+  short-read whole-genome sequencing (WGS) misses, when to order it, how to
+  interpret structural variant calls and methylation data, and which clinical
+  tools to consult for downstream analysis.
+
+when_to_use:
+  presenting_features:
+    - "Suspected repeat expansion disorder"
+    - "Short-read WGS inconclusive despite strong clinical suspicion"
+    - "Suspected structural variant (inversion, translocation, large deletion)"
+    - "Suspected imprinting/methylation disorder"
+  patient_context: >-
+    Patients with a clear clinical phenotype but negative or inconclusive
+    standard genetic testing (karyotype, CMA, short-read WGS/WES). Particularly
+    relevant for neurological presentations where repeat expansions are common
+    (ataxias, intellectual disability, movement disorders).
+  trigger_condition: >-
+    Negative short-read WGS + strong phenotypic match to a known repeat
+    expansion or structural variant disorder, OR methylation abnormality
+    suspected from clinical presentation.
+  prerequisites:
+    - "Short-read WGS or WES results (ideally negative, to justify escalation)"
+    - "Clinical phenotype documented with HPO terms"
+    - "Family history if available (inheritance pattern narrows candidates)"
+
+disease_associations:
+  - name: "Fragile X syndrome"
+    omim_id: "300624"
+    mondo_id: "MONDO:0010383"
+    relevance: primary
+  - name: "Friedreich ataxia"
+    omim_id: "229300"
+    mondo_id: "MONDO:0008028"
+    relevance: primary
+  - name: "Huntington disease"
+    omim_id: "143100"
+    mondo_id: "MONDO:0007739"
+    relevance: primary
+  - name: "Myotonic dystrophy type 1"
+    omim_id: "160900"
+    mondo_id: "MONDO:0008056"
+    relevance: primary
+  - name: "Prader-Willi syndrome"
+    omim_id: "176270"
+    mondo_id: "MONDO:0008300"
+    relevance: related
+  - name: "Angelman syndrome"
+    omim_id: "105830"
+    mondo_id: "MONDO:0011073"
+    relevance: related
+
+tool_connections:
+  - tool_id: rare_tool_clinvar
+    role: "Variant pathogenicity lookup for detected structural variants and repeat expansions"
+  - tool_id: rare_tool_panelapp
+    role: "Gene panel selection for SV-associated disorders"
+  - tool_id: rare_tool_hpo
+    role: "Phenotype matching for repeat expansion diseases"
+  - tool_id: rare_tool_gnomad
+    role: "Population frequency check for structural variants (gnomAD-SV)"
+  - tool_id: rare_tool_pubmed
+    role: "Literature search for novel structural variants or repeat expansion thresholds"
+
+workflow_steps:
+  - step: 1
+    action: "Assess clinical indication for long-read sequencing"
+    reasoning: >-
+      Long-read sequencing is not a first-line test. It is indicated when
+      short-read WGS is negative but the clinical picture strongly suggests a
+      genetic disorder — particularly those involving repeat expansions
+      (trinucleotide, pentanucleotide), large structural variants (>50bp),
+      or methylation abnormalities that short reads cannot resolve.
+    expected_output: "Clinical justification documented with HPO terms"
+    decision_branch:
+      if_positive: "Proceed to gene panel selection (step 2)"
+      if_negative: "Consider alternative approaches: RNA-seq, metabolomics"
+      if_ambiguous: "Consult clinical genetics for sequencing strategy"
+
+  - step: 2
+    action: "Select targeted gene panel for long-read analysis"
+    tool_id: rare_tool_panelapp
+    reasoning: >-
+      Even with long-read WGS, interpretation is focused. Use PanelApp to
+      identify genes associated with the suspected phenotype cluster. For repeat
+      expansion disorders, the candidate gene list is relatively constrained
+      (~50 known pathogenic repeat loci).
+    expected_output: "Gene panel with known repeat expansion loci matching phenotype"
+    decision_branch:
+      if_positive: "Proceed to Nanopore analysis (step 3)"
+      if_negative: "Broaden phenotype terms, re-query PanelApp"
+      if_ambiguous: "Use comprehensive repeat expansion panel (STRchive loci)"
+
+  - step: 3
+    action: "Interpret Nanopore structural variant and repeat expansion calls"
+    reasoning: >-
+      Nanopore callers (e.g., Sniffles2 for SVs, STRique/TRGT for repeats)
+      produce calls with different quality profiles than short-read callers.
+      Key interpretation differences: (1) SVs are called with breakpoint
+      precision, not just copy number change; (2) repeat length distributions
+      show mosaicism directly; (3) phasing resolves compound heterozygosity
+      without parental samples.
+    expected_output: "Structural variant or repeat expansion call with length and zygosity"
+    decision_branch:
+      if_positive: "Check pathogenicity via ClinVar (step 4)"
+      if_negative: "Check methylation data if available (step 5)"
+      if_ambiguous: "Review raw signal for borderline repeat lengths"
+
+  - step: 4
+    action: "Check variant pathogenicity in ClinVar"
+    tool_id: rare_tool_clinvar
+    reasoning: >-
+      ClinVar contains pathogenicity assertions for many repeat expansion loci.
+      Critical to check: (1) Is the detected repeat length in the pathogenic
+      range? (2) Are there gene-specific thresholds (premutation vs. full
+      mutation ranges differ by gene)? (3) Is the variant classified as
+      pathogenic, likely pathogenic, or VUS?
+    expected_output: "Pathogenicity classification with evidence level (review stars)"
+    decision_branch:
+      if_positive: "Confirm with phenotype matching via HPO (step 6)"
+      if_negative: "Novel variant — search literature via PubMed (step 7)"
+      if_ambiguous: "Check population frequency in gnomAD-SV (step 4b)"
+
+  - step: 5
+    action: "Analyze methylation data for imprinting disorders"
+    reasoning: >-
+      Nanopore natively detects 5-methylcytosine (5mC) without bisulfite
+      conversion. For suspected imprinting disorders (Prader-Willi, Angelman,
+      Beckwith-Wiedemann), compare methylation levels at known differentially
+      methylated regions (DMRs) against reference ranges. A methylation ratio
+      deviating >2 SD from the reference suggests an imprinting defect.
+    expected_output: "Methylation differential scores at disease-associated DMRs"
+    decision_branch:
+      if_positive: "Imprinting disorder confirmed — proceed to clinical correlation"
+      if_negative: "Methylation normal — return to SV analysis"
+      if_ambiguous: "Technical artifact possible — check coverage depth at DMR"
+
+  - step: 6
+    action: "Phenotype confirmation via HPO"
+    tool_id: rare_tool_hpo
+    reasoning: >-
+      Once a candidate variant is identified, confirm that the patient's
+      phenotype matches the expected disease presentation. HPO terms allow
+      systematic comparison: check which features are obligate vs. occasional
+      for the candidate disease.
+    expected_output: "Phenotype match score — how well patient features align with disease"
+    decision_branch:
+      if_positive: "Diagnosis confirmed — document and report"
+      if_negative: "Phenotype mismatch — reconsider variant significance"
+      if_ambiguous: "Age-dependent penetrance — some features may emerge later"
+
+  - step: 7
+    action: "Literature search for novel findings"
+    tool_id: rare_tool_pubmed
+    reasoning: >-
+      For variants not yet in ClinVar (especially novel repeat expansion
+      lengths or structural variants in recently characterized genes), search
+      PubMed for case reports and functional studies. The long-read sequencing
+      field is rapidly evolving — new pathogenic loci are being characterized
+      regularly.
+    expected_output: "Published case reports or functional data supporting pathogenicity"
+    decision_branch:
+      if_positive: "Sufficient evidence for likely pathogenic classification"
+      if_negative: "Classify as VUS — recommend research-grade follow-up"
+      if_ambiguous: "Recommend functional studies or segregation analysis"
+
+interpretation_notes:
+  - context: "Repeat expansion length calls from Nanopore"
+    guidance: >-
+      Nanopore repeat length estimates have higher variance than PCR-based
+      methods for very long repeats (>1000 units). Report the modal length
+      from the repeat length distribution, not just the mean. For clinical
+      thresholds near premutation/full mutation boundaries, recommend
+      confirmatory PCR-based testing (e.g., AmplideX for FMR1).
+    tool_id: rare_tool_clinvar
+
+  - context: "Structural variant calls from Sniffles2"
+    guidance: >-
+      Sniffles2 reports SVs with PRECISE or IMPRECISE flags. PRECISE calls
+      have breakpoint resolution to ~10bp. IMPRECISE calls (usually in
+      repetitive regions) may have breakpoint uncertainty of 100-500bp.
+      For clinical reporting, only use PRECISE calls or IMPRECISE calls
+      with >=10x supporting read coverage.
+
+  - context: "Methylation differential at imprinting loci"
+    guidance: >-
+      Normal methylation ratio at most DMRs is ~0.5 (one allele methylated,
+      one unmethylated). Values <0.2 or >0.8 suggest imprinting defect or
+      UPD. However, blood-derived methylation may differ from tissue of
+      interest. Brain-specific imprinting changes will not be detected in
+      blood samples.
+
+  - context: "gnomAD-SV population frequency interpretation"
+    guidance: >-
+      gnomAD-SV v4 contains structural variants from short-read data, which
+      has lower sensitivity than long-read for complex SVs and repeat
+      expansions. A variant absent from gnomAD-SV is not necessarily rare —
+      it may simply be undetectable by short reads. Use population frequency
+      as supporting evidence, not as a primary filter.
+    tool_id: rare_tool_gnomad
+
+examples:
+  - scenario: >-
+      A 4-year-old boy with intellectual disability, macroorchidism, and
+      autistic features. Short-read WGS found no pathogenic SNVs or small
+      indels. Family history: maternal uncle with learning difficulties.
+    expected_behavior: >-
+      Recognize X-linked inheritance pattern. Order Nanopore sequencing
+      targeting FMR1 CGG repeat. Detect CGG expansion >200 repeats (full
+      mutation). Confirm pathogenicity via ClinVar (Fragile X syndrome).
+      Check HPO for phenotype match (HP:0001249 Intellectual disability,
+      HP:0000053 Macroorchidism, HP:0000729 Autistic behavior — all
+      consistent). Report as Fragile X syndrome.
+    tool_sequence:
+      - "rare_tool_panelapp"
+      - "rare_tool_clinvar"
+      - "rare_tool_hpo"
+
+  - scenario: >-
+      A 35-year-old woman with progressive gait ataxia, dysarthria, and
+      hypertrophic cardiomyopathy. Short-read WGS identified no pathogenic
+      variants in ataxia gene panels. ECG shows cardiac conduction defects.
+    expected_behavior: >-
+      Suspect Friedreich ataxia (GAA repeat expansion in FXN gene, not
+      detectable by short-read WGS). Order Nanopore targeting FXN intron 1.
+      Detect GAA expansion >66 repeats on both alleles. Confirm via ClinVar
+      (pathogenic range >66 GAA repeats). Cross-check phenotype via HPO
+      (HP:0001251 Cerebellar ataxia, HP:0001638 Cardiomyopathy).
+    tool_sequence:
+      - "rare_tool_panelapp"
+      - "rare_tool_clinvar"
+      - "rare_tool_hpo"
+      - "rare_tool_pubmed"
+
+confidence_assessment:
+  overall: high
+  limiting_factors:
+    - "Nanopore error rate higher than Illumina for SNVs (use for SVs/repeats, not SNV calling)"
+    - "Very long repeat expansions (>10,000 units) have imprecise length estimates"
+    - "Methylation analysis requires adequate coverage (>20x at DMRs)"
+    - "Not all repeat expansion disorders have established pathogenic thresholds"
+  alternative_differentials:
+    - "RNA sequencing for splice-affecting variants missed by DNA-only analysis"
+    - "Optical genome mapping (Bionano) as alternative SV detection technology"
+    - "Whole-genome bisulfite sequencing for comprehensive methylation profiling"
+
+sources:
+  - type: paper
+    reference: "Mantere T et al. (2019) Long-read sequencing emerging in medical genetics. Front Genet. doi:10.3389/fgene.2019.00426"
+  - type: paper
+    reference: "Dolzhenko E et al. (2024) Characterization of pathogenic repeat expansions with targeted nanopore sequencing. Genome Res."
+  - type: database
+    reference: "STRchive — curated database of pathogenic short tandem repeat loci (https://harrietdashnow.com/STRchive/)"
+  - type: guideline
+    reference: "ACMG technical standard for clinical interpretation of sequence variants (Richards et al., 2015)"
+
+fair:
+  keywords:
+    - "long-read sequencing"
+    - "Oxford Nanopore"
+    - "structural variants"
+    - "repeat expansions"
+    - "rare disease diagnostics"
+    - "methylation"
+  license: "CC-BY-NC-SA-4.0"
+  creators:
+    - name: "Rare AI Archive Contributors"
+      affiliation: "Wilhelm Foundation"
+      role: "curator"
+
+adna:
+  type: rare_context_file
+  namespace: "rare_"
+  triad: what
+  created: "2026-03-28"
+  updated: "2026-03-28"
+  last_edited_by: agent_stanley
+  tags:
+    - context
+    - data_source_guide
+    - nanopore
+    - long_read_sequencing
+    - structural_variants
+    - repeat_expansions

@@ -130,6 +130,26 @@
       "items": { "type": "string" },
       "description": "Patient categories where this tool is particularly relevant"
     },
+    "context_guides": {
+      "type": "array",
+      "description": "References to context files describing expert usage patterns for this tool",
+      "items": {
+        "type": "object",
+        "required": ["context_id"],
+        "properties": {
+          "context_id": {
+            "type": "string",
+            "pattern": "^rare_ctx_[a-z0-9_]+$",
+            "description": "References a context_file.schema.json entity"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": ["usage_guide", "interpretation_guide", "workflow_reference"],
+            "description": "How this context relates to the tool"
+          }
+        }
+      }
+    },
     "caching": {
       "type": "object",
       "properties": {

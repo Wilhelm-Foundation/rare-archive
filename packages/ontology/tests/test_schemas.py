@@ -4,6 +4,7 @@ from rare_archive_ontology.schemas import (
     _SCHEMA_CACHE,
     _load_schema,
     validate_clinical_tool,
+    validate_context_file,
     validate_dataset,
     validate_model,
     validate_patient_category,
@@ -104,3 +105,52 @@ class TestValidateDataset:
         data = {**valid_dataset, "dataset_type": "invalid_type"}
         errors = validate_dataset(data)
         assert len(errors) > 0
+
+
+class TestValidateContextFile:
+    def test_valid(self, valid_context_file):
+        errors = validate_context_file(valid_context_file)
+        assert errors == []
+
+    def test_missing_required_fields(self):
+        errors = validate_context_file({})
+        assert len(errors) > 0
+        field_names = " ".join(errors)
+        for field in ("context_id", "title", "version", "category", "description", "when_to_use"):
+            assert field in field_names
+
+    def test_invalid_context_id_pattern(self, valid_context_file):
+        data = {**valid_context_file, "context_id": "BAD-ID"}
+        errors = validate_context_file(data)
+        assert any("does not match" in e for e in errors)
+
+    def test_invalid_category_enum(self, valid_context_file):
+        data = {**valid_context_file, "category": "invalid_category"}
+        errors = validate_context_file(data)
+        assert len(errors) > 0
+
+    def test_description_min_length(self, valid_context_file):
+        data = {**valid_context_file, "description": "too short"}
+        errors = validate_context_file(data)
+        assert len(errors) > 0
+
+    def test_invalid_tool_id_in_connections(self, valid_context_file):
+        data = {
+            **valid_context_file,
+            "tool_connections": [{"tool_id": "INVALID", "role": "test"}],
+        }
+        errors = validate_context_file(data)
+        assert any("does not match" in e for e in errors)
+
+    def test_all_categories_accepted(self, valid_context_file):
+        for cat in [
+            "diagnostic_workflow",
+            "interpretation_guide",
+            "data_source_guide",
+            "tool_sequence",
+            "phenotype_pattern",
+            "diagnostic_odyssey",
+        ]:
+            data = {**valid_context_file, "category": cat}
+            errors = validate_context_file(data)
+            assert errors == [], f"Category '{cat}' should be valid but got: {errors}"

@@ -24,7 +24,8 @@
         "rare_model",
         "rare_dataset",
         "rare_evaluation",
-        "rare_preference"
+        "rare_preference",
+        "rare_context_file"
       ],
       "description": "aDNA entity type with rare_ namespace prefix"
     },

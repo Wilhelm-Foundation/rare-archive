@@ -49,6 +49,46 @@ Whether you're a clinician who knows rare diseases intimately, an ML engineer wh
 
 ---
 
+## Contributing Context Files
+
+Context files capture **how experts reason** with clinical tools — the tacit knowledge that makes rare disease specialists effective. This is different from clinical vignettes (cases to reason about) or tool documentation (what tools do). Context files capture the "why" behind each tool invocation and the interpretation rules that come from clinical experience.
+
+### Why Context Matters
+
+When a specialist at the Undiagnosed Patient Hackathon says "I'm checking gnomAD for the Ashkenazi Jewish subpopulation frequency, not the overall frequency" — that's expert reasoning that an AI system needs to learn. Context files make this reasoning structured, versioned, and machine-readable.
+
+Context feeds into three systems:
+1. **Runtime grounding** — OpenWebUI injects relevant context during tool-augmented inference
+2. **Training annotation** — gold-standard agentic traces reference context to explain tool selection
+3. **Evaluation criteria** — the RLHF Arena's "Tool Usage" dimension references context-defined patterns
+
+### The 6 Context Categories
+
+| Category | What to Write | Example |
+|----------|--------------|---------|
+| `diagnostic_workflow` | Step-by-step reasoning sequence | "For suspected Gaucher: Orphanet → ClinVar → gnomAD (ASJ) → HPO → PubMed" |
+| `interpretation_guide` | How to read tool outputs | "N370S homozygous in GBA = Type 1 only; compound het with L444P = higher Type 2/3 risk" |
+| `data_source_guide` | Which databases matter and why | "Oxford Nanopore long-read sequencing: when to order, how to interpret SV calls" |
+| `tool_sequence` | Tool invocation order with branching | "If ClinVar returns VUS, check gnomAD frequency before escalating to PubMed" |
+| `phenotype_pattern` | Clinical feature clusters | "Joint hypermobility + skin elasticity + vascular fragility → COL5A1/COL3A1 panels" |
+| `diagnostic_odyssey` | Patient journey lessons | "Average 7-year odyssey for LSD; most common misdiagnosis is hematologic malignancy" |
+
+### How to Contribute a Context File
+
+1. **Start from an exemplar** — see `packages/ontology/context/` for working examples
+2. **Use the schema** — all files validate against `packages/ontology/schemas/context_file.schema.json`
+3. **Name it correctly** — `rare_ctx_[category]_[disease]_[descriptor].yaml`
+4. **Include required fields** — `context_id`, `title`, `version`, `category`, `description`, `when_to_use`
+5. **Reference tools by ID** — use `rare_tool_clinvar`, `rare_tool_orphanet`, etc. in `tool_connections` and `workflow_steps`
+6. **Add FAIR metadata** — `fair.keywords` (min 3), `fair.license`, `fair.creators`
+7. **Submit a PR** — context files go through clinical review (2+ specialists) before publication
+
+### Quality Tiers
+
+New context files enter as `draft`. They progress through `reviewed` → `validated` → `published` as they pass clinical accuracy review, schema validation, and novelty assessment.
+
+---
+
 ## Getting Started
 
 ### 1. Set Up Your Environment

@@ -76,6 +76,40 @@ def valid_dataset():
 
 
 @pytest.fixture
+def valid_context_file():
+    return {
+        "context_id": "rare_ctx_workflow_lsd_gaucher",
+        "title": "Lysosomal Storage Disease Diagnostic Workflow",
+        "version": "1.0.0",
+        "category": "diagnostic_workflow",
+        "description": "Step-by-step diagnostic reasoning for suspected Gaucher disease presenting with hepatosplenomegaly.",
+        "when_to_use": {
+            "presenting_features": ["Hepatosplenomegaly", "Bone pain", "Fatigue"],
+            "patient_context": "Ashkenazi Jewish ancestry",
+            "trigger_condition": "Hepatosplenomegaly + bone involvement + Ashkenazi ancestry",
+        },
+        "tool_connections": [
+            {"tool_id": "rare_tool_orphanet", "role": "primary disease lookup"},
+            {"tool_id": "rare_tool_clinvar", "role": "variant pathogenicity check"},
+        ],
+        "workflow_steps": [
+            {
+                "step": 1,
+                "action": "Disease lookup via Orphanet",
+                "tool_id": "rare_tool_orphanet",
+                "reasoning": "Phenotype cluster is specific enough for disease-level matching.",
+                "expected_output": "Gaucher disease (ORPHA:355) as top match",
+                "decision_branch": {
+                    "if_positive": "Proceed to ClinVar for GBA variant check",
+                    "if_negative": "Expand differential to Niemann-Pick B, Wilson disease",
+                    "if_ambiguous": "Add HPO terms and re-query",
+                },
+            }
+        ],
+    }
+
+
+@pytest.fixture
 def sample_categories():
     """Two sample patient categories for assignment tests."""
     return [

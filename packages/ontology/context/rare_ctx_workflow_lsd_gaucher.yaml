@@ -1,0 +1,308 @@
+# Context File: Lysosomal Storage Disease Diagnostic Workflow
+# Schema: context_file.schema.json v1.0.0
+# Category: diagnostic_workflow
+
+context_id: rare_ctx_workflow_lsd_gaucher
+title: "Lysosomal Storage Disease Diagnostic Workflow — Gaucher Disease"
+version: "1.0.0"
+category: diagnostic_workflow
+quality_tier: validated
+
+description: >-
+  Expert diagnostic reasoning for suspected Gaucher disease, the most common
+  lysosomal storage disease. Captures the step-by-step workflow from initial
+  presentation (hepatosplenomegaly, bone pain, Ashkenazi ancestry) through
+  tool-assisted diagnosis, including genotype-phenotype interpretation and
+  treatment implications. This workflow exemplifies the phenotype-first
+  diagnostic approach used at the Undiagnosed Patient Hackathon.
+
+when_to_use:
+  presenting_features:
+    - "Hepatosplenomegaly (HP:0001433)"
+    - "Bone pain (HP:0002653)"
+    - "Fatigue (HP:0012378)"
+    - "Easy bruising / thrombocytopenia (HP:0001873)"
+    - "Anemia (HP:0001903)"
+  patient_context: >-
+    Ashkenazi Jewish ancestry is a strong risk factor (carrier frequency ~1:15).
+    Also consider in any patient with unexplained hepatosplenomegaly regardless
+    of ancestry, as Gaucher disease occurs pan-ethnically. Age of onset varies
+    by type: Type 1 (non-neuropathic) can present at any age; Types 2/3
+    (neuropathic) present in infancy/childhood.
+  trigger_condition: >-
+    Hepatosplenomegaly + bone involvement (bone pain, avascular necrosis, or
+    Erlenmeyer flask deformity) ± Ashkenazi ancestry ± cytopenias. The
+    combination of organomegaly with skeletal involvement is highly suggestive.
+  prerequisites:
+    - "Complete blood count (CBC) showing cytopenias"
+    - "Imaging confirming hepatosplenomegaly"
+    - "Bone imaging if skeletal symptoms present"
+
+disease_associations:
+  - name: "Gaucher disease type 1"
+    orpha_id: "Orphanet_355"
+    omim_id: "230800"
+    mondo_id: "MONDO:0018940"
+    relevance: primary
+  - name: "Gaucher disease type 2"
+    orpha_id: "Orphanet_77259"
+    omim_id: "230900"
+    relevance: related
+  - name: "Gaucher disease type 3"
+    orpha_id: "Orphanet_77261"
+    omim_id: "231000"
+    relevance: related
+  - name: "Niemann-Pick disease type B"
+    orpha_id: "Orphanet_77293"
+    omim_id: "607616"
+    relevance: differential
+  - name: "Wilson disease"
+    orpha_id: "Orphanet_905"
+    omim_id: "277900"
+    relevance: differential
+
+tool_connections:
+  - tool_id: rare_tool_orphanet
+    role: "Primary disease lookup — match phenotype cluster to candidate diseases"
+  - tool_id: rare_tool_clinvar
+    role: "GBA variant pathogenicity check — confirm pathogenic variants"
+  - tool_id: rare_tool_gnomad
+    role: "Population frequency — Ashkenazi subpopulation carrier frequency"
+  - tool_id: rare_tool_hpo
+    role: "Phenotype confirmation — systematic feature matching"
+  - tool_id: rare_tool_pubmed
+    role: "Treatment and prognosis — enzyme replacement therapy evidence"
+  - tool_id: rare_tool_panelapp
+    role: "Gene panel selection if broader LSD workup needed"
+
+workflow_steps:
+  - step: 1
+    action: "Disease lookup via Orphanet"
+    tool_id: rare_tool_orphanet
+    reasoning: >-
+      Start with Orphanet because the phenotype cluster (hepatosplenomegaly
+      + bone involvement + Ashkenazi ancestry) is specific enough for
+      disease-level matching. Orphanet's rare disease search maps clinical
+      features to candidate diseases with prevalence data. The phenotype-first
+      approach is preferred over direct genetic testing when the clinical
+      picture is suggestive — it narrows the differential before committing
+      to specific gene tests.
+    expected_output: "Gaucher disease (ORPHA:355) as top match for hepatosplenomegaly + bone disease"
+    decision_branch:
+      if_positive: "Proceed to ClinVar for GBA variant check (step 2)"
+      if_negative: "Expand differential — consider Niemann-Pick B (SMPD1), Wilson disease (ATP7B), or other storage disorders"
+      if_ambiguous: "Add HPO terms for presenting features and re-query Orphanet"
+
+  - step: 2
+    action: "Check GBA gene variants in ClinVar"
+    tool_id: rare_tool_clinvar
+    reasoning: >-
+      Gaucher disease is caused by biallelic pathogenic variants in GBA
+      (glucocerebrosidase). ClinVar contains well-curated pathogenicity
+      assertions for common GBA variants. The most clinically relevant
+      variants have genotype-phenotype correlations that predict disease type.
+      Check for the patient's specific variants against ClinVar's
+      classification and review status (star rating).
+    expected_output: "GBA variant classification — pathogenic, likely pathogenic, or VUS"
+    decision_branch:
+      if_positive: "Variant confirmed pathogenic — check population frequency (step 3)"
+      if_negative: "No known pathogenic variants — consider enzymatic assay (gold standard) or broader gene panel"
+      if_ambiguous: "VUS found — check functional evidence in PubMed (step 5)"
+
+  - step: 3
+    action: "Check population frequency in gnomAD"
+    tool_id: rare_tool_gnomad
+    reasoning: >-
+      GBA variants have dramatically different carrier frequencies across
+      populations. CRITICAL: use the Ashkenazi Jewish (ASJ) subpopulation
+      in gnomAD, NOT the overall or European frequency. N370S carrier
+      frequency in ASJ is ~1:17, but only ~1:800 in non-Jewish Europeans.
+      L444P is much rarer in all populations. This population-specific
+      frequency informs likelihood of homozygosity or compound
+      heterozygosity and is essential for accurate risk assessment.
+    expected_output: "Population-specific allele frequencies confirming variant rarity/commonality"
+    decision_branch:
+      if_positive: "Frequency consistent with pathogenic variant in this population — proceed to phenotype confirmation (step 4)"
+      if_negative: "Variant too common for recessive disease — likely benign, reconsider diagnosis"
+      if_ambiguous: "Intermediate frequency — consider carrier status vs. disease-causing"
+
+  - step: 4
+    action: "Phenotype confirmation via HPO"
+    tool_id: rare_tool_hpo
+    reasoning: >-
+      Systematic phenotype matching confirms that the patient's clinical
+      features align with the expected Gaucher disease presentation. HPO
+      provides structured vocabulary and disease-phenotype associations
+      with frequency data. Check which features are obligate (present in
+      all cases) vs. occasional. This step catches atypical presentations
+      that might suggest a different diagnosis despite matching genotype.
+    expected_output: "High phenotype match score — patient features consistent with Gaucher disease"
+    decision_branch:
+      if_positive: "Diagnosis confirmed — proceed to genotype-phenotype correlation (step 5)"
+      if_negative: "Phenotype mismatch — reassess. Consider GBA-associated Parkinsonism or other LSD"
+      if_ambiguous: "Some features age-dependent — may emerge over time"
+
+  - step: 5
+    action: "Literature search for treatment and prognosis"
+    tool_id: rare_tool_pubmed
+    reasoning: >-
+      Once diagnosis is established, PubMed search informs treatment
+      decisions. Gaucher disease has FDA-approved enzyme replacement
+      therapies (ERT: imiglucerase, velaglucerase, taliglucerase) and
+      substrate reduction therapy (SRT: eliglustat, miglustat). Treatment
+      choice depends on disease type, severity, and patient factors.
+      Search for genotype-specific outcomes and current treatment guidelines.
+    expected_output: "Current treatment guidelines and genotype-specific prognosis data"
+    decision_branch:
+      if_positive: "Treatment plan informed by literature — document and refer to specialist"
+      if_negative: "Rare genotype with limited data — recommend specialist referral and registry enrollment"
+      if_ambiguous: "Conflicting evidence — note uncertainty and recommend multidisciplinary review"
+
+interpretation_notes:
+  - context: "Homozygous N370S (p.Asn409Ser) in GBA"
+    guidance: >-
+      N370S homozygosity is the most common genotype in Ashkenazi Gaucher
+      patients and is EXCLUSIVELY associated with Type 1 (non-neuropathic).
+      Prognosis is generally favorable. Phenotype ranges from asymptomatic
+      to severe visceral/skeletal disease. ERT is effective. N370S has
+      never been observed in Types 2 or 3, so its presence excludes
+      neuropathic forms.
+    tool_id: rare_tool_clinvar
+
+  - context: "Compound heterozygous N370S/L444P in GBA"
+    guidance: >-
+      N370S/L444P compound heterozygosity carries a HIGHER risk of
+      neuropathic disease than N370S homozygosity. While most patients
+      present with Type 1, there is an increased risk of Type 3 (chronic
+      neuropathic) features, including oculomotor apraxia and
+      progressive neurological decline. These patients require neurological
+      monitoring. This genotype also confers elevated Parkinson disease
+      risk later in life.
+    tool_id: rare_tool_clinvar
+
+  - context: "Homozygous L444P (p.Leu483Pro) in GBA"
+    guidance: >-
+      L444P homozygosity is strongly associated with neuropathic Gaucher
+      disease (Types 2 or 3). Type 2 (acute neuropathic) has onset in
+      infancy and is typically fatal by age 2-4. Type 3 (chronic
+      neuropathic) has later onset with slower neurological progression.
+      This genotype requires URGENT neurological assessment and early
+      treatment initiation.
+    tool_id: rare_tool_clinvar
+
+  - context: "gnomAD population frequency for GBA variants"
+    guidance: >-
+      CRITICAL: Always check the Ashkenazi Jewish (ASJ) subpopulation
+      specifically, NOT the overall or European frequency. GBA N370S:
+      ASJ carrier frequency ~6% (1:17), European ~0.1% (1:800). Using
+      the wrong population frequency will dramatically underestimate
+      disease probability in Ashkenazi patients and overestimate it in
+      other populations. gnomAD v4 provides ASJ-specific allele counts.
+    tool_id: rare_tool_gnomad
+
+  - context: "Enzymatic assay vs. genetic testing for Gaucher diagnosis"
+    guidance: >-
+      While this workflow emphasizes genetic tools, the gold standard
+      for Gaucher diagnosis remains beta-glucocerebrosidase enzymatic
+      activity in leukocytes or dried blood spots. Reduced enzyme
+      activity (<15% of normal) is diagnostic. Genetic testing identifies
+      the specific genotype for prognosis prediction. Both are
+      recommended: enzyme assay confirms diagnosis, genetics predicts
+      clinical course.
+
+examples:
+  - scenario: >-
+      A 28-year-old Ashkenazi Jewish man presents with splenomegaly
+      found incidentally on abdominal imaging, mild thrombocytopenia
+      (platelets 95K), and chronic fatigue. He reports intermittent
+      bone pain in his femurs. No neurological symptoms.
+    expected_behavior: >-
+      Recognize the classic Gaucher Type 1 triad: splenomegaly +
+      cytopenias + bone disease in an Ashkenazi patient. Query Orphanet
+      for hepatosplenomegaly + bone pain → Gaucher disease as top hit.
+      Check ClinVar for GBA variants → find N370S homozygous (pathogenic,
+      4-star review). Check gnomAD ASJ subpopulation → N370S carrier
+      frequency 6%, consistent. Confirm phenotype via HPO → all features
+      match Type 1. Search PubMed for ERT guidelines → recommend
+      imiglucerase. Refer to hematology and metabolic genetics.
+    tool_sequence:
+      - "rare_tool_orphanet"
+      - "rare_tool_clinvar"
+      - "rare_tool_gnomad"
+      - "rare_tool_hpo"
+      - "rare_tool_pubmed"
+
+  - scenario: >-
+      A 6-month-old infant with hepatosplenomegaly, failure to thrive,
+      strabismus, and progressive loss of motor milestones. Parents are
+      non-consanguineous, non-Ashkenazi European ancestry.
+    expected_behavior: >-
+      Recognize acute neuropathic presentation (strabismus + motor
+      regression + organomegaly) suggesting Type 2 Gaucher or
+      Niemann-Pick A. Query Orphanet with neurological + visceral
+      features. If GBA testing shows L444P homozygous, this confirms
+      Type 2 Gaucher — urgent neurological assessment. If SMPD1
+      variants found instead, pivot to Niemann-Pick A. Note: Type 2
+      Gaucher has no effective treatment; ERT does not cross the
+      blood-brain barrier. Genetic counseling for family is critical.
+    tool_sequence:
+      - "rare_tool_orphanet"
+      - "rare_tool_clinvar"
+      - "rare_tool_hpo"
+      - "rare_tool_panelapp"
+      - "rare_tool_pubmed"
+
+confidence_assessment:
+  overall: high
+  limiting_factors:
+    - "Enzymatic assay (not available via these tools) remains the diagnostic gold standard"
+    - "Rare/novel GBA variants may be classified as VUS despite being pathogenic"
+    - "Genotype-phenotype correlation is imperfect — same genotype can have variable expressivity"
+    - "GBA pseudogene (GBAP1) can cause false-positive variant calls in some sequencing pipelines"
+  alternative_differentials:
+    - "Niemann-Pick disease type B (SMPD1) — hepatosplenomegaly without bone disease"
+    - "Wilson disease (ATP7B) — hepatosplenomegaly with neuropsychiatric features, Kayser-Fleischer rings"
+    - "Acid sphingomyelinase deficiency — overlapping phenotype, different enzyme"
+    - "GBA-associated Parkinson disease — GBA heterozygous carriers have 5-20x PD risk"
+
+sources:
+  - type: guideline
+    reference: "Biegstraaten M et al. (2015) Management goals for type 1 Gaucher disease. Blood Rev. doi:10.1016/j.blre.2014.10.002"
+  - type: paper
+    reference: "Grabowski GA (2008) Phenotype, diagnosis, and treatment of Gaucher's disease. Lancet. doi:10.1016/S0140-6736(08)61522-6"
+  - type: paper
+    reference: "Sidransky E et al. (2009) Multicenter analysis of glucocerebrosidase mutations in Parkinson's disease. N Engl J Med. doi:10.1056/NEJMoa0901281"
+  - type: database
+    reference: "ClinVar GBA gene page — https://www.ncbi.nlm.nih.gov/clinvar/?term=GBA%5Bgene%5D"
+  - type: database
+    reference: "gnomAD v4 GBA — Ashkenazi Jewish subpopulation allele frequencies"
+
+fair:
+  keywords:
+    - "Gaucher disease"
+    - "lysosomal storage disease"
+    - "GBA gene"
+    - "diagnostic workflow"
+    - "Ashkenazi Jewish"
+    - "enzyme replacement therapy"
+    - "rare disease diagnostics"
+  license: "CC-BY-NC-SA-4.0"
+  creators:
+    - name: "Rare AI Archive Contributors"
+      affiliation: "Wilhelm Foundation"
+      role: "curator"
+
+adna:
+  type: rare_context_file
+  namespace: "rare_"
+  triad: what
+  created: "2026-03-28"
+  updated: "2026-03-28"
+  last_edited_by: agent_stanley
+  tags:
+    - context
+    - diagnostic_workflow
+    - gaucher_disease
+    - lysosomal_storage_disease
+    - clinical_genetics
+    - ashkenazi
