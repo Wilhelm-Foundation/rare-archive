@@ -263,15 +263,11 @@ The rare disease AI space is advancing rapidly. We build on and acknowledge outs
 - **[RareSeek R1](https://arxiv.org/abs/2503.07632)** (2025) — physician-parity on EHR narratives
 - **[Zebra-Llama](https://arxiv.org/abs/2410.12045)** (2024) — single-disease specialization for EDS
 
-The Rare AI Archive's clinical tool pipeline builds directly on the [Human Phenotype Ontology](https://hpo.jax.org/) and the [GA4GH Phenopacket](https://phenopacket-schema.readthedocs.io/) standard — foundational work by Robinson, Groza, and colleagues that enables computable phenotyping across the rare disease ecosystem.
+The Rare AI Archive's clinical tool pipeline builds directly on the [Human Phenotype Ontology](https://hpo.jax.org/) and the [GA4GH Phenopacket](https://phenopacket-schema.readthedocs.io/) standard — foundational work by Robinson, Groza, Baynam, and colleagues that enables computable phenotyping across the rare disease ecosystem.
 
 Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 
-## Acknowledgments
-
-This project owes a deep debt to **Tristan Carlisle** and the [Rare Care Centre](https://rarecare.world/) for their pioneering work on swarm-driven optimization of small-language-model agents at the edge. Tristan's vision — that diagnostic AI should meet patients where they are, running on local hardware rather than behind API walls — has profoundly shaped how we think about federated deployment and edge-native inference. His thought leadership and generous collaboration continue to push the boundaries of what's possible in diagnostic AI for rare disease.
-
-We also gratefully acknowledge **Tudor Groza**, **Gareth Baynam**, and the broader computational phenotyping community whose foundational work on HPO, Phenopackets, and systematic LLM evaluation created the scientific bedrock this project builds upon.
+We owe particular thanks to **Tristan Carlisle** for his pioneering work on swarm-driven optimization of small-language-model agents at the edge. Tristan's vision — that diagnostic AI should meet patients where they are, running on local hardware rather than behind API walls — has profoundly shaped our approach to federated deployment and edge-native inference, and his collaboration continues to push the boundaries of what's possible in diagnostic AI for rare disease.
 
 ## License
 
