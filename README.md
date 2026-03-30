@@ -263,11 +263,11 @@ The rare disease AI space is advancing rapidly. We build on and acknowledge outs
 - **[RareSeek R1](https://arxiv.org/abs/2503.07632)** (2025) — physician-parity on EHR narratives
 - **[Zebra-Llama](https://arxiv.org/abs/2410.12045)** (2024) — single-disease specialization for EDS
 
-The Rare AI Archive's clinical tool pipeline builds directly on the [Human Phenotype Ontology](https://hpo.jax.org/) and the [GA4GH Phenopacket](https://phenopacket-schema.readthedocs.io/) standard — foundational work by Robinson, Groza, Baynam, and colleagues that enables computable phenotyping across the rare disease ecosystem.
+The Rare AI Archive's clinical tool pipeline builds directly on [hpo.jax.org](https://hpo.jax.org/) and the [ga4gh.org](https://www.ga4gh.org/) standard — foundational work by Robinson, Groza, Baynam, and colleagues that enables computable phenotyping across the rare disease ecosystem.
 
 Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 
-We owe particular thanks to **Tristan Carlisle** for his pioneering work on swarm-driven optimization of small-language-model agents at the edge. Tristan's vision — that diagnostic AI should meet patients where they are, running on local hardware rather than behind API walls — has profoundly shaped our approach to federated deployment and edge-native inference, and his collaboration continues to push the boundaries of what's possible in diagnostic AI for rare disease.
+We owe particular thanks to **Tudor Groza** for his rare disease expertise focussed on delivering real-world impact equitably and at scale; and to **Tristan Carlisle** for his pioneering work on swarm-driven optimization of small-language-model agents at the edge. Tristan's vision — that diagnostic AI should meet patients where they are, running on local hardware rather than behind API walls. Their work has profoundly shaped our approach to federated deployment, knowledge sharing, edge-native inference, and collaboration that pushes the boundaries forward for people living with rare and undiagnosed diseases and their families.
 
 ## License
 
