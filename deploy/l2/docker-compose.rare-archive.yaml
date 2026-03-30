@@ -83,6 +83,32 @@ services:
     networks:
       - lattice-l2
 
+  # Auth proxy — validates JupyterHub sessions for OpenWebUI
+  auth-proxy:
+    image: python:3.12-slim
+    container_name: rare-archive-auth-proxy
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./auth_proxy.py:/app/auth_proxy.py:ro
+    working_dir: /app
+    command: >
+      sh -c "pip install -q fastapi uvicorn httpx && python3 auth_proxy.py"
+    environment:
+      - JUPYTERHUB_API_URL=http://jupyterhub:8081/hub/api
+      - JUPYTERHUB_API_TOKEN=${JUPYTERHUB_API_TOKEN:-}
+      - EMAIL_DOMAIN=lattice.bio
+      - LISTEN_PORT=8090
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - lattice-l2
+
   # OpenWebUI — Clinical interface with Arena mode
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
@@ -100,6 +126,8 @@ services:
       - ENABLE_ARENA_MODEL=true
       - WEBUI_AUTH=true
       - WEBUI_NAME=Rare AI Archive
+      - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=X-Remote-User-Email
+      - WEBUI_AUTH_TRUSTED_NAME_HEADER=X-Remote-User-Name
       - CHROMA_HTTP_HOST=rare-archive-chromadb
       - CHROMA_HTTP_PORT=8000
       - RAG_EMBEDDING_ENGINE=ollama
