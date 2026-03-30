@@ -118,6 +118,22 @@ The Q8_0 model is 4.2 GB. Any Mac with 8+ GB RAM can run it with full Metal offl
 
 **Slow generation**: Ensure Metal is enabled (check for `ggml_metal_device_init` in startup output). If missing, rebuild with `-DGGML_METAL=ON`.
 
+## 35B MoE Model (Upcoming)
+
+The 35B MoE model (Qwen3.5-35B-A3B) is in SFT training on L2 GPU 1 (ETA April 3-4, 2026). Once complete:
+
+| Quant | Size (est.) | Target | RAM Required |
+|-------|-------------|--------|-------------|
+| Q8_0 | ~37 GB | L2 serving (A100-80GB) | 80+ GB |
+| Q5_K_M | ~25 GB | L1 with 32+ GB RAM | 32+ GB |
+| Q4_K_M | ~20 GB | L1 with 24+ GB RAM | 24+ GB |
+
+Distribution paths (same as 4B):
+1. HuggingFace: `Wilhelm-Foundation/rare-archive-qwen-35b-sft-v1` (when published)
+2. L2 internal: `scp latlab-dell:/data/latlab/rare-archive/models/<model>.gguf ~/Models/`
+
+**Note**: The 35B Q8_0 requires ~37 GB for the model alone. Only Macs with 64+ GB unified memory can comfortably run it at full GPU offload. For 32 GB Macs, use Q4_K_M with partial offload (`-ngl 30`).
+
 ## Model Details
 
 | Property | Value |

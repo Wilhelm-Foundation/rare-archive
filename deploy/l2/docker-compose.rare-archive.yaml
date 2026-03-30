@@ -13,7 +13,7 @@
 services:
   # Primary inference server — Qwen3.5-35B-A3B Q8_0
   llama-server-primary:
-    image: ghcr.io/ggml-org/llama.cpp:server
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
     container_name: rare-archive-llama-primary
     restart: unless-stopped
     ports:
@@ -49,7 +49,7 @@ services:
 
   # Arena challenger server — Fine-tuned 4B SFT Q8_0
   llama-server-arena:
-    image: ghcr.io/ggml-org/llama.cpp:server
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
     container_name: rare-archive-llama-arena
     restart: unless-stopped
     ports:
@@ -94,10 +94,9 @@ services:
       - ./auth_proxy.py:/app/auth_proxy.py:ro
     working_dir: /app
     command: >
-      sh -c "pip install -q fastapi uvicorn httpx && python3 auth_proxy.py"
+      sh -c "pip install -q fastapi uvicorn psycopg2-binary && python3 auth_proxy.py"
     environment:
-      - JUPYTERHUB_API_URL=http://jupyterhub:8081/hub/api
-      - JUPYTERHUB_API_TOKEN=${JUPYTERHUB_API_TOKEN:-}
+      - DATABASE_URL=${JUPYTERHUB_DATABASE_URL:-}
       - EMAIL_DOMAIN=lattice.bio
       - LISTEN_PORT=8090
     healthcheck:
@@ -130,33 +129,30 @@ services:
       - WEBUI_AUTH_TRUSTED_NAME_HEADER=X-Remote-User-Name
       - CHROMA_HTTP_HOST=rare-archive-chromadb
       - CHROMA_HTTP_PORT=8000
-      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_ENGINE=
       - DEFAULT_MODELS=qwen3.5-35b-a3b
     depends_on:
       llama-server-primary:
         condition: service_healthy
       chromadb:
-        condition: service_healthy
+        condition: service_started
     networks:
       - lattice-l2
 
   # ChromaDB — RAG vector storage
   chromadb:
-    image: chromadb/chroma:0.5.23
+    image: chromadb/chroma:1.5.2
     container_name: rare-archive-chromadb
     restart: unless-stopped
     ports:
       - "8084:8000"
     volumes:
-      - ${DATA_DIR:-/data/latlab/rare-archive}/chromadb:/chroma/chroma
+      - ${DATA_DIR:-/data/latlab/rare-archive}/chromadb:/data
     environment:
       - IS_PERSISTENT=TRUE
       - ANONYMIZED_TELEMETRY=FALSE
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      disable: true
     networks:
       - lattice-l2
 
