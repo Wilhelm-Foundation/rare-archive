@@ -7,8 +7,11 @@ license: Apache-2.0
 """
 
 import json
+import logging
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 
 class Tools:
@@ -54,11 +57,14 @@ class Tools:
 
         # Get diseases for each HPO term via Orphanet phenotype API
         disease_scores: dict[str, float] = {}
+        failed_terms = 0
         async with httpx.AsyncClient(timeout=30) as client:
             for term in hpo_terms[:10]:
                 try:
                     resp = await client.get(f"{self.orphanet_url}rd-phenotypes/hpoids/{term}")
                     if resp.status_code != 200:
+                        logger.warning("Orphanet phenotype lookup failed for %s: HTTP %d", term, resp.status_code)
+                        failed_terms += 1
                         continue
                     data = resp.json()
                     results = data.get("data", {}).get("results", [])
@@ -67,7 +73,9 @@ class Tools:
                         name = disorder.get("Preferred term", "Unknown")
                         if name != "Unknown":
                             disease_scores[name] = disease_scores.get(name, 0) + 1
-                except Exception:
+                except Exception as e:
+                    logger.warning("Failed to resolve phenotype associations for %s: %s", term, e)
+                    failed_terms += 1
                     continue
 
         # Rank by number of matching HPO terms
@@ -76,7 +84,7 @@ class Tools:
         if __event_emitter__:
             await __event_emitter__({"type": "status", "data": {"done": True}})
 
-        return json.dumps({
+        result = {
             "input_symptoms": symptom_list,
             "resolved_hpo_terms": hpo_terms,
             "differentials": [
@@ -84,4 +92,12 @@ class Tools:
                 for i, (name, score) in enumerate(ranked[:20])
             ],
             "note": "Ranked by number of matching HPO terms via Orphanet. Clinical judgement required.",
-        }, indent=2)
+        }
+
+        if failed_terms > 0 and len(hpo_terms) > 0 and failed_terms / len(hpo_terms) > 0.5:
+            result["warning"] = (
+                f"{failed_terms} of {len(hpo_terms)} phenotype terms could not be "
+                f"resolved -- results may be incomplete. Check Orphanet API availability."
+            )
+
+        return json.dumps(result, indent=2)

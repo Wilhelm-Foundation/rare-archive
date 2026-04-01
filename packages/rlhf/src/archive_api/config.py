@@ -6,12 +6,16 @@ from dataclasses import dataclass
 
 @dataclass
 class Settings:
-    database_url: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql+asyncpg://lattice:password@localhost:5432/rare_archive",
-    )
-    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/2")
+    database_url: str = os.getenv("DATABASE_URL", "")
+    redis_url: str = os.getenv("REDIS_URL", "")
     openwebui_url: str = os.getenv("OPENWEBUI_URL", "http://localhost:3000")
+
+    def __post_init__(self):
+        if not self.database_url:
+            raise ValueError(
+                "DATABASE_URL environment variable must be set. "
+                "Example: postgresql+asyncpg://user:pass@host:5432/dbname"
+            )
     hf_token: str = os.getenv("HF_TOKEN", "")
     hf_org: str = os.getenv("HF_ORG", "wilhelm-foundation")
     hf_dataset: str = os.getenv("HF_DATASET", "rare-archive-rlhf-preferences")

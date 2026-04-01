@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..config import settings
 from ..models.database import Evaluation, PreferenceExport, get_db
 
@@ -74,6 +75,7 @@ def _download_existing(tmpdir: Path) -> Path:
 async def get_preference_pairs(
     patient_category: str | None = None,
     limit: int = 1000,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Extract DPO-compatible preference pairs from evaluations."""
@@ -114,6 +116,7 @@ async def get_preference_pairs(
 async def export_to_huggingface(
     patient_category: str | None = None,
     append_only: bool = True,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Export preference pairs to HuggingFace dataset.

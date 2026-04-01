@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..models.database import Case, get_db
 
 router = APIRouter()
@@ -37,6 +38,7 @@ class CaseBatchCreate(BaseModel):
 @router.post("/create", response_model=CaseResponse)
 async def create_case(
     case: CaseCreate,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Add a clinical case to the library."""
@@ -73,6 +75,7 @@ async def create_case(
 @router.post("/batch", response_model=dict)
 async def batch_create_cases(
     batch: CaseBatchCreate,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Batch-insert cases. Skips duplicates."""

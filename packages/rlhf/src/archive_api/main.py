@@ -31,10 +31,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[
+        "http://localhost:3100",     # OpenWebUI on L2 (direct)
+        "http://localhost:8080",     # OpenWebUI internal container port
+        "https://go.latticelab.ai",  # Public NGINX domain
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["X-API-Key", "Content-Type", "Accept"],
 )
 
 app.include_router(elo.router, prefix="/elo", tags=["ELO"])

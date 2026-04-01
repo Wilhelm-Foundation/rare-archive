@@ -173,6 +173,7 @@ services:
       - HF_TOKEN=${HF_TOKEN:-}
       - HF_ORG=wilhelm-foundation
       - CHROMADB_URL=http://rare-archive-chromadb:8000
+      - ARCHIVE_API_KEY=${ARCHIVE_API_KEY:-}
     depends_on:
       openwebui:
         condition: service_started

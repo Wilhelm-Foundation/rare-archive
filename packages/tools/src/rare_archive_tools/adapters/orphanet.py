@@ -3,6 +3,7 @@
 API: Orphadata REST API (restructured 2025 — domain-based endpoints)
 """
 
+import urllib.parse
 from typing import Any
 
 import httpx
@@ -34,19 +35,19 @@ class OrphanetAdapter(BaseAdapter):
 
     def search_disease(self, query: str) -> dict[str, Any]:
         """Search for a disease by name."""
-        return self._request("GET", f"rd-cross-referencing/orphacodes/names/{query}")
+        return self._request("GET", f"rd-cross-referencing/orphacodes/names/{urllib.parse.quote(query, safe='')}")
 
     def get_disease(self, orpha_code: str) -> dict[str, Any]:
         """Get cross-referencing data for a disease by Orphanet code."""
-        return self._request("GET", f"rd-cross-referencing/orphacodes/{orpha_code}")
+        return self._request("GET", f"rd-cross-referencing/orphacodes/{urllib.parse.quote(orpha_code, safe='')}")
 
     def get_disease_genes(self, orpha_code: str) -> dict[str, Any]:
         """Get genes associated with a disease."""
-        return self._request("GET", f"rd-associated-genes/orphacodes/{orpha_code}")
+        return self._request("GET", f"rd-associated-genes/orphacodes/{urllib.parse.quote(orpha_code, safe='')}")
 
     def get_disease_phenotypes(self, orpha_code: str) -> dict[str, Any]:
         """Get HPO phenotypes associated with a disease."""
-        return self._request("GET", f"rd-phenotypes/orphacodes/{orpha_code}")
+        return self._request("GET", f"rd-phenotypes/orphacodes/{urllib.parse.quote(orpha_code, safe='')}")
 
     def lookup(self, disease_name: str) -> dict[str, Any]:
         """Search by name and return structured result."""

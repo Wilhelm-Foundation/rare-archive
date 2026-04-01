@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..config import settings
 from ..models.database import ModelRating, get_db
 
@@ -121,6 +122,7 @@ async def get_model_ratings(
 @router.post("/update")
 async def update_elo(
     request: ELOUpdateRequest,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Update ELO ratings after a comparison."""

@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..models.database import Expert, get_db
 
 router = APIRouter()
@@ -33,6 +34,7 @@ class ExpertResponse(BaseModel):
 @router.post("/register", response_model=ExpertResponse)
 async def register_expert(
     registration: ExpertRegistration,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Register a new clinical expert for RLHF evaluation."""

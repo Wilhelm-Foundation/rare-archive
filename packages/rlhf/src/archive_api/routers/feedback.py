@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..integrations.chromadb import store_correction, search_corrections
 from ..models.database import ClinicalFeedback, Case, get_db
 
@@ -63,6 +64,7 @@ class CorrectionSearchResult(BaseModel):
 @router.post("/correction", response_model=FeedbackResponse)
 async def submit_correction(
     submission: CorrectionSubmission,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Submit a diagnostic correction for a case.
@@ -119,6 +121,7 @@ async def submit_correction(
 @router.post("/annotation", response_model=FeedbackResponse)
 async def submit_annotation(
     submission: AnnotationSubmission,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Submit a free-text annotation."""
@@ -189,6 +192,7 @@ async def get_corrections(
 
 @router.get("/export-training")
 async def export_training_data(
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Export corrections as SFT-compatible JSONL for training.

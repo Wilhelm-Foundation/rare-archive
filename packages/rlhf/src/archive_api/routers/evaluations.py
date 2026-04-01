@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..auth import verify_api_key
 from ..models.database import Evaluation, Expert, get_db
 
 router = APIRouter()
@@ -40,6 +41,7 @@ class EvaluationResponse(BaseModel):
 @router.post("/submit", response_model=EvaluationResponse)
 async def submit_evaluation(
     submission: EvaluationSubmission,
+    _key: str = Depends(verify_api_key),
     db: AsyncSession = Depends(get_db),
 ):
     """Submit an Arena evaluation with structured annotations."""
