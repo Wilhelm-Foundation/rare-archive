@@ -183,7 +183,9 @@ def create_or_get_kb(client: httpx.Client, base_url: str, name: str, description
     existing = resp.json()
 
     # Check for existing KB with same name
-    for kb in existing:
+    # API may return a list or a paginated dict with "items" key
+    items = existing.get("items", existing) if isinstance(existing, dict) else existing
+    for kb in items:
         if kb.get("name") == name:
             print(f"  Found existing KB: {kb['id']} ({name})")
             return kb["id"]
