@@ -119,13 +119,8 @@ async def get_model_ratings(
     ]
 
 
-@router.post("/update")
-async def update_elo(
-    request: ELOUpdateRequest,
-    _key: str = Depends(verify_api_key),
-    db: AsyncSession = Depends(get_db),
-):
-    """Update ELO ratings after a comparison."""
+async def compute_elo_update(request: ELOUpdateRequest, db: AsyncSession) -> dict:
+    """Core ELO update logic — callable from both the route and evaluations."""
     k = settings.elo_k_factor
     cat = request.patient_category
     mode = request.evaluation_mode
@@ -201,3 +196,13 @@ async def update_elo(
         "winner": {"model_id": winner.model_id, "new_elo": round(winner.overall_elo, 1)},
         "loser": {"model_id": loser.model_id, "new_elo": round(loser.overall_elo, 1)},
     }
+
+
+@router.post("/update")
+async def update_elo(
+    request: ELOUpdateRequest,
+    _key: str = Depends(verify_api_key),
+    db: AsyncSession = Depends(get_db),
+):
+    """Update ELO ratings after a comparison."""
+    return await compute_elo_update(request, db)

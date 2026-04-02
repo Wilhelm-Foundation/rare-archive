@@ -72,7 +72,7 @@ async def submit_evaluation(
     await db.refresh(evaluation)
 
     # Trigger ELO update
-    from .elo import update_elo, ELOUpdateRequest
+    from .elo import compute_elo_update, ELOUpdateRequest
 
     winner_id = submission.model_a_id if submission.winner == "a" else submission.model_b_id
     loser_id = submission.model_b_id if submission.winner == "a" else submission.model_a_id
@@ -91,7 +91,7 @@ async def submit_evaluation(
             f"loser_{k}": v for k, v in l_ann.model_dump().items()
         },
     )
-    elo_result = await update_elo(elo_req, db)
+    elo_result = await compute_elo_update(elo_req, db)
 
     return EvaluationResponse(
         id=evaluation.id,
