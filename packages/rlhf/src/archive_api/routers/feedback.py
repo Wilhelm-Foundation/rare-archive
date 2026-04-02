@@ -37,10 +37,21 @@ class AnnotationSubmission(BaseModel):
     case_id: str | None = None
     expert_username: str
     feedback_type: str = Field(
-        pattern="^(diagnostic_correction|clinical_note|tool_suggestion|safety_concern)$"
+        pattern="^(diagnostic_correction|clinical_note|tool_suggestion|safety_concern|tool_quality)$"
     )
     text: str
     severity: str = "info"
+
+
+class ToolQualitySubmission(BaseModel):
+    evaluation_id: int | None = None
+    case_id: str | None = None
+    expert_username: str
+    tool_name: str
+    quality_score: int = Field(ge=0, le=5)
+    was_appropriate: bool
+    was_missing: bool
+    reasoning: str
 
 
 class FeedbackResponse(BaseModel):
@@ -52,6 +63,7 @@ class FeedbackResponse(BaseModel):
     corrected_diagnosis: str | None
     text: str | None
     severity: str
+    structured_data: dict | None = None
 
 
 class CorrectionSearchResult(BaseModel):
@@ -115,6 +127,45 @@ async def submit_correction(
         corrected_diagnosis=feedback.corrected_diagnosis,
         text=feedback.text,
         severity=feedback.severity,
+        structured_data=feedback.structured_data,
+    )
+
+
+@router.post("/tool-quality", response_model=FeedbackResponse)
+async def submit_tool_quality(
+    submission: ToolQualitySubmission,
+    _key: str = Depends(verify_api_key),
+    db: AsyncSession = Depends(get_db),
+):
+    """Submit structured feedback on tool-usage quality."""
+    feedback = ClinicalFeedback(
+        case_id=submission.case_id,
+        evaluation_id=submission.evaluation_id,
+        expert_username=submission.expert_username,
+        feedback_type="tool_quality",
+        text=submission.reasoning,
+        severity="info",
+        structured_data={
+            "tool_name": submission.tool_name,
+            "quality_score": submission.quality_score,
+            "was_appropriate": submission.was_appropriate,
+            "was_missing": submission.was_missing,
+        },
+    )
+    db.add(feedback)
+    await db.commit()
+    await db.refresh(feedback)
+
+    return FeedbackResponse(
+        id=feedback.id,
+        case_id=feedback.case_id,
+        evaluation_id=feedback.evaluation_id,
+        expert_username=feedback.expert_username,
+        feedback_type=feedback.feedback_type,
+        corrected_diagnosis=feedback.corrected_diagnosis,
+        text=feedback.text,
+        severity=feedback.severity,
+        structured_data=feedback.structured_data,
     )
 
 
@@ -146,6 +197,7 @@ async def submit_annotation(
         corrected_diagnosis=feedback.corrected_diagnosis,
         text=feedback.text,
         severity=feedback.severity,
+        structured_data=feedback.structured_data,
     )
 
 
@@ -185,6 +237,7 @@ async def get_corrections(
             corrected_diagnosis=f.corrected_diagnosis,
             text=f.text,
             severity=f.severity,
+            structured_data=f.structured_data,
         )
         for f in corrections
     ]

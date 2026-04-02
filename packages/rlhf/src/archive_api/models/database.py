@@ -116,12 +116,13 @@ class ClinicalFeedback(Base):
     expert_username = Column(String(255), nullable=False)
 
     feedback_type = Column(String(50), nullable=False)
-    # diagnostic_correction | clinical_note | tool_suggestion | safety_concern
+    # diagnostic_correction | clinical_note | tool_suggestion | safety_concern | tool_quality
 
     corrected_diagnosis = Column(String(500))
     reasoning = Column(Text)
     text = Column(Text)
     severity = Column(String(50), default="info")  # info, warning, critical
+    structured_data = Column(JSON, nullable=True)  # type-specific structured fields
 
     created_at = Column(DateTime, default=datetime.utcnow)
 

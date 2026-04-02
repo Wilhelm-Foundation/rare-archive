@@ -2,7 +2,9 @@
 
 import json
 import logging
+import os
 from pathlib import Path
+from shutil import copy2
 from tempfile import TemporaryDirectory
 
 from fastapi import APIRouter, Depends
@@ -19,6 +21,10 @@ router = APIRouter()
 
 # Stable path in HF repo — one canonical file that grows via append
 HF_PREFERENCES_PATH = "data/preferences.jsonl"
+
+# Local persistent cache for dedup when HF token is unavailable
+LOCAL_EXPORT_DIR = Path(os.getenv("DATA_DIR", "/data/latlab/rare-archive")) / "exports"
+LOCAL_PREFERENCES_PATH = LOCAL_EXPORT_DIR / "preferences.jsonl"
 
 
 def _load_existing_ids(jsonl_path: Path) -> set[int]:
@@ -42,33 +48,39 @@ def _load_existing_ids(jsonl_path: Path) -> set[int]:
 
 
 def _download_existing(tmpdir: Path) -> Path:
-    """Download existing preferences JSONL from HuggingFace, if it exists.
+    """Load existing preferences JSONL for deduplication.
 
-    Returns the local path (may be empty/nonexistent if no prior export).
+    Checks local persistent cache first, then HuggingFace if token is set.
+    Returns a path in tmpdir (may be empty/nonexistent on first export).
     """
     local_path = tmpdir / "existing_preferences.jsonl"
-    if not settings.hf_token:
+
+    # Check local persistent cache first
+    if LOCAL_PREFERENCES_PATH.exists():
+        copy2(LOCAL_PREFERENCES_PATH, local_path)
+        logger.debug(f"Loaded {local_path.stat().st_size} bytes from local cache")
         return local_path
 
-    try:
-        from huggingface_hub import hf_hub_download
-        downloaded = hf_hub_download(
-            repo_id=f"{settings.hf_org}/{settings.hf_dataset}",
-            filename=HF_PREFERENCES_PATH,
-            repo_type="dataset",
-            token=settings.hf_token,
-            local_dir=str(tmpdir),
-            local_dir_use_symlinks=False,
-        )
-        # hf_hub_download may place it at tmpdir/data/preferences.jsonl
-        downloaded_path = Path(downloaded)
-        if downloaded_path != local_path and downloaded_path.exists():
-            downloaded_path.rename(local_path)
-        return local_path
-    except Exception:
-        # File doesn't exist on HF yet — first export
-        logger.debug("No existing preferences file on HuggingFace (first export)")
-        return local_path
+    # Try HuggingFace if token is available
+    if settings.hf_token:
+        try:
+            from huggingface_hub import hf_hub_download
+            downloaded = hf_hub_download(
+                repo_id=f"{settings.hf_org}/{settings.hf_dataset}",
+                filename=HF_PREFERENCES_PATH,
+                repo_type="dataset",
+                token=settings.hf_token,
+                local_dir=str(tmpdir),
+                local_dir_use_symlinks=False,
+            )
+            downloaded_path = Path(downloaded)
+            if downloaded_path != local_path and downloaded_path.exists():
+                downloaded_path.rename(local_path)
+            return local_path
+        except Exception:
+            logger.debug("No existing preferences file on HuggingFace (first export)")
+
+    return local_path
 
 
 @router.get("/pairs")
@@ -137,7 +149,7 @@ async def export_to_huggingface(
         existing_ids: set[int] = set()
         existing_path = tmpdir_path / "existing_preferences.jsonl"
 
-        if append_only and settings.hf_token:
+        if append_only:
             existing_path = _download_existing(tmpdir_path)
             existing_ids = _load_existing_ids(existing_path)
 
@@ -164,6 +176,10 @@ async def export_to_huggingface(
             # Append new pairs
             for pair in new_pairs:
                 out.write(json.dumps(pair, ensure_ascii=False) + "\n")
+
+        # Save local cache for future dedup
+        LOCAL_EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+        copy2(merged_path, LOCAL_PREFERENCES_PATH)
 
         # Upload to HuggingFace
         commit_hash = ""

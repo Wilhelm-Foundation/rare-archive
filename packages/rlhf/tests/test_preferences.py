@@ -107,16 +107,34 @@ class TestAppendDeduplication:
             ids = _load_existing_ids(path)
             assert ids == {10, 20}
 
-    async def test_export_twice_no_duplicates(self, client, sample_evaluation):
-        """Export twice — second export should still succeed (no HF in test mode)."""
+    async def test_export_twice_no_duplicates(self, client, session, sample_expert, tmp_path, monkeypatch):
+        """Export twice — second export deduplicates via local cache."""
+        import archive_api.routers.preferences as pref_mod
+        monkeypatch.setattr(pref_mod, "LOCAL_EXPORT_DIR", tmp_path)
+        monkeypatch.setattr(pref_mod, "LOCAL_PREFERENCES_PATH", tmp_path / "preferences.jsonl")
+
+        # Insert evaluation directly to avoid ELO Depends bug
+        from archive_api.models.database import Evaluation
+        eval_record = Evaluation(
+            expert_id=sample_expert["id"],
+            case_id="DEDUP_CASE",
+            patient_category="metabolic",
+            model_a_id="model-A",
+            model_b_id="model-B",
+            model_a_response="Response A",
+            model_b_response="Response B",
+            winner="a",
+            annotations={"model_a": {"diagnostic_accuracy": 4}, "model_b": {"diagnostic_accuracy": 2}},
+        )
+        session.add(eval_record)
+        await session.commit()
+
         resp1 = await client.post("/preferences/export")
         assert resp1.status_code == 200
         assert resp1.json()["status"] == "success"
-        count1 = resp1.json()["new_pairs_exported"]
+        assert resp1.json()["new_pairs_exported"] >= 1
 
+        # Second export should find all pairs already in local cache
         resp2 = await client.post("/preferences/export")
         assert resp2.status_code == 200
-        # Without HF, both exports report all pairs as "new" (no download)
-        # but the core dedup logic is tested via _load_existing_ids above
-        assert resp2.json()["status"] == "success"
-        assert resp2.json()["new_pairs_exported"] == count1
+        assert resp2.json()["status"] == "no_new_data"

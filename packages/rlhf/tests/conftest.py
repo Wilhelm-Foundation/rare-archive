@@ -2,9 +2,10 @@
 
 import os
 
-# Override DATABASE_URL before any archive_api imports so the module-level
-# engine in database.py uses SQLite instead of PostgreSQL.
+# Override env vars before any archive_api imports so module-level
+# singletons use test values instead of production.
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite://"
+os.environ["ARCHIVE_API_KEY"] = "test-api-key"
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
@@ -53,7 +54,9 @@ async def client(engine):
 
     app.dependency_overrides[get_db] = override_get_db
     async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+        headers={"X-API-Key": "test-api-key"},
     ) as c:
         yield c
     app.dependency_overrides.clear()
