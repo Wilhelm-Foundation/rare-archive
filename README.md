@@ -14,13 +14,18 @@
 
 ---
 
-300 million people worldwide live with a rare disease. The average diagnostic odyssey takes **5-7 years** — years of misdiagnoses, unnecessary procedures, and uncertainty. 95% of rare diseases have no approved treatment.
+> *"A diagnosis changes everything."* — Wilhelm Foundation
 
-**The Rare AI Archive exists to close that gap.**
+For people and families living with undiagnosed diseases (PLWUD / FLWUD), a diagnosis is the gateway to treatment, prognosis, genetic counseling, and community support. But globally, an estimated 350 million people live with undiagnosed disease, and even after genome sequencing — the most powerful diagnostic tool we have — about 60% remain without answers. The diagnostic odyssey averages 5–7 years.
 
-We are building an open ecosystem for rare disease AI — where patient communities create clinical context, rare disease centers validate it, and open-source model builders turn it into deployed diagnostic tools that improve with every clinician interaction.
+The **Rare-AI Archive** is an open ecosystem for AI/data tools that accelerate diagnosis for the rare and undiagnosed disease population. It is the diagnosis-acceleration pillar of the **Wilhelm AI Initiative for the Undiagnosed (AI4U)**, the Wilhelm Foundation's program-level umbrella over a portfolio of AI initiatives serving PLWUD/FLWUD.
 
-*A program of the [Wilhelm Foundation](https://wilhelm.foundation) &middot; Powered by [Lattice Protocol](https://github.com/LatticeProtocol) (open infrastructure for composable, federated AI workflows)*
+We close the diagnostic-odyssey gap through:
+- **Federated rare-disease diagnostic AI** — open-weights models trained on real clinical reasoning patterns
+- **Curated catalog** — models, datasets, benchmarks, ontology alignments published openly
+- **Decentralized post-training** — clinicians, families, and ML engineers contribute as a federated commons
+
+*Part of the [Wilhelm AI Initiative for the Undiagnosed (AI4U)](https://wilhelm.foundation/ai4u), a program of the [Wilhelm Foundation](https://wilhelm.foundation) · Powered by [Lattice Protocol](https://github.com/LatticeProtocol).*
 
 > **Research Use Only.** The Rare AI Archive is a clinical decision support system, not a diagnostic tool. It is **not FDA/CE-cleared** for medical use. All outputs require expert clinical validation.
 
@@ -32,6 +37,21 @@ We are building an open ecosystem for rare disease AI — where patient communit
 <td align="center"><strong>5</strong><br><sub>Disease-specific models<br>(2 complete, 3 planned)</sub></td>
 </tr>
 </table>
+
+---
+
+## About AI4U
+
+The **Wilhelm AI Initiative for the Undiagnosed (AI4U)** is the Wilhelm Foundation's program-level umbrella over four AI initiatives serving people and families living with undiagnosed diseases (PLWUD / FLWUD):
+
+- **Rare-AI Archive** (this project) — accelerate diagnosis of rare disease (operational)
+- **Odyssey Stories** — narrative substrate of diagnostic journeys (planned)
+- **Family Compass** — patient/family health-data agency + diagnostic process navigation (planned)
+- **Hackathon Forge** — community-driven discovery + convening, extending the Wilhelm-funded Undiagnosed Hackathon program (AI4U-internal capability)
+
+AI4U is a global PLWUD-partnered initiative aligned with the Wilhelm Foundation's mission: *"for all people with Undiagnosed Diseases to be diagnosed."*
+
+Learn more: [wilhelm.foundation/ai4u](https://wilhelm.foundation/ai4u)
 
 ---
 
@@ -243,12 +263,12 @@ Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **pati
 
 ```bibtex
 @software{rare_ai_archive_2026,
-  title     = {Rare AI Archive: Open-Source Clinical AI for Rare Disease Diagnostics},
+  title     = {Rare AI Archive: Open-Source Clinical AI for Rare and Undiagnosed Disease Diagnostics},
   author    = {Wilhelm Foundation and Lattice Protocol},
   year      = {2026},
   url       = {https://github.com/Wilhelm-Foundation/rare-archive},
   license   = {Apache-2.0},
-  note      = {Decentralized post-training ecosystem for rare disease diagnostics}
+  note      = {Diagnosis-acceleration pillar of AI4U (Wilhelm AI Initiative for the Undiagnosed), a program of the Wilhelm Foundation.}
 }
 ```
 
