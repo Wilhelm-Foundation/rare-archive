@@ -1,4 +1,4 @@
-# Rare AI Archive — Demo Scenarios
+# Rare-AI Archive — Demo Scenarios
 
 Clinical demonstration vignettes for the Rare Disease Specialist system.
 Each scenario follows: **Patient Presentation → Tool Invocations → Expected Output → Model Interpretation**.

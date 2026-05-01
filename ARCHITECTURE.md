@@ -1,12 +1,14 @@
 # Architecture
 
-The Rare AI Archive is not a model — it is an **agentic diagnostic system** that reasons about clinical presentations, invokes real clinical tools to gather evidence, synthesizes findings into a differential diagnosis, and improves through clinician feedback. This document describes the system's architecture, data flows, and deployment infrastructure.
+> The Rare-AI Archive is the diagnosis-acceleration pillar of **AI4U** (Wilhelm AI Initiative for the Undiagnosed), a program of the Wilhelm Foundation. AI4U holds the program-level frame over four PLWUD-impact initiatives. This document covers Rare-AI Archive specifics; for AI4U-program-level context, see [wilhelm.foundation/ai4u](https://wilhelm.foundation/ai4u).
+
+The Rare-AI Archive is not a model — it is an **agentic diagnostic system** that reasons about clinical presentations, invokes real clinical tools to gather evidence, synthesizes findings into a differential diagnosis, and improves through clinician feedback. This document describes the system's architecture, data flows, and deployment infrastructure.
 
 ![System Architecture — L1 Edge, L2 HPC, L3 Cloud](assets/diagrams/system_architecture.png)
 
 ## Agentic Diagnostic System
 
-Traditional clinical AI produces a prediction from an input. The Rare AI Archive produces a **diagnostic reasoning trace** — a multi-turn process where the model decides which tools to invoke, interprets their results, and synthesizes a differential diagnosis:
+Traditional clinical AI produces a prediction from an input. The Rare-AI Archive produces a **diagnostic reasoning trace** — a multi-turn process where the model decides which tools to invoke, interprets their results, and synthesizes a differential diagnosis:
 
 ```
 Reason  →  Identify symptom constellation, form initial hypothesis

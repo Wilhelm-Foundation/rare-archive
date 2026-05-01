@@ -1,4 +1,4 @@
-# Evaluation Metrics — Rare AI Archive
+# Evaluation Metrics — Rare-AI Archive
 
 How we measure rare disease diagnostic model performance.
 

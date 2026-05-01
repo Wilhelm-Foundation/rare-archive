@@ -1,4 +1,4 @@
-# Rare AI Archive — Demo Video Script
+# Rare-AI Archive — Demo Video Script
 
 **Duration target**: 4-5 minutes
 **Format**: Screen recording (D2 decision: authentic over animated)
@@ -26,7 +26,7 @@
 
 **[Screen]**: GitHub repo landing page → scroll to show badges + README header
 
-**[Voice]**: "Three hundred million people worldwide live with a rare disease. The average time to diagnosis is five to seven years. The Rare AI Archive is an open-source project building AI models to help close that gap."
+**[Voice]**: "Three hundred million people worldwide live with a rare disease. The average time to diagnosis is five to seven years. The Rare-AI Archive is an open-source project building AI models to help close that gap."
 
 ### 0:20-0:45 — The Problem
 
@@ -78,7 +78,7 @@
 
 **[Screen]**: Back to GitHub README → show "Built by people who believe that no disease is too rare to matter"
 
-**[Voice]**: "The Rare AI Archive. Open-source AI for rare disease diagnostics. Links in the description."
+**[Voice]**: "The Rare-AI Archive. Open-source AI for rare and undiagnosed disease diagnostics. Links in the description."
 
 ---
 

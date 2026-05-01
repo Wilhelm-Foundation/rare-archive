@@ -1,6 +1,6 @@
 # Documentation
 
-Guides for deploying, evaluating, and extending the Rare AI Archive.
+Guides for deploying, evaluating, and extending the Rare-AI Archive.
 
 ## Guides
 

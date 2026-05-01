@@ -1,4 +1,4 @@
-# Quantization Guide — Rare AI Archive
+# Quantization Guide — Rare-AI Archive
 
 How to convert fine-tuned LoRA adapters into deployable GGUF files.
 

@@ -1,6 +1,6 @@
-# Tool Integration Spec — Rare AI Archive
+# Tool Integration Spec — Rare-AI Archive
 
-How to add new clinical tools to the Rare AI Archive.
+How to add new clinical tools to the Rare-AI Archive.
 
 ## Architecture
 

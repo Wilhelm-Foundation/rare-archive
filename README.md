@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Wilhelm-Foundation/rare-archive">
-    <img src="assets/hero_banner.png" alt="Rare AI Archive" width="100%">
+    <img src="assets/hero_banner.png" alt="Rare-AI Archive" width="100%">
   </a>
 </p>
 
@@ -37,7 +37,7 @@ We are building an open ecosystem for rare disease AI — where patient communit
 
 ## The Ecosystem
 
-The Rare AI Archive is not a single model. It is a **decentralized, collaborative post-training ecosystem** where the people closest to rare diseases contribute the context that makes AI useful.
+The Rare-AI Archive is not a single model. It is a **decentralized, collaborative post-training ecosystem** where the people closest to rare diseases contribute the context that makes AI useful.
 
 ![The Ecosystem Flywheel](assets/diagrams/ecosystem_flywheel.png)
 
@@ -63,7 +63,7 @@ The [**Undiagnosed Patient Hackathon**](https://www.nature.com/articles/d41586-0
 
 All without PHI. The training signal is the *pattern*, not the patient.
 
-Combined with structured vignettes from the undiagnosed patient movement — [NORD](https://rarediseases.org), [Rare as One](https://chanzuckerberg.com/rare-as-one/), and rare disease advocacy groups worldwide — this creates a continuously growing corpus of expert context that feeds model training, tool tuning, and system validation.
+Combined with structured vignettes drawn from published medical literature and clinical case databases — alongside the broader rare-disease patient community, including organizations like [NORD](https://rarediseases.org) and [Rare as One](https://chanzuckerberg.com/rare-as-one/) — this creates a continuously growing corpus of expert context that feeds model training, tool tuning, and system validation.
 
 ### Context-Driven Tool Usage
 
@@ -221,7 +221,7 @@ Specialized models for disease clusters — each trained on domain-specific data
 | Condition-specific models — IEM + Neuromuscular adapters | **Complete** |
 | Stage 2 Tool-Use — gold-standard clinical tool traces | In progress |
 | Community onboarding — templates for disease communities | Planned |
-| [Rare disease diagnosis leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard) — open benchmarking | **Live** |
+| [Rare disease diagnosis leaderboard](https://huggingface.co/spaces/Wilhelm-Foundation/rare-disease-diagnosis-leaderboard) — open benchmarking | **Live** |
 | Federated multi-site deployment — data sovereignty | Planned |
 | Stage 3 DPO/GRPO — clinician preference alignment | Planned |
 | Stage 4 Progressive RL — reward-optimized reasoning | Planned |
@@ -236,7 +236,7 @@ Whether you're a **clinician**, **ML engineer**, **bioinformatician**, or **pati
 - **[Contributing Guide](CONTRIBUTING.md)** — how to start
 - **[GitHub Discussions](https://github.com/Wilhelm-Foundation/rare-archive/discussions)** — questions, ideas, feedback
 - **[Clinical Demo](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo)** — try it before you build on it
-- **[Diagnosis Leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard)** — open benchmarks for rare disease AI
+- **[Diagnosis Leaderboard](https://huggingface.co/spaces/Wilhelm-Foundation/rare-disease-diagnosis-leaderboard)** — open benchmarks for rare disease AI
 - **[HuggingFace Collection](https://huggingface.co/collections/Wilhelm-Foundation/rare-ai-archive-complete-toolkit-69c4b1e14800a370fe028851)** — model + 3 datasets + demo
 
 ## Cite Us
@@ -263,7 +263,7 @@ The rare disease AI space is advancing rapidly. We build on and acknowledge outs
 - **[RareSeek R1](https://arxiv.org/abs/2503.07632)** (2025) — physician-parity on EHR narratives
 - **[Zebra-Llama](https://arxiv.org/abs/2410.12045)** (2024) — single-disease specialization for EDS
 
-The Rare AI Archive's clinical tool pipeline builds directly on [hpo.jax.org](https://hpo.jax.org/) and the [ga4gh.org](https://www.ga4gh.org/) standard — foundational work by Robinson, Groza, Baynam, and colleagues that enables computable phenotyping across the rare disease ecosystem.
+The Rare-AI Archive's clinical tool pipeline builds directly on [hpo.jax.org](https://hpo.jax.org/) and the [ga4gh.org](https://www.ga4gh.org/) standard — foundational work by Robinson, Groza, Baynam, and colleagues that enables computable phenotyping across the rare disease ecosystem.
 
 Our approach is complementary — building the open ecosystem where many models, communities, and deployment sites collaborate to make rare disease AI continuously better. We welcome comparison and collaboration.
 

@@ -66,22 +66,22 @@ For detailed architecture with diagrams: [ARCHITECTURE.md](https://github.com/Wi
 
 ## Interactive Demo
 
-Try the clinical demo: [**Rare AI Archive Clinical Demo**](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo) — explore 10 clinical scenarios with tool-augmented diagnostic reasoning. No account required.
+Try the clinical demo: [**Rare-AI Archive Clinical Demo**](https://huggingface.co/spaces/Wilhelm-Foundation/rare-archive-clinical-demo) — explore 10 clinical scenarios with tool-augmented diagnostic reasoning. No account required.
 
 ## Diagnosis Leaderboard
 
-Compare rare disease AI models on standardized benchmarks: [**Rare Archive Diagnosis Leaderboard**](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard) — the first open leaderboard for rare disease diagnostic AI. Submit your model and see how it compares.
+Compare rare-disease AI models on standardized benchmarks: [**Rare Disease Diagnosis Leaderboard**](https://huggingface.co/spaces/Wilhelm-Foundation/rare-disease-diagnosis-leaderboard) — the first open leaderboard for rare-disease diagnostic AI. Submit your model and see how it compares.
 
 ## Links
 
 - **GitHub**: [Wilhelm-Foundation/rare-archive](https://github.com/Wilhelm-Foundation/rare-archive)
-- **Leaderboard**: [Diagnosis Leaderboard](https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard)
+- **Leaderboard**: [Rare Disease Diagnosis Leaderboard](https://huggingface.co/spaces/Wilhelm-Foundation/rare-disease-diagnosis-leaderboard)
 - **Documentation**: [Quantization](https://github.com/Wilhelm-Foundation/rare-archive/blob/main/docs/quantization_guide.md) · [Evaluation](https://github.com/Wilhelm-Foundation/rare-archive/blob/main/docs/evaluation_metrics.md) · [Tool Integration](https://github.com/Wilhelm-Foundation/rare-archive/blob/main/docs/tool_integration_spec.md)
 - **License**: Apache 2.0
 
 ## Built on Lattice Protocol
 
-The Rare AI Archive follows the [Lattice Protocol](https://github.com/LatticeProtocol) standard — three primitives (Dataset, Module, Lattice), aDNA metadata, and compute tier deployment (L1 edge → L2 cluster → L3 datacenter).
+The Rare-AI Archive follows the [Lattice Protocol](https://github.com/LatticeProtocol) standard — three primitives (Dataset, Module, Lattice), aDNA metadata, and compute tier deployment (L1 edge → L2 cluster → L3 datacenter).
 
 ---
 
