@@ -1,4 +1,4 @@
-# Troubleshooting — Rare AI Archive
+# Troubleshooting — Rare-AI Archive
 
 Common issues and their fixes, organized by category.
 

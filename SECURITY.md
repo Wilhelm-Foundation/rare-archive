@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-The Rare AI Archive processes clinical decision-support scenarios. While we use only synthetic patient data (never real PHI), we take security seriously.
+The Rare-AI Archive processes clinical decision-support scenarios. While we use only synthetic patient data (never real PHI), we take security seriously.
 
 **To report a security vulnerability:**
 

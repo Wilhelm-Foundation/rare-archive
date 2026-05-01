@@ -1,4 +1,4 @@
-# Rare AI Archive — User Management
+# Rare-AI Archive — User Management
 
 ## OpenWebUI Instance
 

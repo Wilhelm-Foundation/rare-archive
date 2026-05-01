@@ -1,6 +1,8 @@
-# Contributing to the Rare AI Archive
+# Contributing to the Rare-AI Archive
 
-The Rare AI Archive is a **decentralized post-training ecosystem** for rare disease diagnostics. Three roles drive it — and there is a place for you in each.
+> The Rare-AI Archive is the diagnosis-acceleration pillar of **AI4U** (Wilhelm AI Initiative for the Undiagnosed), a program of the Wilhelm Foundation. AI4U holds the program-level frame over four PLWUD-impact initiatives. This document covers Rare-AI Archive specifics; for AI4U-program-level context, see [wilhelm.foundation/ai4u](https://wilhelm.foundation/ai4u).
+
+The Rare-AI Archive is a **decentralized post-training ecosystem** for rare and undiagnosed disease diagnostics. Three roles drive it — and there is a place for you in each.
 
 Whether you're a clinician who knows rare diseases intimately, an ML engineer who can train models, or a patient advocate who has lived the diagnostic odyssey — your expertise is what makes this system work. The model is one component; the community is the engine.
 

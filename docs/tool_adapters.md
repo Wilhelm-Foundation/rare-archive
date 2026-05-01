@@ -1,4 +1,4 @@
-# Tool Adapter Reference — Rare AI Archive
+# Tool Adapter Reference — Rare-AI Archive
 
 Per-tool documentation for all 7 clinical diagnostic tool integrations. Each tool has a Python adapter (`packages/tools/src/rare_archive_tools/adapters/`) and an OpenWebUI wrapper (`packages/tools/src/rare_archive_tools/openwebui/`).
 

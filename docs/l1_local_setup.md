@@ -1,4 +1,4 @@
-# L1 Local Setup — Rare AI Archive
+# L1 Local Setup — Rare-AI Archive
 
 Run the 4B rare disease SFT model locally on any Apple Silicon Mac with Metal acceleration.
 

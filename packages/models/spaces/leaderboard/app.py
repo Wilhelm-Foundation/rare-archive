@@ -285,7 +285,7 @@ If you use this leaderboard or the RareArena benchmark in your work, please cite
   title={Rare Archive Diagnosis Leaderboard},
   author={Wilhelm Foundation and Lattice Protocol},
   year={2026},
-  url={https://huggingface.co/spaces/wilhelm-foundation/rare-archive-leaderboard},
+  url={https://huggingface.co/spaces/Wilhelm-Foundation/rare-disease-diagnosis-leaderboard},
   note={Open benchmarks for rare disease diagnostic AI}
 }
 ```
